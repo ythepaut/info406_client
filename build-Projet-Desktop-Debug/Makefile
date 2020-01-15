@@ -52,8 +52,10 @@ OBJECTS_DIR   = ./
 
 ####### Files
 
-SOURCES       = ../Projet/main.cpp 
-OBJECTS       = main.o
+SOURCES       = ../Projet/FenPrincipale.cpp \
+		../Projet/main.cpp 
+OBJECTS       = FenPrincipale.o \
+		main.o
 DIST          = /usr/lib64/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib64/qt5/mkspecs/common/unix.conf \
 		/usr/lib64/qt5/mkspecs/common/linux.conf \
@@ -130,7 +132,8 @@ DIST          = /usr/lib64/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib64/qt5/mkspecs/features/exceptions.prf \
 		/usr/lib64/qt5/mkspecs/features/yacc.prf \
 		/usr/lib64/qt5/mkspecs/features/lex.prf \
-		../Projet/Projet.pro  ../Projet/main.cpp
+		../Projet/Projet.pro ../Projet/FenPrincipale.h ../Projet/FenPrincipale.cpp \
+		../Projet/main.cpp
 QMAKE_TARGET  = Projet
 DESTDIR       = 
 TARGET        = Projet
@@ -312,7 +315,8 @@ distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents /usr/lib64/qt5/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents ../Projet/main.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents ../Projet/FenPrincipale.h $(DISTDIR)/
+	$(COPY_FILE) --parents ../Projet/FenPrincipale.cpp ../Projet/main.cpp $(DISTDIR)/
 
 
 clean: compiler_clean 
@@ -362,7 +366,10 @@ compiler_clean: compiler_moc_predefs_clean
 
 ####### Compile
 
-main.o: ../Projet/main.cpp 
+FenPrincipale.o: ../Projet/FenPrincipale.cpp ../Projet/FenPrincipale.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o FenPrincipale.o ../Projet/FenPrincipale.cpp
+
+main.o: ../Projet/main.cpp ../Projet/FenPrincipale.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o ../Projet/main.cpp
 
 ####### Install
