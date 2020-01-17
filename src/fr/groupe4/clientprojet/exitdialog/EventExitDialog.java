@@ -1,6 +1,8 @@
-package fr.groupe4.clientprojet;
+package fr.groupe4.clientprojet.exitdialog;
 
-import java.awt.*;
+import fr.groupe4.clientprojet.mainwindow.EventMainWindow;
+
+import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
@@ -10,10 +12,10 @@ public class EventExitDialog extends WindowAdapter implements ActionListener {
     public final static String EXIT = "exit";
     public final static String CANCEL = "cancel";
 
-    private Dialog source;
+    private JDialog source;
 
-    EventExitDialog(Dialog pSource) {
-        source = pSource;
+    public EventExitDialog(JDialog source) {
+        this.source = source;
     }
 
     @Override
@@ -21,7 +23,6 @@ public class EventExitDialog extends WindowAdapter implements ActionListener {
         switch (e.getActionCommand()) {
             case EXIT:
                 source.getOwner().dispose();
-                System.exit(0);
                 break;
 
             case CANCEL:
