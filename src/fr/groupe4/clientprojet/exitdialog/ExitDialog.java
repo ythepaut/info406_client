@@ -1,5 +1,7 @@
 package fr.groupe4.clientprojet.exitdialog;
 
+import fr.groupe4.clientprojet.exitdialog.enums.ExitChoice;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -7,13 +9,13 @@ public class ExitDialog extends JDialog {
     private EventExitDialog eventExitDialog;
 
     public ExitDialog(JFrame owner) {
-        super(owner, "Êtes-vous sûr de vouloir quitter ?");
+        super(owner, "Êtes-vous sûr de vouloir quitter ?", true);
 
         drawContent();
 
-
         setVisible(true);
     }
+
 
     private void drawContent() {
         eventExitDialog = new EventExitDialog(this);
@@ -27,12 +29,13 @@ public class ExitDialog extends JDialog {
 
 
         JButton exitButton = new JButton("Quitter");
-        exitButton.setActionCommand(EventExitDialog.EXIT);
+        exitButton.setActionCommand(ExitChoice.EXIT.getName());
         exitButton.addActionListener(eventExitDialog);
         getContentPane().add(exitButton);
         JButton cancelButton = new JButton("Annuler");
-        cancelButton.setActionCommand(EventExitDialog.CANCEL);
+        cancelButton.setActionCommand(ExitChoice.CANCEL.getName());
         cancelButton.addActionListener(eventExitDialog);
         getContentPane().add(cancelButton);
     }
+
 }

@@ -1,4 +1,4 @@
-package fr.groupe4.clientprojet.mainwindow;
+package fr.groupe4.clientprojet.mainwindow.enums;
 
 public enum MenubarAction {
     CONNECTION("connection"),
@@ -24,14 +24,19 @@ public enum MenubarAction {
         switch (name) {
             case "connection":
                 result = MenubarAction.CONNECTION;
+                break;
             case "setting":
                 result = MenubarAction.SETTING;
+                break;
             case "exit":
                 result = MenubarAction.EXIT;
+                break;
             case "addTask":
                 result = MenubarAction.ADDTASK;
+                break;
             case "deleteTask":
                 result = MenubarAction.DELETETASK;
+                break;
         }
 
         return result;
