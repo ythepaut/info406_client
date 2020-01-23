@@ -1,6 +1,7 @@
 package fr.groupe4.clientprojet.mainwindow;
 
 import fr.groupe4.clientprojet.exitdialog.ExitDialog;
+import fr.groupe4.clientprojet.connectiondialog.ConnectionDialog;
 import fr.groupe4.clientprojet.mainwindow.enums.MenubarAction;
 
 import javax.swing.*;
@@ -22,6 +23,7 @@ public class EventMainWindow extends WindowAdapter implements ActionListener {
 
         switch (MenubarAction.getEnum(e.getActionCommand())) {
             case CONNECTION:
+                new ConnectionDialog(source);
                 break;
 
             case SETTING:
