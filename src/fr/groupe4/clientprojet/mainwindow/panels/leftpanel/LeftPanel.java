@@ -9,6 +9,7 @@ import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.MatteBorder;
 import java.awt.*;
+import java.io.File;
 import java.util.ArrayList;
 
 /**
@@ -43,7 +44,7 @@ public class LeftPanel extends JPanel {
         projectPanel.setBackground(Color.WHITE);
         GridBagConstraints c = new GridBagConstraints(); c.gridx = 0; c.insets = new Insets(25, 0, 25, 0);
 
-        Font buttonFont = new Font("Arial", Font.PLAIN, 14);
+        Font buttonFont = new Font("Arial", Font.PLAIN, 15);
         for (int i = 0; i < 5; i++) {
             c.gridy = i;
             RoundButton button = new RoundButton(Integer.toString(i));
@@ -61,7 +62,7 @@ public class LeftPanel extends JPanel {
         JPanel bottomPanel = new JPanel(new GridBagLayout());
         bottomPanel.setBackground(Color.WHITE);
         c.gridy = 0;
-        RoundButton button = new RoundButton("C");
+        RoundButton button = new RoundButton(new File("/mnt/DATA/Groupe4/info406_client/src/calendar.png")); // Changer le path pour qu'il soit adaptatif
         buttons.add(button);
         button.setActionCommand(CenterPanel.CALENDAR);
         button.addActionListener(eventLeftPanel);
