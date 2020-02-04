@@ -3,13 +3,14 @@ package fr.groupe4.clientprojet.mainwindow.panels.centerpanel;
 import javax.swing.*;
 import java.awt.*;
 
+import fr.groupe4.clientprojet.calendar.*;
+
 public class CenterPanel extends JPanel {
     public static final String CALENDAR = "calendar", USER = "user";
     private String view;
 
     public CenterPanel(String view) {
         this.view = view;
-
 
         setBackground(Color.WHITE);
 
@@ -49,11 +50,17 @@ public class CenterPanel extends JPanel {
     private void drawCalendar() {
         setLayout(new BorderLayout());
 
+        Calendar c = new Calendar();
+
         // Titre
         JPanel titlePanel = new JPanel(new GridLayout(1, 2));
+        CalendarPanel calendarPanel = new CalendarPanel(c);
+
         titlePanel.add(new JLabel(view));
 
         add(titlePanel, BorderLayout.NORTH);
+
+        add(calendarPanel);
     }
 
     private void drawUser() {
