@@ -2,6 +2,7 @@ package fr.groupe4.clientprojet.mainwindow.panels.leftpanel;
 
 
 import fr.groupe4.clientprojet.mainwindow.panels.centerpanel.CenterPanel;
+import fr.groupe4.clientprojet.utils.Location;
 import fr.groupe4.clientprojet.utils.RoundButton;
 
 import javax.swing.*;
@@ -17,6 +18,7 @@ import java.util.ArrayList;
  * Celui qui contient la liste des projets et le bouton 'calendrier' et 'profil'
  */
 public class LeftPanel extends JPanel {
+    private final int TAILLE_BOUTONS = 25; // TODO: Le final pourra être enlevé quand on ajoutera les paramètres
     private ArrayList<RoundButton> buttons;
     private CenterPanel centerPanel;
 
@@ -44,7 +46,7 @@ public class LeftPanel extends JPanel {
         projectPanel.setBackground(Color.WHITE);
         GridBagConstraints c = new GridBagConstraints(); c.gridx = 0; c.insets = new Insets(25, 0, 25, 0);
 
-        Font buttonFont = new Font("Arial", Font.PLAIN, 15);
+        Font buttonFont = new Font("Arial", Font.PLAIN, TAILLE_BOUTONS);
         for (int i = 0; i < 5; i++) {
             c.gridy = i;
             RoundButton button = new RoundButton(Integer.toString(i));
@@ -62,7 +64,7 @@ public class LeftPanel extends JPanel {
         JPanel bottomPanel = new JPanel(new GridBagLayout());
         bottomPanel.setBackground(Color.WHITE);
         c.gridy = 0;
-        RoundButton button = new RoundButton(new File("/mnt/DATA/Groupe4/info406_client/src/calendar.png")); // Changer le path pour qu'il soit adaptatif
+        RoundButton button = new RoundButton(new File(Location.getPath() + "/calendar.png"));
         buttons.add(button);
         button.setActionCommand(CenterPanel.CALENDAR);
         button.addActionListener(eventLeftPanel);

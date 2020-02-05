@@ -39,19 +39,21 @@ public class RoundButton extends JButton {
     protected void paintComponent(Graphics g) {
         Graphics2D g2 = (Graphics2D) g;
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        int taille = Math.min(getWidth(), getHeight());
+        int taille = Math.min(getWidth(), getHeight()); // La taille du cercle
+        int x = (Math.max(getWidth(), getHeight()) - taille) /2; // La position en x, en y c'est toujours 0
         if (selected) {
-            System.out.println(taille);
             g2.setColor(new Color(84, 180, 255));
-            g2.fillOval(taille/3, 1, taille-3, taille-3);
+            g2.fillOval(x, 0, taille, taille);
         }
         if (image != null) {
-            g2.drawImage(image, (int)((13.0/28.0)*taille), (int)((5.0/28.0)*taille), 2*(taille/3), 2*(taille/3), this); // Le 13/28 et 5/28 est trouvé par tâtonnement
+            g2.drawImage(image, x, 0, taille, taille, this); // Le 13/28 et 5/28 est trouvé par tâtonnement
+            //g2.drawImage(image, (int)((13.0/28.0)*taille), (int)((5.0/28.0)*taille), 2*(taille/3), 2*(taille/3), this); // Le 13/28 et 5/28 est trouvé par tâtonnement
+        } else {
+            super.paintComponent(g);
+            g2.setColor(Color.BLACK);
+            g2.setStroke(new BasicStroke(1.6f));
+            g2.drawOval(x, 0, taille, taille);
+            g2.dispose();
         }
-        super.paintComponent(g);
-        g2.setColor(Color.BLACK);
-        g2.setStroke(new BasicStroke(1.6f));
-        g2.drawOval(taille/3, 1, taille-3, taille-3);
-        g2.dispose();
     }
 }
