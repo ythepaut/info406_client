@@ -21,6 +21,7 @@ public class LeftPanel extends JPanel {
     private final int TAILLE_BOUTONS = 25; // TODO: Le final pourra être enlevé quand on ajoutera les paramètres
     private ArrayList<RoundButton> buttons;
     private CenterPanel centerPanel;
+    private int nbProjet, debutListe = 0, scrollValue = 0;
 
     public LeftPanel(CenterPanel centerPanel) {
         buttons = new ArrayList<>();
@@ -40,28 +41,16 @@ public class LeftPanel extends JPanel {
 
     private void drawContent() {
         EventLeftPanel eventLeftPanel = new EventLeftPanel(this, centerPanel);
-
-        // Boutons projets
-        JPanel projectPanel = new JPanel(new GridBagLayout());
-        projectPanel.setBackground(Color.WHITE);
+        Font buttonFont = new Font("Arial", Font.PLAIN, TAILLE_BOUTONS);
         GridBagConstraints c = new GridBagConstraints(); c.gridx = 0; c.insets = new Insets(25, 0, 25, 0);
 
-        Font buttonFont = new Font("Arial", Font.PLAIN, TAILLE_BOUTONS);
-        for (int i = 0; i < 5; i++) {
-            c.gridy = i;
-            RoundButton button = new RoundButton(Integer.toString(i));
-            button.setActionCommand(Integer.toString(i));
-            button.addActionListener(eventLeftPanel);
-            button.setFont(buttonFont);
-            projectPanel.add(button, c);
-            buttons.add(button);
-        }
-
-        add(projectPanel, BorderLayout.NORTH);
+        // Boutons projets
+        drawProjectButton(eventLeftPanel, buttonFont, c);
 
 
         // Boutons du bas (calendrier, profil)
         JPanel bottomPanel = new JPanel(new GridBagLayout());
+        bottomPanel.setBorder(new MatteBorder(3, 0, 0, 0, Color.BLACK));
         bottomPanel.setBackground(Color.WHITE);
         c.gridy = 0;
         RoundButton button = new RoundButton(new File(Location.getPath() + "/calendar.png"));
@@ -80,5 +69,68 @@ public class LeftPanel extends JPanel {
         bottomPanel.add(button, c);
 
         add(bottomPanel, BorderLayout.SOUTH);
+    }
+
+    private void drawProjectButton(EventLeftPanel eventLeftPanel, Font buttonFont, GridBagConstraints c) {
+        JPanel projectPanel = new JPanel(new BorderLayout());
+        setNbProjets(6); // TODO: Cette variable sera déterminé par le nombre de projets reçu par le modèle
+
+        // La scrollBar
+        int nbProjetsMax = 5; // TODO: Valeur à déterminer en fonction de la taille de la fenêtre
+        if (nbProjet > nbProjetsMax) {
+            JPanel scrollPanel = new JPanel(new BorderLayout());
+            JScrollBar scrollBar = new JScrollBar(JScrollBar.VERTICAL, scrollValue, 1, 0, nbProjet);
+            scrollBar.addAdjustmentListener(eventLeftPanel);
+            scrollBar.setVisible(true);
+            scrollPanel.add(scrollBar, BorderLayout.CENTER);
+
+            projectPanel.add(scrollPanel, BorderLayout.WEST);
+        }
+
+
+        // Les boutons
+        JPanel buttonPanel = new JPanel(new GridBagLayout());
+        buttonPanel.setBackground(Color.WHITE);
+
+        for (int i = debutListe; i < nbProjetsMax + debutListe; i++) {
+            c.gridy = i;
+            if (i < nbProjet) {
+                RoundButton button = new RoundButton(Integer.toString(i));
+                button.setActionCommand(Integer.toString(i));
+                button.addActionListener(eventLeftPanel);
+                button.setFont(buttonFont);
+                buttonPanel.add(button, c);
+                buttons.add(button);
+            } else {
+                JLabel label = new JLabel(" ");
+                label.setFont(buttonFont);
+                buttonPanel.add(label, c);
+            }
+        }
+
+        projectPanel.add(buttonPanel, BorderLayout.CENTER);
+
+
+        add(projectPanel, BorderLayout.NORTH);
+    }
+
+    public void setNbProjets(int nbProjets) {
+        this.nbProjet = nbProjets;
+    }
+
+    public void setDebutListe(int debutListe) {
+        this.debutListe = debutListe;
+    }
+
+    public void setScrollValue(int scrollValue) {
+        this.scrollValue = scrollValue;
+    }
+
+    public void redraw() {
+        removeAll();
+        validate();
+        revalidate();
+        repaint();
+        drawContent();
     }
 }
