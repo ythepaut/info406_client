@@ -3,12 +3,9 @@ package fr.groupe4.clientprojet.mainwindow.panels.leftpanel;
 import fr.groupe4.clientprojet.mainwindow.panels.centerpanel.CenterPanel;
 import fr.groupe4.clientprojet.utils.RoundButton;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.AdjustmentEvent;
-import java.awt.event.AdjustmentListener;
+import java.awt.event.*;
 
-public class EventLeftPanel implements ActionListener, AdjustmentListener {
+public class EventLeftPanel implements ActionListener, MouseWheelListener {
     private CenterPanel centerPanel;
     private LeftPanel source;
 
@@ -28,9 +25,8 @@ public class EventLeftPanel implements ActionListener, AdjustmentListener {
     }
 
     @Override
-    public void adjustmentValueChanged(AdjustmentEvent e) {
-        source.setDebutListe(e.getValue());
-        source.setScrollValue(e.getValue());
+    public void mouseWheelMoved(MouseWheelEvent e) {
+        source.setDebutListe(source.getDebutListe() + e.getWheelRotation());
         source.redraw();
     }
 }

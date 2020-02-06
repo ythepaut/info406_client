@@ -21,7 +21,7 @@ public class LeftPanel extends JPanel {
     private final int TAILLE_BOUTONS = 25; // TODO: Le final pourra être enlevé quand on ajoutera les paramètres
     private ArrayList<RoundButton> buttons;
     private CenterPanel centerPanel;
-    private int nbProjet, debutListe = 0, scrollValue = 0;
+    private int nbProjet, debutListe = 0;
 
     public LeftPanel(CenterPanel centerPanel) {
         buttons = new ArrayList<>();
@@ -46,6 +46,7 @@ public class LeftPanel extends JPanel {
 
         // Boutons projets
         drawProjectButton(eventLeftPanel, buttonFont, c);
+        c.insets = new Insets(25, 0, 25, 0);
 
 
         // Boutons du bas (calendrier, profil)
@@ -73,19 +74,9 @@ public class LeftPanel extends JPanel {
 
     private void drawProjectButton(EventLeftPanel eventLeftPanel, Font buttonFont, GridBagConstraints c) {
         JPanel projectPanel = new JPanel(new BorderLayout());
-        setNbProjets(6); // TODO: Cette variable sera déterminé par le nombre de projets reçu par le modèle
-
-        // La scrollBar
+        projectPanel.addMouseWheelListener(eventLeftPanel);
+        setNbProjets(10); // TODO: Cette variable sera déterminé par le nombre de projets reçu par le modèle
         int nbProjetsMax = 5; // TODO: Valeur à déterminer en fonction de la taille de la fenêtre
-        if (nbProjet > nbProjetsMax) {
-            JPanel scrollPanel = new JPanel(new BorderLayout());
-            JScrollBar scrollBar = new JScrollBar(JScrollBar.VERTICAL, scrollValue, 1, 0, nbProjet);
-            scrollBar.addAdjustmentListener(eventLeftPanel);
-            scrollBar.setVisible(true);
-            scrollPanel.add(scrollBar, BorderLayout.CENTER);
-
-            projectPanel.add(scrollPanel, BorderLayout.WEST);
-        }
 
 
         // Les boutons
@@ -111,6 +102,37 @@ public class LeftPanel extends JPanel {
         projectPanel.add(buttonPanel, BorderLayout.CENTER);
 
 
+        // Label haut et bas pour quand il y a des projets non affichés
+        c.gridy = 0;
+        c.insets = new Insets(0, 0, 0, 0);
+        JLabel haut = new JLabel(". . ."), bas = new JLabel(". . .");
+        haut.setFont(new Font("Monospace", Font.BOLD, TAILLE_BOUTONS/2)); bas.setFont(new Font("Monospace", Font.BOLD, TAILLE_BOUTONS/2));
+
+        if (debutListe > 0) {
+            haut.setText(". . .");
+            haut.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        } else {
+            haut.setText(" ");
+            haut.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+        }
+        JPanel hautPanel = new JPanel(new GridBagLayout());
+        hautPanel.setBackground(Color.WHITE);
+        hautPanel.add(haut, c);
+        projectPanel.add(hautPanel, BorderLayout.NORTH);
+
+        if (nbProjet > debutListe + nbProjetsMax) {
+            bas.setText(". . .");
+            bas.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        } else {
+            bas.setText(" ");
+            bas.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+        }
+        JPanel basPanel = new JPanel(new GridBagLayout());
+        basPanel.setBackground(Color.WHITE);
+        basPanel.add(bas, c);
+        projectPanel.add(basPanel, BorderLayout.SOUTH);
+
+
         add(projectPanel, BorderLayout.NORTH);
     }
 
@@ -118,12 +140,14 @@ public class LeftPanel extends JPanel {
         this.nbProjet = nbProjets;
     }
 
-    public void setDebutListe(int debutListe) {
-        this.debutListe = debutListe;
+    public int getDebutListe() {
+        return debutListe;
     }
 
-    public void setScrollValue(int scrollValue) {
-        this.scrollValue = scrollValue;
+    public void setDebutListe(int debutListe) {
+        if (debutListe < nbProjet && debutListe >= 0) {
+            this.debutListe = debutListe;
+        }
     }
 
     public void redraw() {
