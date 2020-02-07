@@ -56,7 +56,7 @@ public class CenterPanel extends JPanel {
 
         // Titre
         JPanel titlePanel = new JPanel(new GridLayout(1, 2));
-        CalendarPanel calendarPanel = new CalendarPanel(c);
+        CalendarComponent calendarPanel = new CalendarComponent(c);
 
         titlePanel.add(new JLabel(view));
 

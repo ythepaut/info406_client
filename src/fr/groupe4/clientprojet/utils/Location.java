@@ -1,9 +1,5 @@
 package fr.groupe4.clientprojet.utils;
 
-import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.StringTokenizer;
-
 public abstract class Location {
 
     /**
