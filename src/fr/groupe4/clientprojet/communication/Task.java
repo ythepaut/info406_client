@@ -1,7 +1,19 @@
 package fr.groupe4.clientprojet.communication;
 
+/**
+ * Tâche
+ *
+ * @author Romain
+ */
 public class Task {
+    /**
+     * Description de la tâche
+     */
     private String desc;
+
+    /**
+     * ID de la tâche
+     */
     private int id;
 
     public Task(String id) {
@@ -12,6 +24,9 @@ public class Task {
         }
     }
 
+    /**
+     * Setter de la description
+     */
     public void setDescription(String desc) {
         this.desc = desc;
     }
