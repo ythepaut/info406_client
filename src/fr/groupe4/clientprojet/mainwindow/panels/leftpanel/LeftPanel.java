@@ -54,14 +54,14 @@ public class LeftPanel extends JPanel {
         bottomPanel.setBorder(new MatteBorder(3, 0, 0, 0, Color.BLACK));
         bottomPanel.setBackground(Color.WHITE);
         c.gridy = 0;
-        RoundButton button = new RoundButton(new File(Location.getPath() + "/calendar.png"));
+        RoundButton button = new RoundButton(new File(Location.getPath() + "/fr/groupe4/clientprojet/data/img/calendar.png"));
         buttons.add(button);
         button.setActionCommand(CenterPanel.CALENDAR);
         button.addActionListener(eventLeftPanel);
         button.setFont(buttonFont);
         bottomPanel.add(button, c);
         c.gridy = 1;
-        button = new RoundButton("P");
+        button = new RoundButton(new File(Location.getPath() + "/fr/groupe4/clientprojet/data/img/user.png"));
         buttons.add(button);
         button.setActionCommand(CenterPanel.USER);
         button.setSelected(true);
@@ -110,10 +110,8 @@ public class LeftPanel extends JPanel {
 
         if (debutListe > 0) {
             haut.setText(". . .");
-            haut.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         } else {
             haut.setText(" ");
-            haut.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
         }
         JPanel hautPanel = new JPanel(new GridBagLayout());
         hautPanel.setBackground(Color.WHITE);
@@ -122,10 +120,8 @@ public class LeftPanel extends JPanel {
 
         if (nbProjet > debutListe + nbProjetsMax) {
             bas.setText(". . .");
-            bas.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         } else {
             bas.setText(" ");
-            bas.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
         }
         JPanel basPanel = new JPanel(new GridBagLayout());
         basPanel.setBackground(Color.WHITE);

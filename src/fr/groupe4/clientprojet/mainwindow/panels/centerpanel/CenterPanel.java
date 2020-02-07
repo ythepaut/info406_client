@@ -4,15 +4,21 @@ import javax.swing.*;
 import java.awt.*;
 
 import fr.groupe4.clientprojet.calendar.*;
+import fr.groupe4.clientprojet.utils.RoundButton;
 
 public class CenterPanel extends JPanel {
     public static final String CALENDAR = "calendar", USER = "user";
     private String view;
+    public static final int HOME = 0, TASK = 1, MESSAGE = 2;
+    private int slide = HOME;
+
+    private EventCenterPanel eventCenterPanel;
 
     public CenterPanel(String view) {
         this.view = view;
 
         setBackground(Color.WHITE);
+        eventCenterPanel = new EventCenterPanel(this);
 
         drawContent();
     }
@@ -21,11 +27,7 @@ public class CenterPanel extends JPanel {
         this.view = view;
 
         // On redéssine
-        removeAll();
-        validate();
-        revalidate();
-        repaint();
-        drawContent();
+        redraw();
     }
 
     public String getView() {
@@ -89,20 +91,93 @@ public class CenterPanel extends JPanel {
         add(titlePanel, BorderLayout.NORTH);
 
         // Partie centrale (onglets)
-        JTabbedPane tabbedPane = new JTabbedPane();
-        // Onglet équipe
-        JPanel teamPanel = new JPanel();
-        // TODO: Ajouter liste des membres de l'équipe
-        tabbedPane.addTab("Equipe", teamPanel);
-        // Onglet tâches
-        JPanel taskPanel = new JPanel();
-        // TODO: Ajouter liste des tâches
-        tabbedPane.addTab("Tâches", taskPanel);
-        // Onglet messages
-        JPanel messagePanel = new JPanel();
-        // TODO: Ajouter messagerie générale du projet
-        tabbedPane.addTab("Messages", messagePanel);
+        JPanel slidesPanel = new JPanel(new BorderLayout());
+        slidesPanel.setBackground(Color.WHITE);
 
-        add(tabbedPane, BorderLayout.CENTER);
+        // Bouton gauche
+        RoundButton leftButton = new RoundButton("<");
+        leftButton.setActionCommand(EventCenterPanel.LEFT);
+        leftButton.addActionListener(eventCenterPanel);
+        slidesPanel.add(leftButton, BorderLayout.WEST);
+        // Bouton droite
+        RoundButton rightButton = new RoundButton(">");
+        rightButton.setActionCommand(EventCenterPanel.RIGHT);
+        rightButton.addActionListener(eventCenterPanel);
+        slidesPanel.add(rightButton, BorderLayout.EAST);
+        // Boutons haut
+        JPanel topButtons = new JPanel(new GridBagLayout());
+        topButtons.setBackground(Color.WHITE);
+        c.gridx = c.gridy = 0;
+        JButton homeButton = new JButton("HOME");
+        homeButton.setActionCommand("" + HOME);
+        homeButton.addActionListener(eventCenterPanel);
+        topButtons.add(homeButton, c);
+        c.gridx++;
+        JButton taskButton = new JButton("TASK");
+        taskButton.setActionCommand("" + TASK);
+        taskButton.addActionListener(eventCenterPanel);
+        topButtons.add(taskButton, c);
+        c.gridx++;
+        JButton messagePanel = new JButton("MESSAGE");
+        messagePanel.setActionCommand("" + MESSAGE);
+        messagePanel.addActionListener(eventCenterPanel);
+        topButtons.add(messagePanel, c);
+
+        slidesPanel.add(topButtons, BorderLayout.NORTH);
+
+        switch (slide) {
+            case HOME:
+                slidesPanel.add(homePanel(), BorderLayout.CENTER);
+                break;
+
+            case TASK:
+                slidesPanel.add(taskPanel(), BorderLayout.CENTER);
+                break;
+
+            case MESSAGE:
+                slidesPanel.add(messagePanel(), BorderLayout.CENTER);
+                break;
+
+            default:
+        }
+
+        add(slidesPanel, BorderLayout.CENTER);
+    }
+
+    private JPanel homePanel() {
+        JPanel panel = new JPanel();
+        panel.add(new JLabel("HOME"));
+        // TODO : Construire panel accueil
+        return panel;
+    }
+
+    private JPanel taskPanel() {
+        JPanel panel = new JPanel();
+        panel.add(new JLabel("TÂCHES"));
+        // TODO : Construire panel tâches
+        return panel;
+    }
+
+    private JPanel messagePanel() {
+        JPanel panel = new JPanel();
+        panel.add(new JLabel("MESSAGES"));
+        // TODO : Construire panel messagerie
+        return panel;
+    }
+
+    public void setSlide(int slide) {
+        this.slide = Math.max(HOME, Math.min(slide, MESSAGE));
+    }
+
+    public int getSlide() {
+        return slide;
+    }
+
+    public void redraw() {
+        removeAll();
+        validate();
+        revalidate();
+        repaint();
+        drawContent();
     }
 }
