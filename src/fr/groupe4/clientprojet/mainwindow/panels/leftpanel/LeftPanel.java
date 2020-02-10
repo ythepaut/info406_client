@@ -42,7 +42,9 @@ public class LeftPanel extends JPanel {
     private void drawContent() {
         EventLeftPanel eventLeftPanel = new EventLeftPanel(this, centerPanel);
         Font buttonFont = new Font("Arial", Font.PLAIN, TAILLE_BOUTONS);
-        GridBagConstraints c = new GridBagConstraints(); c.gridx = 0; c.insets = new Insets(25, 0, 25, 0);
+        GridBagConstraints c = new GridBagConstraints();
+        c.gridx = 0;
+        c.insets = new Insets(25, 0, 25, 0);
 
         // Boutons projets
         drawProjectButton(eventLeftPanel, buttonFont, c);
@@ -106,7 +108,8 @@ public class LeftPanel extends JPanel {
         c.gridy = 0;
         c.insets = new Insets(0, 0, 0, 0);
         JLabel haut = new JLabel(". . ."), bas = new JLabel(". . .");
-        haut.setFont(new Font("Monospace", Font.BOLD, TAILLE_BOUTONS/2)); bas.setFont(new Font("Monospace", Font.BOLD, TAILLE_BOUTONS/2));
+        haut.setFont(new Font("Monospace", Font.BOLD, TAILLE_BOUTONS/2));
+        bas.setFont(new Font("Monospace", Font.BOLD, TAILLE_BOUTONS/2));
 
         if (debutListe > 0) {
             haut.setText(". . .");

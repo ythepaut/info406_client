@@ -38,6 +38,8 @@ public class EventCenterPanel implements ActionListener {
             case MESSAGE:
                 owner.setSlide(2);
                 break;
+
+            default:
         }
         owner.redraw();
     }

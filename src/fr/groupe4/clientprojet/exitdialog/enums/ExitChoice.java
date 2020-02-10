@@ -25,6 +25,8 @@ public enum ExitChoice {
             case "cancel":
                 result = ExitChoice.CANCEL;
                 break;
+
+            default:
         }
 
         return result;
