@@ -2,20 +2,22 @@
 
 <calendar>
     <task id="1">
-        <description>Vacances</description>
+        <id>1</id>
+        <description>Machin 1</description>
         <type>1</type>
-        <startdate>11/02/2020</startdate>
+        <startdate>04/02/2020</startdate>
         <starttime>12:00</starttime>
-        <enddate>13/02/2020</enddate>
-        <endtime>12:00</endtime>
+        <enddate>04/02/2020</enddate>
+        <endtime>14:00</endtime>
     </task>
 
     <task id="2">
-        <description>Truc perso</description>
-        <type>2</type>
-        <startdate>31/01/2019</startdate>
+        <id>2</id>
+        <description>Machin 2</description>
+        <type>1</type>
+        <startdate>06/02/2019</startdate>
         <starttime>11:15</starttime>
-        <enddate>31/01/2018</enddate>
+        <enddate>06/02/2019</enddate>
         <endtime>11:30</endtime>
     </task>
 </calendar>

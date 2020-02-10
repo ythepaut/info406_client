@@ -2,6 +2,7 @@ package fr.groupe4.clientprojet.mainwindow.panels.centerpanel;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Date;
 
 import fr.groupe4.clientprojet.calendar.*;
 import fr.groupe4.clientprojet.utils.RoundButton;
@@ -52,7 +53,7 @@ public class CenterPanel extends JPanel {
     private void drawCalendar() {
         setLayout(new BorderLayout());
 
-        Calendar c = new Calendar();
+        Calendar c = new Calendar(6, 2020);
 
         // Titre
         JPanel titlePanel = new JPanel(new GridLayout(1, 2));
