@@ -12,6 +12,10 @@ public abstract class Location {
      * @return String : sous la forme "blabla/"
      */
     public static String getPath() {
-        return System.getProperty("java.class.path");
+        String path = System.getProperty("java.class.path");
+
+        path = path.split(";")[0];
+
+        return path;
     }
 }
