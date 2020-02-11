@@ -1,5 +1,6 @@
 package fr.groupe4.clientprojet.mainwindow;
 
+import fr.groupe4.clientprojet.connectiondialog.ConnectionDialog;
 import fr.groupe4.clientprojet.exitdialog.ExitDialog;
 
 import javax.swing.*;
@@ -12,6 +13,13 @@ public class EventMainWindow extends WindowAdapter {
 
     public EventMainWindow(JFrame source) {
         this.source = source;
+    }
+
+    @Override
+    public void windowOpened(WindowEvent e) {
+        //if (!Communication.isConnected()) { TODO: Enlever le commentaire une fois que la méthode existera
+            new ConnectionDialog(source);
+        //}
     }
 
     @Override
