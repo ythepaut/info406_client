@@ -1,5 +1,8 @@
 package fr.groupe4.clientprojet.utils;
 
+/**
+ * Classe abstraite qui permet de connaître le répertoire de l'éxécutable via sa méthode statique getPath();
+ */
 public abstract class Location {
 
     /**

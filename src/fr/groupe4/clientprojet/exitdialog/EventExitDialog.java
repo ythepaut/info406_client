@@ -9,14 +9,29 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
+/**
+ * Le listener du dialog de confirmation de sortie
+ */
 public class EventExitDialog extends WindowAdapter implements ActionListener {
-
+    /**
+     * Le dialog en question
+     */
     private JDialog source;
 
+    /**
+     * Le constructeur
+     *
+     * @param source : le dialog
+     */
     public EventExitDialog(JDialog source) {
         this.source = source;
     }
 
+    /**
+     * Quand un bouton est cliqué
+     *
+     * @param e : l'event
+     */
     @Override
     public void actionPerformed(ActionEvent e) {
 
@@ -33,6 +48,11 @@ public class EventExitDialog extends WindowAdapter implements ActionListener {
 
     }
 
+    /**
+     * Quand on ferme la fenêtre
+     *
+     * @param e : l'event
+     */
     @Override
     public void windowClosing(WindowEvent e) {
         e.getWindow().dispose();

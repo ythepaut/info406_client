@@ -2,19 +2,41 @@ package fr.groupe4.clientprojet.mainwindow.panels.centerpanel;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.Date;
 
 import fr.groupe4.clientprojet.calendar.*;
 import fr.groupe4.clientprojet.utils.RoundButton;
 
+/**
+ * Créé le panel du centre de la fenêtre
+ */
 public class CenterPanel extends JPanel {
+    /**
+     * Variables statiques destinées à disparaître au profit d'une énumeration
+     */
     public static final String CALENDAR = "calendar", USER = "user";
+    /**
+     * La vue sur laquelle on est
+     */
     private String view;
+    /**
+     * Variables statiques destinées à disparaître au profit d'une énumeration
+     */
     public static final int HOME = 0, TASK = 1, MESSAGE = 2;
+    /**
+     * Le slide sur lequel on est
+     */
     private int slide = HOME;
 
+    /**
+     * le listener du panel
+     */
     private EventCenterPanel eventCenterPanel;
 
+    /**
+     * Le constructeur
+     *
+     * @param view : la vue sur laquelle se mettre
+     */
     public CenterPanel(String view) {
         this.view = view;
 
@@ -24,6 +46,11 @@ public class CenterPanel extends JPanel {
         drawContent();
     }
 
+    /**
+     * Définie la vue du panel central
+     *
+     * @param view : la vue
+     */
     public void setView(String view) {
         this.view = view;
 
@@ -31,10 +58,18 @@ public class CenterPanel extends JPanel {
         redraw();
     }
 
+    /**
+     * Renvoie la vue sur laquelle on est
+     *
+     * @return : la vue
+     */
     public String getView() {
         return view;
     }
 
+    /**
+     * Dessine le contenu du panel
+     */
     private void drawContent() {
         switch (view) {
             case CALENDAR:
@@ -50,6 +85,9 @@ public class CenterPanel extends JPanel {
         }
     }
 
+    /**
+     * Dessine le calendrier
+     */
     private void drawCalendar() {
         setLayout(new BorderLayout());
 
@@ -66,6 +104,9 @@ public class CenterPanel extends JPanel {
         add(calendarPanel);
     }
 
+    /**
+     * Dessine la vue 'profil'
+     */
     private void drawUser() {
         setLayout(new BorderLayout());
 
@@ -76,6 +117,9 @@ public class CenterPanel extends JPanel {
         add(titlePanel, BorderLayout.NORTH);
     }
 
+    /**
+     * Dessine la vue 'projet' avec ses slides
+     */
     private void drawProject() {
         setLayout(new BorderLayout());
 
@@ -145,6 +189,11 @@ public class CenterPanel extends JPanel {
         add(slidesPanel, BorderLayout.CENTER);
     }
 
+    /**
+     * Dessine le premier slide du projet
+     *
+     * @return : le jpanel
+     */
     private JPanel homePanel() {
         JPanel panel = new JPanel();
         panel.add(new JLabel("HOME"));
@@ -152,6 +201,11 @@ public class CenterPanel extends JPanel {
         return panel;
     }
 
+    /**
+     * Dessine le slide des tâches du projet
+     *
+     * @return : le jpanel
+     */
     private JPanel taskPanel() {
         JPanel panel = new JPanel();
         panel.add(new JLabel("TÂCHES"));
@@ -159,6 +213,11 @@ public class CenterPanel extends JPanel {
         return panel;
     }
 
+    /**
+     * Dessine le slide de la messagerie du projet
+     *
+     * @return : le jpanel
+     */
     private JPanel messagePanel() {
         JPanel panel = new JPanel();
         panel.add(new JLabel("MESSAGES"));
@@ -166,14 +225,27 @@ public class CenterPanel extends JPanel {
         return panel;
     }
 
+    /**
+     * Défini le slide sur lequel on est
+     *
+     * @param slide : le slide
+     */
     public void setSlide(int slide) {
         this.slide = Math.max(HOME, Math.min(slide, MESSAGE));
     }
 
+    /**
+     * Renvoie le slide sur lequel on est
+     *
+     * @return : le slide
+     */
     public int getSlide() {
         return slide;
     }
 
+    /**
+     * Redessine le panel
+     */
     public void redraw() {
         removeAll();
         validate();

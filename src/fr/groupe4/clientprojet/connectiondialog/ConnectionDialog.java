@@ -6,11 +6,28 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
+/**
+ * Le dialog de connexion
+ */
 public class ConnectionDialog extends JDialog {
+    /**
+     * Le champ texte pour l'identifiant
+     */
     private JTextField username;
+    /**
+     * Le champ texte pour le mot de passe
+     */
     private JPasswordField password;
+    /**
+     * Le listener du dialog
+     */
     private EventConnectionDialog eventConnectionDialog;
 
+    /**
+     * Le constructeur
+     *
+     * @param owner : la frame qui appelle le dialog
+     */
     public ConnectionDialog(JFrame owner) {
         super(owner, "Connexion", true);
         setSize(250, 350);
@@ -26,6 +43,9 @@ public class ConnectionDialog extends JDialog {
         setVisible(true);
     }
 
+    /**
+     * Dessine le contenu du dialog
+     */
     private void drawContent() {
         setBackground(Color.WHITE);
         setLayout(new BorderLayout());
@@ -62,10 +82,20 @@ public class ConnectionDialog extends JDialog {
         add(buttonPanel, BorderLayout.SOUTH);
     }
 
+    /**
+     * Renvoie l'identifiant
+     *
+     * @return : l'identifiant
+     */
     public String getUsername() {
         return username.getText();
     }
 
+    /**
+     * Renvoie le mot de passe
+     *
+     * @return : le mot de passe
+     */
     public String getPassword() {
         StringBuilder res = new StringBuilder();
         char[] cs = password.getPassword();

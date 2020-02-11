@@ -6,8 +6,16 @@ import fr.groupe4.clientprojet.mainwindow.panels.leftpanel.LeftPanel;
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * Fenêtre principale
+ */
 public class MainWindow extends JFrame {
 
+    /**
+     * Constructeur de la fenêtre
+     *
+     * @param title : titre de la fenêtre
+     */
     public MainWindow(String title) {
         EventMainWindow eventMainWindow = new EventMainWindow(this);
 
@@ -25,6 +33,9 @@ public class MainWindow extends JFrame {
         setVisible(true);
     }
 
+    /**
+     * Dessine le contenue de la fenêtre
+     */
     private void drawContent() {
         setLayout(new BorderLayout());
         CenterPanel centerPanel = new CenterPanel(CenterPanel.USER); // <!> Dans LeftPanel, le bouton user est initialisé comme selected <!>

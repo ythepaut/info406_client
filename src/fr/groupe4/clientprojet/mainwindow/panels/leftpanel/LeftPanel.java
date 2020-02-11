@@ -18,11 +18,29 @@ import java.util.ArrayList;
  * Celui qui contient la liste des projets et le bouton 'calendrier' et 'profil'
  */
 public class LeftPanel extends JPanel {
+    /**
+     * La largeur des boutons
+     */
     private final int TAILLE_BOUTONS = 25; // TODO: Le final pourra être enlevé quand on ajoutera les paramètres
+    /**
+     * La liste des boutons
+     */
     private ArrayList<RoundButton> buttons;
+    /**
+     * le panel du centre
+     */
     private CenterPanel centerPanel;
+    /**
+     * le nombre de projets
+     * le début de la liste des projets
+     */
     private int nbProjet, debutListe = 0;
 
+    /**
+     * Le constructeur
+     *
+     * @param centerPanel : le panel du centre
+     */
     public LeftPanel(CenterPanel centerPanel) {
         buttons = new ArrayList<>();
         this.centerPanel = centerPanel;
@@ -35,10 +53,18 @@ public class LeftPanel extends JPanel {
         drawContent();
     }
 
+    /**
+     * Renvoie la liste des boutons
+     *
+     * @return : les boutons
+     */
     public ArrayList<RoundButton> getButtons() {
         return buttons;
     }
 
+    /**
+     * Dessine le contenu du panel
+     */
     private void drawContent() {
         EventLeftPanel eventLeftPanel = new EventLeftPanel(this, centerPanel);
         Font buttonFont = new Font("Arial", Font.PLAIN, TAILLE_BOUTONS);
@@ -74,6 +100,13 @@ public class LeftPanel extends JPanel {
         add(bottomPanel, BorderLayout.SOUTH);
     }
 
+    /**
+     * Dessine la liste des projets
+     *
+     * @param eventLeftPanel : le listener du panel
+     * @param buttonFont : la police des boutons
+     * @param c : la contrainte du panel
+     */
     private void drawProjectButton(EventLeftPanel eventLeftPanel, Font buttonFont, GridBagConstraints c) {
         JPanel projectPanel = new JPanel(new BorderLayout());
         projectPanel.addMouseWheelListener(eventLeftPanel);
@@ -135,20 +168,38 @@ public class LeftPanel extends JPanel {
         add(projectPanel, BorderLayout.NORTH);
     }
 
+    /**
+     * Défini le nombre de projet
+     *
+     * @param nbProjets : le nombre de projet
+     */
     public void setNbProjets(int nbProjets) {
         this.nbProjet = nbProjets;
     }
 
+    /**
+     * Renvoie le début de la liste des projets
+     *
+     * @return : le début de la liste des projets
+     */
     public int getDebutListe() {
         return debutListe;
     }
 
+    /**
+     * Défini le début de la liste des projets
+     *
+     * @param debutListe : début de la liste
+     */
     public void setDebutListe(int debutListe) {
         if (debutListe < nbProjet && debutListe >= 0) {
             this.debutListe = debutListe;
         }
     }
 
+    /**
+     * Redéssine le panel
+     */
     public void redraw() {
         removeAll();
         validate();
