@@ -1,5 +1,6 @@
 package fr.groupe4.clientprojet.calendar;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Observable;
 
@@ -13,7 +14,12 @@ public class Calendar extends Observable {
     TaskList trueTasks;
 
     public Calendar(int week, int year) {
-        this.trueTasks = Communication.getWeekTasks(week, year);
+        try {
+            this.trueTasks = Communication.getWeekTasks(week, year);
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
 
         setChanged();
         notifyObservers();
