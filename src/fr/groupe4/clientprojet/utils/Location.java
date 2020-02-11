@@ -14,7 +14,7 @@ public abstract class Location {
     public static String getPath() {
         String path = System.getProperty("java.class.path");
 
-        path = path.split(";")[0];
+        path = path.split(System.getProperty("path.separator"))[0];
 
         return path;
     }
