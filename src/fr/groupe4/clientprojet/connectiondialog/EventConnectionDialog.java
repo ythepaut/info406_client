@@ -1,6 +1,8 @@
 package fr.groupe4.clientprojet.connectiondialog;
 
+import fr.groupe4.clientprojet.communication.Communication;
 import fr.groupe4.clientprojet.connectiondialog.enums.ConnectionChoice;
+import fr.groupe4.clientprojet.utils.errordialog.ErrorDialog;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -44,7 +46,11 @@ public class EventConnectionDialog extends WindowAdapter implements ActionListen
     public void actionPerformed(ActionEvent e) {
         switch (ConnectionChoice.getEnum(e.getActionCommand())) {
             case OK:
-                //Communication.connect(source.getUsername(), source.getPassword()); TODO: Enlever le commentaire une fois que la méthode existera
+                if (Communication.connect(source.getUsername(), source.getPassword())) {
+                    source.dispose();
+                } else {
+                    new ErrorDialog(source, "Connection non effectuée"); // TODO : adapter le message en fonction de l'erreur
+                }
                 break;
 
             case CANCEL:

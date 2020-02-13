@@ -2,9 +2,13 @@ package fr.groupe4.clientprojet.mainwindow;
 
 import fr.groupe4.clientprojet.mainwindow.panels.centerpanel.CenterPanel;
 import fr.groupe4.clientprojet.mainwindow.panels.leftpanel.LeftPanel;
+import fr.groupe4.clientprojet.utils.Location;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.io.File;
+import java.io.IOException;
 
 /**
  * Fenêtre principale
@@ -21,6 +25,11 @@ public class MainWindow extends JFrame {
 
         // Définition de la fenêtre
         setTitle(title);
+        try {
+            setIconImage(ImageIO.read(new File(Location.getPath() + "/fr/groupe4/clientprojet/data/img/icon.png")));
+        } catch (IOException e) {
+            System.err.println(e.getMessage());
+        }
         setMinimumSize(new Dimension(1400, 800));
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
         setLocation(dim.width/2 - getWidth()/2, dim.height/2 - getHeight()/2);

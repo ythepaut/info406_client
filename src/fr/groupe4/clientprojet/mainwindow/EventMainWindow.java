@@ -1,5 +1,6 @@
 package fr.groupe4.clientprojet.mainwindow;
 
+import fr.groupe4.clientprojet.communication.Communication;
 import fr.groupe4.clientprojet.connectiondialog.ConnectionDialog;
 import fr.groupe4.clientprojet.exitdialog.ExitDialog;
 
@@ -32,9 +33,9 @@ public class EventMainWindow extends WindowAdapter {
      */
     @Override
     public void windowOpened(WindowEvent e) {
-        //if (!Communication.isConnected()) { TODO: Enlever le commentaire une fois que la méthode existera
+        if (!Communication.isConnected()) {
             new ConnectionDialog(source);
-        //}
+        }
     }
 
     /**
