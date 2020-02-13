@@ -46,10 +46,12 @@ public class EventConnectionDialog extends WindowAdapter implements ActionListen
     public void actionPerformed(ActionEvent e) {
         switch (ConnectionChoice.getEnum(e.getActionCommand())) {
             case OK:
-                if (Communication.connect(source.getUsername(), source.getPassword())) {
+                Communication comm = new Communication(true, true).connect(source.getUsername(), source.getPassword()).build();
+
+                if (Communication.isConnected()) {
                     source.dispose();
                 } else {
-                    new ErrorDialog(source, "Connection non effectuée"); // TODO : adapter le message en fonction de l'erreur
+                    new ErrorDialog(source, comm.getMessage()); // TODO : adapter le message en fonction de l'erreur
                 }
                 break;
 

@@ -1,6 +1,8 @@
 package fr.groupe4.clientprojet.communication;
 
 import fr.groupe4.clientprojet.utils.Location;
+
+import org.json.simple.parser.ParseException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -21,8 +23,26 @@ import org.json.simple.parser.JSONParser;
 
 /**
  * Communication, effectue les appels API
- * Les appels peuvent être effectués en statique, bloquant le thread courant,
- * ou en instance pour threadifier la connection
+ * Les appels sont effectués en instance pour thread la connection et éviter de bloquer le thread courant
+ *
+ * TODO: timeout
+ * TODO: connectFromUrl erreur
+ *
+ * Exemple d'utilisation :
+ *
+ *      Communication c = new Communication().connect("username", "password").build();
+ *      c.start();
+ *      c.sleepUntilFinished();
+ *
+ * OU
+ *
+ *      Communication c = new Communication(true, true).connect("username", "password").build();
+ *
+ * System.out.println(c.getStatus()); // success
+ * System.out.println(c.getCode()); // SUCCESS_AUTHENTICATED
+ * System.out.println(c.getMessage()); // Authentication successful and JWT generated.
+ * System.out.println(c.getHtmlCode()); // 200
+ * System.out.println(Communication.isConnected()); // true
  *
  * @author Romain
  */
@@ -33,14 +53,14 @@ public class Communication extends Thread {
     private static final HttpClient httpClient = HttpClient.newBuilder().version(HttpClient.Version.HTTP_2).build();
 
     /**
+     * URL de l'API
+     */
+    private static final String baseApiUrl = "https://api.ythepaut.com/g4/actions/";
+
+    /**
      * Token, null si non connecté
      */
     private static String token = null;
-
-    /**
-     * Client en train de se connecter ou non
-     */
-    private static boolean isConnecting = false;
 
     /**
      * Client en train de charger une ressource ou non
@@ -48,17 +68,132 @@ public class Communication extends Thread {
     private static boolean isLoading = false;
 
     /**
-     * Client ayant finit son chargement ou non, utilise pour les instances threadifiées
+     * Vérifie l'état de la connexion
+     *
+     * @return Connecté ou non
+     */
+    public static boolean isConnected() {
+        return token != null;
+    }
+
+    /**
+     * En cours de chargement ou non
+     *
+     * @return En cours de chargement ou non
+     */
+    public static boolean isLoading() {
+        return isLoading;
+    }
+
+    /**
+     * Admin ou non
+     *
+     * TODO
+     *
+     * @return Admin ou non
+     */
+    public static boolean isAdmin() {
+        return true;
+    }
+
+    /**
+     * Client ayant finit son chargement ou non, utilise pour les instances thread
      */
     private boolean loadingFinished;
 
     /**
-     * Constructeur
+     * Type de communication
+     */
+    private CommunicationType typeOfCommunication;
+
+    /**
+     * URL à envoyer à l'API
+     */
+    private String url;
+
+    /**
+     * Statut de la requête, comme "success" ou "error"
+     */
+    private String status;
+
+    /**
+     * Code de l'API, par exemple "ERROR_INVALID_USER_CREDENTIALS" ou "SUCCESS_AUTHENTICATED"
+     */
+    private String code;
+
+    /**
+     * Code HTML de la requête, comme un code 200 (OK) ou 404 (Not Found)
+     */
+    private int htmlCode;
+
+    /**
+     * Message associé à la requête
+     */
+    private String message;
+
+    /**
+     * Constructeur bien formé ou non
+     */
+    private boolean isWellFormed;
+
+    /**
+     * Se lance tout de suite après le constructeur ou nécessite un comm.start()
+     */
+    private boolean startNow;
+
+    /**
+     * Attend que la requête soit terminée et bloque le thread
+     * Cette variable ne sert que si startNow est à true
+     */
+    private boolean sleepUntilFinished;
+
+    /**
+     * Constructeur de base
      */
     public Communication() {
-        super();
+        isWellFormed = false;
+        startNow = false;
+        sleepUntilFinished = false;
+    }
 
-        this.loadingFinished = false;
+    /**
+     * Constructeur
+     *
+     * @param startNow Lance le thread immédiatement ou non, si non il faudra lancer comm.start()
+     */
+    public Communication(boolean startNow) {
+        this();
+        this.startNow = startNow;
+    }
+
+    /**
+     * Constructeur
+     *
+     * @param startNow Lance le thread
+     * @param sleepUntilFinished Met le thread principal en pause tant que la requête n'est pas terminée
+     */
+    public Communication(boolean startNow, boolean sleepUntilFinished) {
+        this(startNow);
+        this.sleepUntilFinished = sleepUntilFinished;
+    }
+
+    /**
+     * Builder final
+     *
+     * @return Communication bien formée
+     */
+    public Communication build() {
+        isWellFormed = true;
+
+        if (startNow) {
+            start();
+
+            if (sleepUntilFinished) {
+                sleepUntilFinished();
+            }
+        }
+
+        return this;
     }
 
     /**
@@ -66,49 +201,170 @@ public class Communication extends Thread {
      *
      * @param username Nom d'utilisateur
      * @param password Mot de passe
-     * @return Connecté ou non
+     *
+     * @return Communication avec URL
      */
-    public static boolean connect(String username, String password) {
-        isConnecting = true;
-        boolean connected;
+    public Communication connect(String username, String password) {
+        typeOfCommunication = CommunicationType.LOGIN;
+        url = "auth?username=" + username + "&passwd=" + password;
+        return this;
+    }
 
-        // Connexion
+    /**
+     * Retourne le statut de la requête, comme "success" ou "error"
+     *
+     * @return Statut
+     */
+    public String getStatus() {
+        return status;
+    }
+
+    /**
+     * Retourne le code de l'API, par exemple "ERROR_INVALID_USER_CREDENTIALS" ou "SUCCESS_AUTHENTICATED"
+     *
+     * @return Code API
+     */
+    public String getCode() {
+        return code;
+    }
+
+    /**
+     * Retourne le message associé à la requête
+     *
+     * @return Message
+     */
+    public String getMessage() {
+        if (message == null) {
+            return "Erreur inconnue";
+        }
+        else {
+            return message;
+        }
+    }
+
+    /**
+     * Retourne le code HTML de la requête, comme un code 200 (OK) ou 404 (Not Found)
+     *
+     * @return Code HTML
+     */
+    public int getHtmlCode() {
+        return htmlCode;
+    }
+
+    /**
+     * Méthode pour connecter l'instance à son URL
+     */
+    private void connectFromUrl() {
+        // Requête API
         HttpRequest request = HttpRequest.newBuilder()
                 .GET()
-                .uri(URI.create("https://api.ythepaut.com/g4/actions/auth?username=" + username + "&passwd=" + password))
+                .uri(URI.create(baseApiUrl + url))
                 .setHeader("User-Agent", "Java 11 HttpClient Bot")
                 .build();
 
-        try {
-            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+        HttpResponse<String> response = null;
+        // Réponse de l'API
 
-            if (response.statusCode() == 200) {
-                JSONParser parser = new JSONParser();
-                Object parsedResponse = parser.parse(response.body());
+        try {
+            response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+        }
+        catch (IOException e) {
+            System.err.println("URL inconnue");
+        }
+        catch (InterruptedException e) {
+            System.err.println("Requête interrompue");
+        }
+
+        if (response != null) {
+            htmlCode = response.statusCode();
+
+            JSONParser parser = new JSONParser();
+            Object parsedResponse = null;
+
+            try {
+                parsedResponse = parser.parse(response.body());
+            }
+            catch (ParseException e) {
+                System.err.println("Réponse invalide");
+            }
+
+            if (parsedResponse != null) {
                 JSONObject jsonMain = (JSONObject) parsedResponse;
 
-                if (jsonMain.get("status").equals("success")) {
-                    JSONObject jsonContent = (JSONObject) jsonMain.get("content");
+                status = (String) jsonMain.get("status");
+                code = (String) jsonMain.get("code");
+                message = (String) jsonMain.get("message");
 
-                    token = (String) jsonContent.get("token");
-                    connected = true;
-                } else {
-                    // System.out.println(jsonMain.get("status"));
-                    connected = false;
+                Object jsonObject = jsonMain.get("content");
+
+                try {
+                    JSONObject jsonContent = (JSONObject) jsonObject;
+                    doSomethingWithData(jsonContent);
+                }
+                catch (Exception e) {
+                    System.err.println("hmmm");
                 }
             }
-            else {
-                connected = false;
+        }
+
+        loadingFinished = true;
+    }
+
+    /**
+     * Requête terminée ou non
+     *
+     * @return Requête terminée ?
+     */
+    public boolean isFinished() {
+        return loadingFinished;
+    }
+
+    /**
+     * Met en pause le thread actuel le temps que la requête soit effectuée
+     */
+    public void sleepUntilFinished() {
+        while (!isFinished()  ) {
+            try {
+                Thread.sleep(1);
+            }
+            catch (InterruptedException e) {
+                e.printStackTrace();
             }
         }
-        catch (Exception e) {
-            e.printStackTrace();
-            connected = false;
+    }
+
+    /**
+     * Fait quelque chose du contenu de la réponse de l'API
+     *
+     * @param jsonContent Contenu à traiter
+     */
+    private void doSomethingWithData(JSONObject jsonContent) {
+        switch (typeOfCommunication) {
+            case LOGIN:
+                if (status.equals("success")) {
+                    token = (String) jsonContent.get("token");
+                }
+                else {
+                    // Identifiants invalides
+                }
+                break;
+
+            default:
+                break;
         }
+    }
 
-        isConnecting = false;
-
-        return connected;
+    /**
+     * Lance le thread de connexion à l'API
+     */
+    @Override
+    public void run() {
+        if (isWellFormed) {
+            connectFromUrl();
+        }
+        else {
+            System.err.println("Connexion mal formée");
+        }
     }
 
     /**
@@ -117,7 +373,6 @@ public class Communication extends Thread {
      * @param checkOnline Vérifie via l'API ou non
      * @return Connecté ou non
      */
-    @Deprecated
     public boolean isConnected(boolean checkOnline) {
         boolean connected = false;
 
@@ -145,46 +400,13 @@ public class Communication extends Thread {
     }
 
     /**
-     * Vérifie l'état de la connexion
-     *
-     * @return Connecté ou non
-     */
-    public static boolean isConnected() {
-        return token != null;
-    }
-
-    /**
-     * En cours de connexion ou non
-     *
-     * @return En cours de connexion ou non
-     */
-    public static boolean isConnecting() {
-        return isConnecting;
-    }
-
-    /**
-     * En cours de chargement ou non
-     *
-     * @return En cours de chargement ou non
-     */
-    public static boolean isLoading() {
-        return isConnecting || isLoading;
-    }
-
-    /**
-     * Admin ou non
-     *
-     * @return Admin ou non
-     */
-    public static boolean isAdmin() {
-        return true;
-    }
-
-    /**
      * Récupère les tâches
+     *
+     * @deprecated À transformer en instance
      *
      * @return Liste des tâches
      */
+    @Deprecated
     public static TaskList getWeekTasks(int week, int year) throws IOException {
         if (!isConnected()) {
             throw new IOException("Non connecté");
