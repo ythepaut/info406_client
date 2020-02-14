@@ -43,7 +43,9 @@ public class EventConnectionDialog extends WindowAdapter implements ActionListen
     public void actionPerformed(ActionEvent e) {
         switch (ConnectionChoice.getEnum(e.getActionCommand())) {
             case OK:
-                Communication comm = new Communication(true, true).connect(source.getUsername(), source.getPassword()).build();
+                Communication comm = new Communication.CommunicationBuilder(true, true)
+                                                      .connect(source.getUsername(), source.getPassword())
+                                                      .build();
 
                 if (Communication.isConnected()) {
                     source.dispose();

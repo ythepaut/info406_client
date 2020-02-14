@@ -1,5 +1,6 @@
 package fr.groupe4.clientprojet.communication;
 
 public enum CommunicationType {
-    LOGIN
+    LOGIN,
+    CHECK_CONNECTION
 }
