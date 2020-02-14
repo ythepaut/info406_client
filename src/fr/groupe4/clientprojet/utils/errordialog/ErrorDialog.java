@@ -8,10 +8,10 @@ public class ErrorDialog extends JDialog {
     private EventErrorDialog eventErrorDialog;
 
     public ErrorDialog(JDialog owner, String message) {
-        super(owner);
+        super(owner, true);
         this.message = message;
         eventErrorDialog = new EventErrorDialog(this);
-        setSize(350, 80);
+        setSize(510, 80);
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
         setLocation(dim.width/2 - getWidth()/2, dim.height/2 - getHeight()/2);
         setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);

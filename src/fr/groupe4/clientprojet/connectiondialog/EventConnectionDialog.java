@@ -4,10 +4,7 @@ import fr.groupe4.clientprojet.communication.Communication;
 import fr.groupe4.clientprojet.connectiondialog.enums.ConnectionChoice;
 import fr.groupe4.clientprojet.utils.errordialog.ErrorDialog;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import java.awt.event.*;
 
 /**
  * Le listener de la connexion
@@ -58,6 +55,8 @@ public class EventConnectionDialog extends WindowAdapter implements ActionListen
             case CANCEL:
                 source.getOwner().dispose();
                 break;
+
+            default:
         }
 
     }
