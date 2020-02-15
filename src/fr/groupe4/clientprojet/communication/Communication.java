@@ -17,6 +17,8 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.time.Duration;
+import java.time.temporal.Temporal;
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -27,8 +29,7 @@ import org.json.simple.parser.JSONParser;
  *
  * Cette classe utilise le pattern Builder
  *
- * TODO: timeout
- * TODO: Communication comm = new Communication.CommunicationBuilder(true, true).startNow().sleepUntilFinished().connect("username", "password").build();
+ * TODO: Communication comm = new Communication.CommunicationBuilder().startNow().sleepUntilFinished().connect("username", "password").build();
  *
  * Exemple d'utilisation :
  *      Communication comm = new Communication.CommunicationBuilder()
@@ -63,9 +64,29 @@ public class Communication extends Thread {
     private static final String baseApiUrl = "https://api.ythepaut.com/g4/actions/";
 
     /**
-     * Réponse HTML OK
+     * Codes réponse HTML
      */
-    private static final int HTML_OK = 200;
+    private static final int
+            HTML_CUSTOM_DEFAULT_ERROR = -1,
+            HTML_CUSTOM_TIMEOUT = 608,
+            HTML_OK = 200,
+            HTML_BAD_REQUEST = 400,
+            HTML_UNAUTHORIZED = 401,
+            HTML_FORBIDDEN = 403,
+            HTML_NOT_FOUND = 404,
+            HTML_TIMEOUT = 408;
+
+    /**
+     * Statut de la réponse API
+     */
+    private static final String
+            STATUS_SUCCESS = "success",
+            STATUS_ERROR = "error";
+
+    /**
+     * Temps avant de timeout
+     */
+    private static final Duration TIMEOUT_DELAY = Duration.ofSeconds(30);
 
     /**
      * Token, null si non connecté
@@ -168,8 +189,8 @@ public class Communication extends Thread {
          *
          * @return Builder non terminé avec URL
          */
-        public CommunicationBuilder checkConnection() {
-            typeOfCommunication = CommunicationType.CHECK_CONNECTION;
+        public CommunicationBuilder updateConnection() {
+            typeOfCommunication = CommunicationType.UPDATE_CONNECTION;
 
             if (token == null) {
                 url = "verify-token?token=null";
@@ -223,8 +244,12 @@ public class Communication extends Thread {
      * @param builder Builder de la communication
      */
     private Communication(CommunicationBuilder builder) {
-        url = builder.url;
         typeOfCommunication = builder.typeOfCommunication;
+        url = builder.url;
+        status = null;
+        code = null;
+        htmlCode = HTML_CUSTOM_DEFAULT_ERROR;
+        message = null;
 
         if (builder.startNow) {
             start();
@@ -285,6 +310,7 @@ public class Communication extends Thread {
                 .GET()
                 .uri(URI.create(baseApiUrl + url))
                 .setHeader("User-Agent", "Java 11 HttpClient Bot")
+                .timeout(TIMEOUT_DELAY)
                 .build();
 
         HttpResponse<String> response = null;
@@ -294,9 +320,11 @@ public class Communication extends Thread {
             response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
         }
         catch (IOException e) {
-            System.err.println("URL inconnue");
+            htmlCode = HTML_CUSTOM_TIMEOUT;
+            System.err.println("Connection timed out");
         }
         catch (InterruptedException e) {
+            htmlCode = HTML_CUSTOM_DEFAULT_ERROR;
             System.err.println("Requête interrompue");
         }
 
@@ -354,16 +382,22 @@ public class Communication extends Thread {
      *
      * @param jsonObject Contenu à traiter
      */
-    private void doSomethingWithData(Object jsonObject) {
+    private synchronized void doSomethingWithData(Object jsonObject) {
         switch (typeOfCommunication) {
             case LOGIN:
-                if (status.equals("success")) {
+                if (status.equals(STATUS_SUCCESS)) {
                     JSONObject jsonContent = (JSONObject) jsonObject;
                     token = (String) jsonContent.get("token");
                 }
                 break;
 
-            case CHECK_CONNECTION:
+            case UPDATE_CONNECTION:
+                if (htmlCode == HTML_OK) {
+                    // OK
+                }
+                else if (htmlCode == HTML_UNAUTHORIZED) {
+                    token = null;
+                }
                 break;
 
             default:
