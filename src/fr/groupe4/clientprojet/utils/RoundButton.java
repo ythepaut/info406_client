@@ -6,10 +6,26 @@ import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 
+/**
+ * Permet de créer des boutons rond avec ou sans image
+ * Sans image -> un contour rond noir autour du bouton
+ * Avec image -> l'image centrée sur le boutons, sans texte
+ */
 public class RoundButton extends JButton {
+    /**
+     * Si le bouton est sélectionné ou pas
+     */
     private boolean selected;
+    /**
+     * L'image du bouton (pour bouton avec image)
+     */
     private Image image;
 
+    /**
+     * Constructeur du bouton sans image
+     *
+     * @param text : le texte du bouton
+     */
     public RoundButton(String text) {
         super(text);
 
@@ -21,6 +37,11 @@ public class RoundButton extends JButton {
         selected = false;
     }
 
+    /**
+     * Constructeur du bouton avec image
+     *
+     * @param file : L'image du bouton
+     */
     public RoundButton(File file) {
         this(" ");
         try {
@@ -30,11 +51,21 @@ public class RoundButton extends JButton {
         }
     }
 
+    /**
+     * Rend le bouton sélectionné ou pas
+     *
+     * @param b : sélectionné ?
+     */
     public void setSelected(boolean b) {
         this.selected = b;
         repaint();
     }
 
+    /**
+     * Dessine les composants du bouton
+     *
+     * @param g : Graphics
+     */
     @Override
     protected void paintComponent(Graphics g) {
         Graphics2D g2 = (Graphics2D) g;

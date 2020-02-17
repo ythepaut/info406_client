@@ -5,9 +5,20 @@ import fr.groupe4.clientprojet.exitdialog.enums.ExitChoice;
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * Fenêtre de confirmation pour la sortie du logiciel
+ */
 public class ExitDialog extends JDialog {
+    /**
+     * Le listener du dialog
+     */
     private EventExitDialog eventExitDialog;
 
+    /**
+     * Le constructeur
+     *
+     * @param owner : la frame à laquelle appartient le dialog
+     */
     public ExitDialog(JFrame owner) {
         super(owner, "Êtes-vous sûr de vouloir quitter ?", true);
 
@@ -16,7 +27,9 @@ public class ExitDialog extends JDialog {
         setVisible(true);
     }
 
-
+    /**
+     * Dessine le contenu du dialog
+     */
     private void drawContent() {
         eventExitDialog = new EventExitDialog(this);
 
