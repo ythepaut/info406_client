@@ -478,7 +478,7 @@ public class Communication extends Observable implements Runnable {
         TaskList tasks = new TaskList();
 
         try {
-            File fileXml = new File(Location.getPath() + "/fr/groupe4/clientprojet/data/XML/calendar.xml");
+            File fileXml = new File(Location.getPath() + "/data/XML/calendar.xml");
             // Récupération du XML
 
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
