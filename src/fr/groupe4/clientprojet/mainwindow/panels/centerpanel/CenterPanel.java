@@ -1,6 +1,7 @@
 package fr.groupe4.clientprojet.mainwindow.panels.centerpanel;
 
 import javax.swing.*;
+import javax.swing.border.MatteBorder;
 import java.awt.*;
 
 import fr.groupe4.clientprojet.calendar.*;
@@ -108,13 +109,33 @@ public class CenterPanel extends JPanel {
      * Dessine la vue 'profil'
      */
     private void drawUser() {
-        setLayout(new BorderLayout());
+        setLayout(new GridLayout(2, 1));
 
-        // Titre
-        JPanel titlePanel = new JPanel(new GridLayout(1, 2));
-        titlePanel.add(new JLabel(view));
+        // Partie supérieure
+        JPanel topPanel = new JPanel(new GridLayout(1, 2));
+        JPanel descripPanel = new JPanel(new GridLayout(1, 2));
+        descripPanel.add(new JLabel("Image"));
+        JPanel namePanel = new JPanel(new GridLayout(2, 1));
+        namePanel.add(new JLabel("Name"));
+        namePanel.add(new JLabel("Description"));
+        descripPanel.add(namePanel);
+        descripPanel.setBorder(new MatteBorder(0, 0, 0, 2, Color.BLACK));
+        topPanel.add(descripPanel);
+        topPanel.add(new JLabel("identifiant"));
 
-        add(titlePanel, BorderLayout.NORTH);
+        add(topPanel);
+
+        // Partie inférieure (fil d'actualité)
+        final int nbNews = 5;
+        JPanel bottomPanel = new JPanel(new BorderLayout());
+        bottomPanel.add(new JLabel("Fil d'actualité :"), BorderLayout.NORTH);
+        JPanel newsPanel = new JPanel(new GridLayout(nbNews, 1));
+        for (int i = 0; i < nbNews; i++) {
+            newsPanel.add(new JLabel("TODAY : " + i));
+        }
+        bottomPanel.add(newsPanel, BorderLayout.CENTER);
+        add(bottomPanel);
+
     }
 
     /**

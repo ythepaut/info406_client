@@ -35,6 +35,7 @@ public class LeftPanel extends JPanel {
      * le début de la liste des projets
      */
     private int nbProjet, debutListe = 0;
+    private boolean first = true;
 
     /**
      * Le constructeur
@@ -92,7 +93,10 @@ public class LeftPanel extends JPanel {
         button = new RoundButton(new File(Location.getPath() + "/fr/groupe4/clientprojet/data/img/user.png"));
         buttons.add(button);
         button.setActionCommand(CenterPanel.USER);
-        button.setSelected(true);
+        if (first) {
+            button.setSelected(true);
+            first = false;
+        }
         button.addActionListener(eventLeftPanel);
         button.setFont(buttonFont);
         bottomPanel.add(button, c);
