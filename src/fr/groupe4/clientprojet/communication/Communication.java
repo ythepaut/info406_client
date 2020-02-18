@@ -2,6 +2,7 @@ package fr.groupe4.clientprojet.communication;
 
 import fr.groupe4.clientprojet.utils.Location;
 
+import org.json.simple.JSONArray;
 import org.json.simple.parser.ParseException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -18,7 +19,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
-import java.time.temporal.Temporal;
+import java.util.HashMap;
 import java.util.Observable;
 
 import org.json.simple.JSONObject;
@@ -31,6 +32,10 @@ import org.json.simple.parser.JSONParser;
  * Cette classe utilise le pattern Builder
  *
  * TODO: Communication comm = new Communication.CommunicationBuilder().startNow().sleepUntilFinished().connect("username", "password").build();
+ * TODO: liste de projets
+ * TODO: POST
+ * TODO: JWT.io
+ * TODO: fonction qui génère l'URL
  *
  * Exemple d'utilisation :
  *      Communication comm = new Communication.CommunicationBuilder()
@@ -202,7 +207,22 @@ public class Communication extends Observable implements Runnable {
 
             return this;
         }
+
+        public CommunicationBuilder getProjectList() {
+            typeOfCommunication = CommunicationType.LIST_PROJECTS;
+
+            if (token == null) {
+                url = "project/list?token=null";
+            }
+            else {
+                url = "project/list?token=" + token;
+            }
+
+            return this;
+        }
     }
+
+    private HashMap<Object, Object> results;
 
     /**
      * Client ayant finit son chargement ou non
@@ -245,6 +265,7 @@ public class Communication extends Observable implements Runnable {
      * @param builder Builder de la communication
      */
     private Communication(CommunicationBuilder builder) {
+        results = new HashMap<>();
         typeOfCommunication = builder.typeOfCommunication;
         url = builder.url;
         status = null;
@@ -370,7 +391,7 @@ public class Communication extends Observable implements Runnable {
      * Met en pause le thread actuel le temps que la requête soit effectuée
      */
     public void sleepUntilFinished() {
-        while (!isFinished()  ) {
+        while (!isFinished()) {
             try {
                 Thread.sleep(1);
             }
@@ -396,14 +417,29 @@ public class Communication extends Observable implements Runnable {
 
             case UPDATE_CONNECTION:
                 if (htmlCode == HTML_OK) {
-                    // OK
+                    results.put("ok", true);
                 }
                 else if (htmlCode == HTML_UNAUTHORIZED) {
-                    token = null;
+                    results.put("ok", false);
+                }
+                else {
+                    results.put("ok", false);
                 }
                 break;
 
+            case LIST_PROJECTS:
+                JSONObject jsonContent = (JSONObject) jsonObject;
+                JSONArray projects = (JSONArray) jsonContent.get("projects");
+
+                for (Object projectObject : projects) {
+                    JSONObject jsonProject = (JSONObject) projectObject;
+                    // jsonProject.keys();
+                }
+
+                break;
+
             default:
+                System.err.println("Type de communication non reconnu");
                 break;
         }
     }
