@@ -19,6 +19,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
 import java.time.temporal.Temporal;
+import java.util.Observable;
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -52,7 +53,7 @@ import org.json.simple.parser.JSONParser;
  *
  * @author Romain
  */
-public class Communication extends Thread {
+public class Communication extends Observable implements Runnable {
     /**
      * Client HTTP pour les requètes
      */
@@ -251,8 +252,10 @@ public class Communication extends Thread {
         htmlCode = HTML_CUSTOM_DEFAULT_ERROR;
         message = null;
 
+        Thread t = new Thread(this);
+
         if (builder.startNow) {
-            start();
+            t.start();
 
             if (builder.sleepUntilFinished) {
                 sleepUntilFinished();
