@@ -3,6 +3,7 @@ package fr.groupe4.clientprojet.connectiondialog;
 import fr.groupe4.clientprojet.communication.Communication;
 import fr.groupe4.clientprojet.connectiondialog.enums.ConnectionChoice;
 import fr.groupe4.clientprojet.utils.errordialog.ErrorDialog;
+import fr.groupe4.clientprojet.utils.loaddialog.LoadDialog;
 
 import java.awt.event.*;
 
@@ -43,9 +44,10 @@ public class EventConnectionDialog extends WindowAdapter implements ActionListen
     public void actionPerformed(ActionEvent e) {
         switch (ConnectionChoice.getEnum(e.getActionCommand())) {
             case OK:
-                Communication comm = new Communication.CommunicationBuilder(true, true)
+                Communication comm = new Communication.CommunicationBuilder(true)
                                                       .connect(source.getUsername(), source.getPassword())
                                                       .build();
+                new LoadDialog(source, comm);
 
                 if (Communication.isConnected()) {
                     source.dispose();

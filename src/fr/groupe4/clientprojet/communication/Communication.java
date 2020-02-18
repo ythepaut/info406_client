@@ -421,6 +421,9 @@ public class Communication extends Observable implements Runnable {
         }
 
         loadingFinished = true;
+
+        setChanged();
+        notifyObservers();
     }
 
     /**
