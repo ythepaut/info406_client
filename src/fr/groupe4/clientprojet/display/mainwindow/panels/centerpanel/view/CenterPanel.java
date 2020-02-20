@@ -3,15 +3,18 @@ package fr.groupe4.clientprojet.display.mainwindow.panels.centerpanel.view;
 import javax.swing.*;
 import javax.swing.border.MatteBorder;
 import java.awt.*;
+import java.util.Observable;
+import java.util.Observer;
 
 import fr.groupe4.clientprojet.calendar.*;
+import fr.groupe4.clientprojet.communication.Communication;
 import fr.groupe4.clientprojet.display.view.RoundButton;
 import fr.groupe4.clientprojet.display.mainwindow.panels.centerpanel.controller.EventCenterPanel;
 
 /**
  * Créé le panel du centre de la fenêtre
  */
-public class CenterPanel extends JPanel {
+public class CenterPanel extends JPanel implements Observer {
     /**
      * Variables statiques destinées à disparaître au profit d'une énumeration
      */
@@ -117,12 +120,12 @@ public class CenterPanel extends JPanel {
         JPanel descripPanel = new JPanel(new GridLayout(1, 2));
         descripPanel.add(new JLabel("Image"));
         JPanel namePanel = new JPanel(new GridLayout(2, 1));
-        namePanel.add(new JLabel("Name"));
-        namePanel.add(new JLabel("Description"));
+        namePanel.add(new JLabel("Name : \n"));
+        namePanel.add(new JLabel("Description : \n"));
         descripPanel.add(namePanel);
         descripPanel.setBorder(new MatteBorder(0, 0, 0, 2, Color.BLACK));
         topPanel.add(descripPanel);
-        topPanel.add(new JLabel("identifiant"));
+        topPanel.add(new JLabel("Mot de passe"));
 
         add(topPanel);
 
@@ -274,5 +277,16 @@ public class CenterPanel extends JPanel {
         revalidate();
         repaint();
         drawContent();
+    }
+
+    /**
+     * Redessine le panel quand le modèle change
+     *
+     * @param observable
+     * @param o
+     */
+    @Override
+    public void update(Observable observable, Object o) {
+        redraw();
     }
 }

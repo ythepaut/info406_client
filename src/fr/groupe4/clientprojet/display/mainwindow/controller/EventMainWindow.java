@@ -27,18 +27,6 @@ public class EventMainWindow extends WindowAdapter {
     }
 
     /**
-     * Quand la fenêtre est ouverte
-     *
-     * @param e : l'event
-     */
-    @Override
-    public void windowOpened(WindowEvent e) {
-        if (!Communication.isConnected()) {
-            new ConnectionDialog(source);
-        }
-    }
-
-    /**
      * Quand la fenêtre est fermée
      *
      * @param e : l'event

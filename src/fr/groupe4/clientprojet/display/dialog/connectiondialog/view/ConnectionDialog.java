@@ -26,11 +26,10 @@ public class ConnectionDialog extends JDialog {
 
     /**
      * Le constructeur
-     *
-     * @param owner : la frame qui appelle le dialog
      */
-    public ConnectionDialog(JFrame owner) {
-        super(owner, "Connexion", true);
+    public ConnectionDialog() {
+        setTitle("Connexion");
+        setModal(true);
         setSize(250, 350);
         setResizable(false);
         eventConnectionDialog = new EventConnectionDialog(this);
