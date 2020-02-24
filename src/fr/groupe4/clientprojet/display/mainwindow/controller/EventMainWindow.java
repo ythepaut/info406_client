@@ -1,10 +1,8 @@
 package fr.groupe4.clientprojet.display.mainwindow.controller;
 
-import fr.groupe4.clientprojet.communication.Communication;
-import fr.groupe4.clientprojet.display.dialog.connectiondialog.view.ConnectionDialog;
 import fr.groupe4.clientprojet.display.dialog.exitdialog.view.ExitDialog;
+import fr.groupe4.clientprojet.display.mainwindow.view.MainWindow;
 
-import javax.swing.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
@@ -15,14 +13,14 @@ public class EventMainWindow extends WindowAdapter {
     /**
      * La frame dont viennent les appels
      */
-    private JFrame source;
+    private MainWindow source;
 
     /**
      * Constructeur
      *
      * @param source : la frame dont viennent les appels
      */
-    public EventMainWindow(JFrame source) {
+    public EventMainWindow(MainWindow source) {
         this.source = source;
     }
 
@@ -36,4 +34,14 @@ public class EventMainWindow extends WindowAdapter {
         new ExitDialog(source);
     }
 
+    /**
+     * Quand la fenêtre est ouverte
+     *
+     * @param e : l'event
+     */
+    @Override
+    public void windowOpened(WindowEvent e) {
+        source.getCenterPanel().redraw();
+        source.getLeftPanel().redraw();
+    }
 }

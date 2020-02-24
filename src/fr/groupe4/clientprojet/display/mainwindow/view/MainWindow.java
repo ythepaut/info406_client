@@ -15,6 +15,8 @@ import java.io.IOException;
  * Fenêtre principale
  */
 public class MainWindow extends JFrame {
+    private CenterPanel centerPanel;
+    private LeftPanel leftPanel;
 
     /**
      * Constructeur de la fenêtre
@@ -48,8 +50,17 @@ public class MainWindow extends JFrame {
      */
     private void drawContent() {
         setLayout(new BorderLayout());
-        CenterPanel centerPanel = new CenterPanel(CenterPanel.USER); // <!> Dans LeftPanel, le bouton user est initialisé comme selected <!>
-        add(new LeftPanel(centerPanel), BorderLayout.WEST);
+        centerPanel = new CenterPanel(CenterPanel.USER); // <!> Dans LeftPanel, le bouton user est initialisé comme selected <!>
+        leftPanel = new LeftPanel(centerPanel);
+        add(leftPanel, BorderLayout.WEST);
         add(centerPanel, BorderLayout.CENTER);
+    }
+
+    public CenterPanel getCenterPanel() {
+        return centerPanel;
+    }
+
+    public LeftPanel getLeftPanel() {
+        return leftPanel;
     }
 }
