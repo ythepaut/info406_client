@@ -1,15 +1,18 @@
 package fr.groupe4.clientprojet.display.mainwindow.panels.centerpanel.view;
 
 import javax.swing.*;
+import javax.swing.border.CompoundBorder;
+import javax.swing.border.EmptyBorder;
 import javax.swing.border.MatteBorder;
 import java.awt.*;
 import java.util.Observable;
 import java.util.Observer;
 
 import fr.groupe4.clientprojet.calendar.*;
-import fr.groupe4.clientprojet.communication.Communication;
+import fr.groupe4.clientprojet.display.mainwindow.panels.userpanel.view.UserPanel;
 import fr.groupe4.clientprojet.display.view.RoundButton;
 import fr.groupe4.clientprojet.display.mainwindow.panels.centerpanel.controller.EventCenterPanel;
+import fr.groupe4.clientprojet.utils.Location;
 
 /**
  * Créé le panel du centre de la fenêtre
@@ -113,33 +116,8 @@ public class CenterPanel extends JPanel implements Observer {
      * Dessine la vue 'profil'
      */
     private void drawUser() {
-        setLayout(new GridLayout(2, 1));
-
-        // Partie supérieure
-        JPanel topPanel = new JPanel(new GridLayout(1, 2));
-        JPanel descripPanel = new JPanel(new GridLayout(1, 2));
-        descripPanel.add(new JLabel("Image"));
-        JPanel namePanel = new JPanel(new GridLayout(2, 1));
-        namePanel.add(new JLabel("Name : \n"));
-        namePanel.add(new JLabel("Description : \n"));
-        descripPanel.add(namePanel);
-        descripPanel.setBorder(new MatteBorder(0, 0, 0, 2, Color.BLACK));
-        topPanel.add(descripPanel);
-        topPanel.add(new JLabel("Mot de passe"));
-
-        add(topPanel);
-
-        // Partie inférieure (fil d'actualité)
-        final int nbNews = 5;
-        JPanel bottomPanel = new JPanel(new BorderLayout());
-        bottomPanel.add(new JLabel("Fil d'actualité :"), BorderLayout.NORTH);
-        JPanel newsPanel = new JPanel(new GridLayout(nbNews, 1));
-        for (int i = 0; i < nbNews; i++) {
-            newsPanel.add(new JLabel("TODAY : " + i));
-        }
-        bottomPanel.add(newsPanel, BorderLayout.CENTER);
-        add(bottomPanel);
-
+        setLayout(new BorderLayout());
+        add(new UserPanel(), BorderLayout.CENTER);
     }
 
     /**
@@ -282,8 +260,8 @@ public class CenterPanel extends JPanel implements Observer {
     /**
      * Redessine le panel quand le modèle change
      *
-     * @param observable
-     * @param o
+     * @param observable : Le modèle qu'on observe
+     * @param o : Un objet
      */
     @Override
     public void update(Observable observable, Object o) {
