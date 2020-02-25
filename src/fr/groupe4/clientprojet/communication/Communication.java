@@ -1,17 +1,9 @@
 package fr.groupe4.clientprojet.communication;
 
-import fr.groupe4.clientprojet.utils.Location;
-
-import org.json.simple.JSONArray;
+import fr.groupe4.clientprojet.communication.enums.CommunicationStatus;
+import fr.groupe4.clientprojet.communication.enums.CommunicationType;
+import fr.groupe4.clientprojet.communication.enums.HTMLCode;
 import org.json.simple.parser.ParseException;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import java.io.File;
 
 import java.io.IOException;
 import java.net.URI;
@@ -21,43 +13,43 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
-import java.util.*;
+
+import java.util.HashMap;
+import java.util.Observable;
+import java.util.Map;
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
-import static fr.groupe4.clientprojet.communication.CommunicationType.*;
-import static fr.groupe4.clientprojet.communication.HTMLCode.*;
+import static fr.groupe4.clientprojet.communication.enums.CommunicationType.*;
+import static fr.groupe4.clientprojet.communication.enums.HTMLCode.*;
 
 /**
- * Communication, effectue les appels API
- * Les appels sont effectués en instance pour thread la connection et éviter de bloquer le thread courant
- *
- * Cette classe utilise le pattern Builder
- *
- * TODO: JWT.io
- * TODO: fonction qui génère l'URL
- *
- * Exemple d'utilisation :
- *      Communication comm = new Communication.CommunicationBuilder()
- *                                            .connect("username", "password")
- *                                            .build();
- *      comm.start();
- *      comm.sleepUntilFinished();
- *
- * Autre exemple :
- *      Communication comm = new Communication.CommunicationBuilder()
- *                                            .startNow()
- *                                            .sleepUntilFinished()
- *                                            .connect("username", "password")
- *                                            .build();
- *
- * Résultats de la connexion :
- *      comm.getStatus(); // success
- *      comm.getCode(); // SUCCESS_AUTHENTICATED
- *      comm.getMessage(); // Authentication successful and JWT generated.
- *      comm.getHtmlCode(); // 200
- *      Communication.isConnected(); // true
+ * Communication, effectue les appels API <br>
+ * Les appels sont effectués en instance pour thread la connection et éviter de bloquer le thread courant <br>
+ * <br>
+ * Cette classe utilise le pattern Builder <br>
+ * <br>
+ * Exemple d'utilisation : <br><code>
+ *      Communication comm = Communication.builder() <br>
+ *                                        .connect("username", "password") <br>
+ *                                        .build(); <br>
+ *      comm.start(); <br>
+ *      comm.sleepUntilFinished(); </code><br>
+ * <br>
+ * Autre exemple : <br><code>
+ *      Communication comm = Communication.builder() <br>
+ *                                        .startNow() <br>
+ *                                        .sleepUntilFinished() <br>
+ *                                        .connect("username", "password") <br>
+ *                                        .build();</code><br>
+ * <br>
+ * Résultats de la connexion : <br>
+ *      comm.getStatus(); // success <br>
+ *      comm.getCode(); // SUCCESS_AUTHENTICATED <br>
+ *      comm.getMessage(); // Authentication successful and JWT generated. <br>
+ *      comm.getHtmlCode(); // 200 <br>
+ *      Communication.isConnected(); // true <br>
  *
  * @author Romain
  */
@@ -73,31 +65,28 @@ public class Communication extends Observable implements Runnable {
     private static final String baseApiUrl = "https://api.ythepaut.com/g4/actions/";
 
     /**
-     * Statut de la réponse API
-     */
-    private static final String
-            STATUS_SUCCESS = "success",
-            STATUS_ERROR = "error";
-
-    /**
      * Temps avant de timeout
      */
     private static final Duration TIMEOUT_DELAY = Duration.ofSeconds(30);
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     /**
      * Token utilisé pour les requêtes, null si non connecté
      */
-    private static volatile String requestToken = null;
+    protected static volatile String requestToken = null;
 
     /**
      * Token utilisé pour renouveler requestToken
      */
-    private static volatile String renewToken = null;
+    protected static volatile String renewToken = null;
 
     /**
      * Si les threads ont le droit de communiquer ou non
      */
     private static volatile boolean communicationAllowed = true;
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     /**
      * Vérifie l'état de la connexion
@@ -108,6 +97,9 @@ public class Communication extends Observable implements Runnable {
         return requestToken != null;
     }
 
+    /**
+     * Quitte tous les threads
+     */
     public static void exit() {
         communicationAllowed = false;
     }
@@ -138,120 +130,21 @@ public class Communication extends Observable implements Runnable {
     /**
      * Builder de la communication
      */
-    public static class CommunicationBuilder {
-        /**
-         * Type de communication
-         */
-        private CommunicationType typeOfCommunication;
-
-        /**
-         * URL à envoyer à l'API
-         */
-        private String url = null;
-
-        /**
-         * Se lance tout de suite après le constructeur ou nécessite un comm.start()
-         */
-        private boolean startNow;
-
-        /**
-         * Attend que la requête soit terminée et bloque le thread
-         * Cette variable ne sert que si startNow est à true
-         */
-        private boolean sleepUntilFinished;
-
-        /**
-         * Constructeur n'envoyant pas automatiquement l'appel API
-         */
-        public CommunicationBuilder() {
-            startNow = false;
-            sleepUntilFinished = false;
-            requestData = new HashMap<>();
-        }
-
-        private HashMap<String, String> requestData;;
-
-        /**
-         * Lance la communication tout de suite
-         *
-         * @return Reste du builder
-         */
-        public CommunicationBuilder startNow() {
-            startNow = true;
-            return this;
-        }
-
-        /**
-         * Attend que la communication soit terminée
-         *
-         * @return Reste du builder
-         */
-        public CommunicationBuilder sleepUntilFinished() {
-            sleepUntilFinished = true;
-            return this;
-        }
-
-        /**
-         * Builder final
-         *
-         * @return Communication bien formée
-         */
-        public Communication build() {
-            return new Communication(this);
-        }
-
-        /**
-         * Connecte le client au serveur
-         *
-         * @param username Nom d'utilisateur
-         * @param password Mot de passe
-         *
-         * @return Builder non terminé avec URL
-         */
-        public CommunicationBuilder connect(String username, String password) {
-            typeOfCommunication = LOGIN;
-            url = "auth/connect";
-            requestData.put("username", username);
-            requestData.put("passwd", password);
-            return this;
-        }
-
-        public CommunicationBuilder checkConnection() {
-            typeOfCommunication = CHECK_CONNECTION;
-            url = "auth/verify";
-            requestData.put("token", requestToken);
-            return this;
-        }
-
-        /**
-         * Vérifie la connexion
-         *
-         * @return Builder non terminé avec URL
-         */
-        public CommunicationBuilder updateConnection() {
-            typeOfCommunication = UPDATE_CONNECTION;
-            url = "auth/renew";
-            requestData.put("token", renewToken);
-            return this;
-        }
-
-        public CommunicationBuilder getProjectList() {
-            typeOfCommunication = LIST_PROJECTS;
-
-            url = "project/list";
-
-            requestData.put("token", requestToken);
-
-            return this;
-        }
+    public static CommunicationBuilder builder() {
+        return new CommunicationBuilder();
     }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     /**
      * Data de la requête
      */
     private HashMap<String, String> requestData;
 
-    private Object communicationResult;
+    /**
+     * Résultat de la communication
+     */
+    protected Object communicationResult;
 
     /**
      * Client ayant finit son chargement ou non
@@ -261,7 +154,7 @@ public class Communication extends Observable implements Runnable {
     /**
      * Type de communication
      */
-    private CommunicationType typeOfCommunication;
+    protected CommunicationType typeOfCommunication;
 
     /**
      * URL à envoyer à l'API
@@ -271,7 +164,7 @@ public class Communication extends Observable implements Runnable {
     /**
      * Statut de la requête, comme "success" ou "error"
      */
-    private String status;
+    protected CommunicationStatus status;
 
     /**
      * Code de l'API, par exemple "ERROR_INVALID_USER_CREDENTIALS" ou "SUCCESS_AUTHENTICATED"
@@ -281,19 +174,21 @@ public class Communication extends Observable implements Runnable {
     /**
      * Code HTML de la requête, comme un code 200 (OK) ou 404 (Not Found)
      */
-    private HTMLCode htmlCode;
+    protected HTMLCode htmlCode;
 
     /**
      * Message associé à la requête
      */
     private String message;
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     /**
      * Constructeur de la Communication
      *
      * @param builder Builder de la communication
      */
-    private Communication(CommunicationBuilder builder) {
+    protected Communication(CommunicationBuilder builder) {
         requestData = builder.requestData;
         communicationResult = null;
         typeOfCommunication = builder.typeOfCommunication;
@@ -320,7 +215,7 @@ public class Communication extends Observable implements Runnable {
      * @return Statut
      */
     public String getStatus() {
-        return status;
+        return status.toString();
     }
 
     /**
@@ -355,9 +250,25 @@ public class Communication extends Observable implements Runnable {
         return htmlCode.getCode();
     }
 
+    /**
+     * Renvoie le résultat de l'action
+     *
+     * @return Résultat
+     */
     public Object getResult() {
         return communicationResult;
     }
+
+    /**
+     * Requête terminée ou non
+     *
+     * @return Requête terminée ?
+     */
+    public boolean isFinished() {
+        return loadingFinished;
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     /**
      * Méthode pour connecter l'instance à son URL
@@ -402,24 +313,15 @@ public class Communication extends Observable implements Runnable {
             if (parsedResponse != null) {
                 JSONObject jsonMain = (JSONObject) parsedResponse;
 
-                status = (String) jsonMain.get("status");
+                status = CommunicationStatus.fromString((String) jsonMain.get("status"));
                 code = (String) jsonMain.get("code");
                 message = (String) jsonMain.get("message");
 
                 Object jsonObject = jsonMain.get("content");
 
-                doSomethingWithData(this, jsonObject);
+                JsonTreatment.doSomethingWithData(this, jsonObject);
             }
         }
-    }
-
-    /**
-     * Requête terminée ou non
-     *
-     * @return Requête terminée ?
-     */
-    public boolean isFinished() {
-        return loadingFinished;
     }
 
     /**
@@ -433,88 +335,6 @@ public class Communication extends Observable implements Runnable {
             catch (InterruptedException e) {
                 e.printStackTrace();
             }
-        }
-    }
-
-    /**
-     * Fait quelque chose du contenu de la réponse de l'API
-     *
-     * @param comm Communication à traiter
-     * @param jsonObject Contenu à traiter
-     */
-    private static synchronized void doSomethingWithData(Communication comm, Object jsonObject) {
-        switch (comm.typeOfCommunication) {
-            case LOGIN:
-                if (comm.status.equals(STATUS_SUCCESS)) {
-                    JSONObject jsonContent = (JSONObject) jsonObject;
-
-                    JSONObject jsonRequestToken = (JSONObject) jsonContent.get("requests-token");
-                    requestToken = (String) jsonRequestToken.get("value");
-
-                    JSONObject jsonRenewToken = (JSONObject) jsonContent.get("renew-token");
-                    renewToken = (String) jsonRenewToken.get("value");
-                }
-                break;
-
-            case CHECK_CONNECTION:
-                if (comm.htmlCode == HTML_UNAUTHORIZED) {
-                    requestToken = null;
-                }
-                else {
-                    if (comm.htmlCode == HTML_OK) {
-                        // Tout va bien
-                    }
-                    else {
-                        System.err.println("Réponse inconnue");
-                    }
-                }
-                break;
-
-            case UPDATE_CONNECTION:
-                if (comm.htmlCode == HTML_OK) {
-                    JSONObject jsonContent = (JSONObject) jsonObject;
-
-                    System.out.println(jsonContent.toString());
-                }
-                else if (comm.htmlCode == HTML_FORBIDDEN) {
-                    System.err.println("Update interdite !?");
-                }
-                else {
-                    System.err.println("Update malformée !?");
-                }
-                break;
-
-            case LIST_PROJECTS:
-                JSONObject jsonContent = (JSONObject) jsonObject;
-                JSONArray projects = (JSONArray) jsonContent.get("projects");
-
-                ArrayList<HashMap<String, Object>> projectsArray = new ArrayList<>();
-
-                for (Object projectObject : projects) {
-                    JSONObject jsonProjectSet = (JSONObject) projectObject;
-                    Object[] keySet = jsonProjectSet.keySet().toArray();
-                    String key = String.valueOf(keySet[0]);
-
-                    JSONObject jsonProject = (JSONObject) jsonProjectSet.get(key);
-
-                    HashMap<String, Object> projectArray = new HashMap<>();
-
-                    projectArray.put("id", jsonProject.get("id"));
-                    projectArray.put("name", jsonProject.get("name"));
-                    projectArray.put("description", jsonProject.get("description"));
-                    projectArray.put("deadline", jsonProject.get("deadline"));
-                    projectArray.put("status", jsonProject.get("status"));
-
-                    projectsArray.add(projectArray);
-                }
-
-                comm.communicationResult = projectsArray;
-
-                break;
-
-            default:
-                System.err.println("Type de communication non reconnu");
-                break;
         }
     }
 
@@ -544,7 +364,7 @@ public class Communication extends Observable implements Runnable {
                 else {
                     // Sinon on vérifie le token
 
-                    Communication checkComm = new Communication.CommunicationBuilder()
+                    Communication checkComm = new CommunicationBuilder()
                             .startNow()
                             .sleepUntilFinished()
                             .checkConnection()
@@ -553,7 +373,7 @@ public class Communication extends Observable implements Runnable {
                     if (requestToken == null) {
                         // Si le token est périmé on le recrée
 
-                        Communication updateComm = new Communication.CommunicationBuilder()
+                        Communication updateComm = new CommunicationBuilder()
                                 .startNow()
                                 .sleepUntilFinished()
                                 .updateConnection()
@@ -580,56 +400,5 @@ public class Communication extends Observable implements Runnable {
 
         setChanged();
         notifyObservers();
-    }
-
-    /**
-     * Récupère les tâches
-     *
-     * @deprecated À transformer en instance
-     *
-     * @return Liste des tâches
-     */
-    @Deprecated
-    public static TaskList getWeekTasks(int week, int year) throws IOException {
-        if (!isConnected()) {
-            throw new IOException("Non connecté");
-        }
-
-        TaskList tasks = new TaskList();
-
-        try {
-            File fileXml = new File(Location.getPath() + "/data/XML/calendar.xml");
-            // Récupération du XML
-
-            DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-            Document doc = dBuilder.parse(fileXml);
-
-            doc.getDocumentElement().normalize();
-
-            NodeList nodeList = doc.getElementsByTagName("calendar");
-            // Liste des nodes XML
-
-            for (int i=0; i<nodeList.getLength(); i++) {
-                Node node = nodeList.item(i);
-
-                if (node.getNodeType() == Node.ELEMENT_NODE) {
-                    // Création de la tâche à partir du node actuel
-
-                    Element element = (Element) node;
-
-                    Task task = new Task(element.getAttribute("id"));
-
-                    task.setDescription(element.getElementsByTagName("description").item(0).getTextContent());
-
-                    tasks.add(task);
-                }
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return tasks;
     }
 }

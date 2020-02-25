@@ -1,4 +1,4 @@
-package fr.groupe4.clientprojet.communication;
+package fr.groupe4.clientprojet.communication.enums;
 
 /**
  * Codes réponse HTML
@@ -13,16 +13,35 @@ public enum HTMLCode {
     HTML_NOT_FOUND(404),
     HTML_TIMEOUT(408);
 
+    /**
+     * Équivalent entier
+     */
     private int code;
 
+    /**
+     * Constructeur
+     *
+     * @param code Code associé
+     */
     HTMLCode(int code) {
         this.code = code;
     }
 
+    /**
+     * Retourne le code associé
+     *
+     * @return Code
+     */
     public int getCode() {
         return code;
     }
 
+    /**
+     * Renvoie l'énum associée à un code entier
+     *
+     * @param code Code
+     * @return Énum
+     */
     public static HTMLCode fromInt(int code) {
         HTMLCode[] codes = HTMLCode.values();
 

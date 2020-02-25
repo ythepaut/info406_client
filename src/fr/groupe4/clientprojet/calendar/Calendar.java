@@ -5,21 +5,16 @@ import java.util.ArrayList;
 import java.util.Observable;
 
 import fr.groupe4.clientprojet.communication.Communication;
-import fr.groupe4.clientprojet.communication.TaskList;
 
 /**
  * Calendrier, modèle
  */
 public class Calendar extends Observable {
-    TaskList trueTasks;
+    Object trueTasks;
 
     public Calendar(int week, int year) {
-        try {
-            this.trueTasks = Communication.getWeekTasks(week, year);
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-        }
+        // this.trueTasks = Communication.getWeekTasks(week, year);
+        trueTasks = null;
 
         setChanged();
         notifyObservers();
