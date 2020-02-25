@@ -15,15 +15,19 @@ import java.io.File;
 
 import java.io.IOException;
 import java.net.URI;
+import java.net.URLEncoder;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.nio.charset.StandardCharsets;
 import java.time.Duration;
-import java.util.HashMap;
-import java.util.Observable;
+import java.util.*;
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+
+import static fr.groupe4.clientprojet.communication.CommunicationType.*;
+import static fr.groupe4.clientprojet.communication.HTMLCode.*;
 
 /**
  * Communication, effectue les appels API
@@ -31,9 +35,6 @@ import org.json.simple.parser.JSONParser;
  *
  * Cette classe utilise le pattern Builder
  *
- * TODO: Communication comm = new Communication.CommunicationBuilder().startNow().sleepUntilFinished().connect("username", "password").build();
- * TODO: liste de projets
- * TODO: POST
  * TODO: JWT.io
  * TODO: fonction qui génère l'URL
  *
@@ -45,7 +46,9 @@ import org.json.simple.parser.JSONParser;
  *      comm.sleepUntilFinished();
  *
  * Autre exemple :
- *      Communication comm = new Communication.CommunicationBuilder(true, true)
+ *      Communication comm = new Communication.CommunicationBuilder()
+ *                                            .startNow()
+ *                                            .sleepUntilFinished()
  *                                            .connect("username", "password")
  *                                            .build();
  *
@@ -70,19 +73,6 @@ public class Communication extends Observable implements Runnable {
     private static final String baseApiUrl = "https://api.ythepaut.com/g4/actions/";
 
     /**
-     * Codes réponse HTML
-     */
-    private static final int
-            HTML_CUSTOM_DEFAULT_ERROR = -1,
-            HTML_CUSTOM_TIMEOUT = 608,
-            HTML_OK = 200,
-            HTML_BAD_REQUEST = 400,
-            HTML_UNAUTHORIZED = 401,
-            HTML_FORBIDDEN = 403,
-            HTML_NOT_FOUND = 404,
-            HTML_TIMEOUT = 408;
-
-    /**
      * Statut de la réponse API
      */
     private static final String
@@ -95,14 +85,19 @@ public class Communication extends Observable implements Runnable {
     private static final Duration TIMEOUT_DELAY = Duration.ofSeconds(30);
 
     /**
-     * Token, null si non connecté
+     * Token utilisé pour les requêtes, null si non connecté
      */
-    private static String token = null;
+    private static volatile String requestToken = null;
 
     /**
-     * Client en train de charger une ressource ou non
+     * Token utilisé pour renouveler requestToken
      */
-    private static boolean isLoading = false;
+    private static volatile String renewToken = null;
+
+    /**
+     * Si les threads ont le droit de communiquer ou non
+     */
+    private static volatile boolean communicationAllowed = true;
 
     /**
      * Vérifie l'état de la connexion
@@ -110,7 +105,34 @@ public class Communication extends Observable implements Runnable {
      * @return Connecté ou non
      */
     public static boolean isConnected() {
-        return token != null;
+        return requestToken != null;
+    }
+
+    public static void exit() {
+        communicationAllowed = false;
+    }
+
+    /**
+     * Transforme une HashMap en formulaire pour POST <br>
+     * https://mkyong.com/java/how-to-send-http-request-getpost-in-java/
+     *
+     * @param data Data en entrée
+     *
+     * @return Formulaire pour POST
+     */
+    private static HttpRequest.BodyPublisher buildFormDataFromMap(HashMap<String, String> data) {
+        StringBuilder builder = new StringBuilder();
+
+        for (Map.Entry<String, String> entry : data.entrySet()) {
+            if (builder.length() > 0) {
+                builder.append("&");
+            }
+            builder.append(URLEncoder.encode(entry.getKey(), StandardCharsets.UTF_8));
+            builder.append("=");
+            builder.append(URLEncoder.encode(entry.getValue(), StandardCharsets.UTF_8));
+        }
+
+        return HttpRequest.BodyPublishers.ofString(builder.toString());
     }
 
     /**
@@ -144,27 +166,29 @@ public class Communication extends Observable implements Runnable {
         public CommunicationBuilder() {
             startNow = false;
             sleepUntilFinished = false;
+            requestData = new HashMap<>();
+        }
+
+        private HashMap<String, String> requestData;;
+
+        /**
+         * Lance la communication tout de suite
+         *
+         * @return Reste du builder
+         */
+        public CommunicationBuilder startNow() {
+            startNow = true;
+            return this;
         }
 
         /**
-         * Constructeur envoyant tout de suite la requête à l'API
+         * Attend que la communication soit terminée
          *
-         * @param startNow Lance le thread immédiatement ou non, si non il faudra lancer comm.start()
+         * @return Reste du builder
          */
-        public CommunicationBuilder(boolean startNow) {
-            this();
-            this.startNow = startNow;
-        }
-
-        /**
-         * Constructeur envoyant
-         *
-         * @param startNow Lance le thread
-         * @param sleepUntilFinished Met le thread principal en pause tant que la requête n'est pas terminée
-         */
-        public CommunicationBuilder(boolean startNow, boolean sleepUntilFinished) {
-            this(startNow);
-            this.sleepUntilFinished = sleepUntilFinished;
+        public CommunicationBuilder sleepUntilFinished() {
+            sleepUntilFinished = true;
+            return this;
         }
 
         /**
@@ -185,8 +209,17 @@ public class Communication extends Observable implements Runnable {
          * @return Builder non terminé avec URL
          */
         public CommunicationBuilder connect(String username, String password) {
-            typeOfCommunication = CommunicationType.LOGIN;
-            url = "auth?username=" + username + "&passwd=" + password;
+            typeOfCommunication = LOGIN;
+            url = "auth/connect";
+            requestData.put("username", username);
+            requestData.put("passwd", password);
+            return this;
+        }
+
+        public CommunicationBuilder checkConnection() {
+            typeOfCommunication = CHECK_CONNECTION;
+            url = "auth/verify";
+            requestData.put("token", requestToken);
             return this;
         }
 
@@ -196,33 +229,29 @@ public class Communication extends Observable implements Runnable {
          * @return Builder non terminé avec URL
          */
         public CommunicationBuilder updateConnection() {
-            typeOfCommunication = CommunicationType.UPDATE_CONNECTION;
-
-            if (token == null) {
-                url = "verify-token?token=null";
-            }
-            else {
-                url = "verify-token?token=" + token;
-            }
-
+            typeOfCommunication = UPDATE_CONNECTION;
+            url = "auth/renew";
+            requestData.put("token", renewToken);
             return this;
         }
 
         public CommunicationBuilder getProjectList() {
-            typeOfCommunication = CommunicationType.LIST_PROJECTS;
+            typeOfCommunication = LIST_PROJECTS;
 
-            if (token == null) {
-                url = "project/list?token=null";
-            }
-            else {
-                url = "project/list?token=" + token;
-            }
+            url = "project/list";
+
+            requestData.put("token", requestToken);
 
             return this;
         }
     }
 
-    private HashMap<Object, Object> results;
+    /**
+     * Data de la requête
+     */
+    private HashMap<String, String> requestData;
+
+    private Object communicationResult;
 
     /**
      * Client ayant finit son chargement ou non
@@ -252,7 +281,7 @@ public class Communication extends Observable implements Runnable {
     /**
      * Code HTML de la requête, comme un code 200 (OK) ou 404 (Not Found)
      */
-    private int htmlCode;
+    private HTMLCode htmlCode;
 
     /**
      * Message associé à la requête
@@ -265,7 +294,8 @@ public class Communication extends Observable implements Runnable {
      * @param builder Builder de la communication
      */
     private Communication(CommunicationBuilder builder) {
-        results = new HashMap<>();
+        requestData = builder.requestData;
+        communicationResult = null;
         typeOfCommunication = builder.typeOfCommunication;
         url = builder.url;
         status = null;
@@ -322,18 +352,23 @@ public class Communication extends Observable implements Runnable {
      * @return Code HTML
      */
     public int getHtmlCode() {
-        return htmlCode;
+        return htmlCode.getCode();
+    }
+
+    public Object getResult() {
+        return communicationResult;
     }
 
     /**
      * Méthode pour connecter l'instance à son URL
      */
-    private void connectFromUrl() {
+    private void send() {
         // Requête API
         HttpRequest request = HttpRequest.newBuilder()
-                .GET()
+                .POST(buildFormDataFromMap(requestData))
                 .uri(URI.create(baseApiUrl + url))
                 .setHeader("User-Agent", "Java 11 HttpClient Bot")
+                .header("Content-Type", "application/x-www-form-urlencoded")
                 .timeout(TIMEOUT_DELAY)
                 .build();
 
@@ -353,7 +388,7 @@ public class Communication extends Observable implements Runnable {
         }
 
         if (response != null) {
-            htmlCode = response.statusCode();
+            htmlCode = HTMLCode.fromInt(response.statusCode());
 
             JSONParser parser = new JSONParser();
             Object parsedResponse = null;
@@ -373,7 +408,7 @@ public class Communication extends Observable implements Runnable {
 
                 Object jsonObject = jsonMain.get("content");
 
-                doSomethingWithData(jsonObject);
+                doSomethingWithData(this, jsonObject);
             }
         }
     }
@@ -391,7 +426,7 @@ public class Communication extends Observable implements Runnable {
      * Met en pause le thread actuel le temps que la requête soit effectuée
      */
     public void sleepUntilFinished() {
-        while (!isFinished()) {
+        while (!loadingFinished && communicationAllowed) {
             try {
                 Thread.sleep(1);
             }
@@ -404,26 +439,48 @@ public class Communication extends Observable implements Runnable {
     /**
      * Fait quelque chose du contenu de la réponse de l'API
      *
+     * @param comm Communication à traiter
      * @param jsonObject Contenu à traiter
      */
-    private synchronized void doSomethingWithData(Object jsonObject) {
-        switch (typeOfCommunication) {
+    private static synchronized void doSomethingWithData(Communication comm, Object jsonObject) {
+        switch (comm.typeOfCommunication) {
             case LOGIN:
-                if (status.equals(STATUS_SUCCESS)) {
+                if (comm.status.equals(STATUS_SUCCESS)) {
                     JSONObject jsonContent = (JSONObject) jsonObject;
-                    token = (String) jsonContent.get("token");
+
+                    JSONObject jsonRequestToken = (JSONObject) jsonContent.get("requests-token");
+                    requestToken = (String) jsonRequestToken.get("value");
+
+                    JSONObject jsonRenewToken = (JSONObject) jsonContent.get("renew-token");
+                    renewToken = (String) jsonRenewToken.get("value");
+                }
+                break;
+
+            case CHECK_CONNECTION:
+                if (comm.htmlCode == HTML_UNAUTHORIZED) {
+                    requestToken = null;
+                }
+                else {
+                    if (comm.htmlCode == HTML_OK) {
+                        // Tout va bien
+                    }
+                    else {
+                        System.err.println("Réponse inconnue");
+                    }
                 }
                 break;
 
             case UPDATE_CONNECTION:
-                if (htmlCode == HTML_OK) {
-                    results.put("ok", true);
+                if (comm.htmlCode == HTML_OK) {
+                    JSONObject jsonContent = (JSONObject) jsonObject;
+
+                    System.out.println(jsonContent.toString());
                 }
-                else if (htmlCode == HTML_UNAUTHORIZED) {
-                    results.put("ok", false);
+                else if (comm.htmlCode == HTML_FORBIDDEN) {
+                    System.err.println("Update interdite !?");
                 }
                 else {
-                    results.put("ok", false);
+                    System.err.println("Update malformée !?");
                 }
                 break;
 
@@ -431,10 +488,27 @@ public class Communication extends Observable implements Runnable {
                 JSONObject jsonContent = (JSONObject) jsonObject;
                 JSONArray projects = (JSONArray) jsonContent.get("projects");
 
+                ArrayList<HashMap<String, Object>> projectsArray = new ArrayList<>();
+
                 for (Object projectObject : projects) {
-                    JSONObject jsonProject = (JSONObject) projectObject;
-                    // jsonProject.keys();
+                    JSONObject jsonProjectSet = (JSONObject) projectObject;
+                    Object[] keySet = jsonProjectSet.keySet().toArray();
+                    String key = String.valueOf(keySet[0]);
+
+                    JSONObject jsonProject = (JSONObject) jsonProjectSet.get(key);
+
+                    HashMap<String, Object> projectArray = new HashMap<>();
+
+                    projectArray.put("id", jsonProject.get("id"));
+                    projectArray.put("name", jsonProject.get("name"));
+                    projectArray.put("description", jsonProject.get("description"));
+                    projectArray.put("deadline", jsonProject.get("deadline"));
+                    projectArray.put("status", jsonProject.get("status"));
+
+                    projectsArray.add(projectArray);
                 }
+
+                comm.communicationResult = projectsArray;
 
                 break;
 
@@ -450,10 +524,56 @@ public class Communication extends Observable implements Runnable {
     @Override
     public void run() {
         if (url == null) {
+            // Si erreur d'URL
             System.err.println("Communication inutile, rien n'est effectué");
         }
         else {
-            connectFromUrl();
+            // Sinon si l'URL est bien construite, on vérifie la connexion
+
+            if (requestToken == null) {
+                // Si pas encore connecté
+                send();
+            }
+            else {
+                // Si déjà connecté
+
+                if (typeOfCommunication == CHECK_CONNECTION || typeOfCommunication == UPDATE_CONNECTION) {
+                    // Si l'on est actuellement en vérification ou en update, on envoie
+                    send();
+                }
+                else {
+                    // Sinon on vérifie le token
+
+                    Communication checkComm = new Communication.CommunicationBuilder()
+                            .startNow()
+                            .sleepUntilFinished()
+                            .checkConnection()
+                            .build();
+
+                    if (requestToken == null) {
+                        // Si le token est périmé on le recrée
+
+                        Communication updateComm = new Communication.CommunicationBuilder()
+                                .startNow()
+                                .sleepUntilFinished()
+                                .updateConnection()
+                                .build();
+
+                        if (requestToken == null) {
+                            // S'il n'est pas recréé, euh oups
+                            System.err.println("help");
+                        }
+                        else {
+                            // Si jeton recréé, on reprend
+                            send();
+                        }
+                    }
+                    else {
+                        // Si jeton valide, on reprend
+                        send();
+                    }
+                }
+            }
         }
 
         loadingFinished = true;
