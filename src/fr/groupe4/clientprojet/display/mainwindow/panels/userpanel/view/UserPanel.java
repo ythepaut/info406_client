@@ -1,6 +1,7 @@
 package fr.groupe4.clientprojet.display.mainwindow.panels.userpanel.view;
 
 import fr.groupe4.clientprojet.display.mainwindow.panels.userpanel.controller.EventUserPanel;
+import fr.groupe4.clientprojet.display.mainwindow.panels.userpanel.enums.UserChoice;
 import fr.groupe4.clientprojet.utils.Location;
 
 import javax.swing.*;
@@ -11,7 +12,7 @@ import java.awt.*;
 
 public class UserPanel extends JPanel {
     private JPasswordField passwordField;
-    private JButton modifyButton;
+    private JTextField mailField;
     private EventUserPanel eventUserPanel;
 
     public UserPanel() {
@@ -33,17 +34,30 @@ public class UserPanel extends JPanel {
         descripPanel.setBorder(new CompoundBorder(new MatteBorder(0, 0, 0, 2, Color.BLACK), new EmptyBorder(0, 0, 0, 20)));
         topPanel.add(descripPanel);
 
+
         JPanel rightPanel = new JPanel(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
         JPanel passwordPanel = new JPanel(new BorderLayout());
         passwordPanel.add(new JLabel("Mot de passe :"), BorderLayout.NORTH);
         passwordField = new JPasswordField();
         passwordPanel.add(passwordField, BorderLayout.CENTER);
-        modifyButton = new JButton("Modifier");
-        modifyButton.addActionListener(eventUserPanel);
-        passwordPanel.add(modifyButton, BorderLayout.SOUTH);
+        JButton passwordButton = new JButton("Modifier");
+        passwordButton.setActionCommand(UserChoice.PASSWORD.getName());
+        passwordButton.addActionListener(eventUserPanel);
+        passwordPanel.add(passwordButton, BorderLayout.SOUTH);
         c.gridx = c.gridy = 0;
         rightPanel.add(passwordPanel, c);
+
+        JPanel mailPanel = new JPanel(new BorderLayout());
+        mailPanel.add(new JLabel("Adressse mail :"), BorderLayout.NORTH);
+        mailField = new JTextField();
+        mailPanel.add(mailField, BorderLayout.CENTER);
+        JButton mailButton = new JButton("Modifier");
+        mailButton.setActionCommand(UserChoice.MAIL.getName());
+        mailButton.addActionListener(eventUserPanel);
+        mailPanel.add(mailButton, BorderLayout.SOUTH);
+        c.gridy = 1;
+        rightPanel.add(mailPanel, c);
         topPanel.add(rightPanel);
 
         add(topPanel);
@@ -63,7 +77,7 @@ public class UserPanel extends JPanel {
     }
 
     /**
-     * Renvoie le mot de passe
+     * Renvoie le mot de passe dans le passwordField
      *
      * @return : le mot de passe
      */
@@ -74,5 +88,14 @@ public class UserPanel extends JPanel {
             res.append(c);
         }
         return res.toString();
+    }
+
+    /**
+     * Récupère l'adresse mail dans le mailField
+     *
+     * @return : l'adresse mail
+     */
+    public String getEmail() {
+        return mailField.getText();
     }
 }
