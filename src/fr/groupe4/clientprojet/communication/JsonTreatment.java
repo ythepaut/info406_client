@@ -2,6 +2,8 @@ package fr.groupe4.clientprojet.communication;
 
 import fr.groupe4.clientprojet.project.Project;
 import fr.groupe4.clientprojet.project.ProjectList;
+import fr.groupe4.clientprojet.resource.human.HumanResource;
+import fr.groupe4.clientprojet.resource.human.User;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -29,14 +31,10 @@ final class JsonTreatment {
      * @param comm Communication à traiter
      * @param jsonObject Contenu à traiter
      */
-    protected static synchronized void doSomethingWithData(Communication comm, Object jsonObject) {
+    protected static void doSomethingWithData(Communication comm, Object jsonObject) {
         switch (comm.typeOfCommunication) {
             case LOGIN:
                 login(comm, jsonObject);
-                break;
-
-            case CHECK_CONNECTION:
-                checkConnection(comm, jsonObject);
                 break;
 
             case UPDATE_CONNECTION:
@@ -47,8 +45,16 @@ final class JsonTreatment {
                 listProjects(comm, jsonObject);
                 break;
 
+            case GET_USER_INFOS:
+                getUserInfos(comm, jsonObject);
+                break;
+
+            case GET_HUMAN_RESOURCE:
+                getHumanResource(comm, jsonObject);
+                break;
+
             default:
-                System.err.println("Type de communication non reconnu");
+                System.err.println("Traitement JSON : type de communication non reconnu");
                 break;
         }
     }
@@ -71,23 +77,45 @@ final class JsonTreatment {
         }
     }
 
-    /**
-     * Vérification de la connexion
-     *
-     * @param comm Communication à traiter
-     * @param jsonObject Contenu à traiter
-     */
-    private static void checkConnection(Communication comm, Object jsonObject) {
-        if (comm.htmlCode == HTML_UNAUTHORIZED) {
-            Communication.setRequestToken(singleton, null);
+    private static void getHumanResource(Communication comm, Object jsonObject) {
+        if (comm.status.equals(STATUS_SUCCESS)) {
+            JSONObject jsonContent = (JSONObject) jsonObject;
+
+            comm.communicationResult = new HumanResource(
+                    (long) jsonContent.get("id"),
+                    (String) jsonContent.get("firstname"),
+                    (String) jsonContent.get("lastname"),
+                    (String) jsonContent.get("job"),
+                    (String) jsonContent.get("role"),
+                    (String) jsonContent.get("description"));
+        }
+    }
+
+    private static void getUserInfos(Communication comm, Object jsonObject) {
+        if (comm.htmlCode == HTML_OK) {
+            JSONObject jsonContent = (JSONObject) jsonObject;
+            JSONObject jsonDataContent = (JSONObject) jsonContent.get("data");
+            JSONObject jsonControlContent = (JSONObject) jsonDataContent.get("control");
+            JSONObject jsonUserContent = (JSONObject) jsonDataContent.get("user");
+
+            Communication c = Communication
+                    .builder()
+                    .startNow()
+                    .sleepUntilFinished()
+                    .getHumanRessource((long) jsonUserContent.get("id_h_resource"))
+                    .build();
+
+            HumanResource humanResource = (HumanResource) c.getResult();
+
+            comm.communicationResult = new User(humanResource,
+                    (String) jsonControlContent.get("ip"),
+                    (String) jsonControlContent.get("type"),
+                    (long) jsonUserContent.get("id"),
+                    (String) jsonUserContent.get("username"),
+                    (String) jsonUserContent.get("email"));
         }
         else {
-            if (comm.htmlCode == HTML_OK) {
-                // Tout va bien
-            }
-            else {
-                System.err.println("Réponse inconnue");
-            }
+            System.err.println("Déconnecté en cours de route ?");
         }
     }
 
@@ -102,8 +130,6 @@ final class JsonTreatment {
             JSONObject jsonContent = (JSONObject) jsonObject;
 
             JSONObject jsonTokenContent = (JSONObject) jsonContent.get("requests-token");
-
-            String t2 = Communication.getRenewToken(singleton);
 
             Communication.setRequestToken(singleton, (String) jsonTokenContent.get("value"));
         }
