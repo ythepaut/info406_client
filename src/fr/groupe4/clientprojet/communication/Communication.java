@@ -14,14 +14,11 @@ import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 
-import java.util.HashMap;
-import java.util.Observable;
-import java.util.Map;
+import java.util.*;
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
-import static fr.groupe4.clientprojet.communication.enums.CommunicationType.*;
 import static fr.groupe4.clientprojet.communication.enums.HTMLCode.*;
 
 /**
@@ -53,6 +50,7 @@ import static fr.groupe4.clientprojet.communication.enums.HTMLCode.*;
  *
  * @author Romain
  */
+@SuppressWarnings("deprecation")
 public final class Communication extends Observable implements Runnable {
     /**
      * Client HTTP pour les requètes
@@ -111,6 +109,7 @@ public final class Communication extends Observable implements Runnable {
      * @param editor Qui veut accéder au token ? JsonTreatment seulement est autorisés
      * @param token Token
      */
+    @SuppressWarnings("SameParameterValue")
     protected static synchronized void setRequestToken(Object editor, String token) {
         if (editor instanceof JsonTreatment) {
             if (token == null) {
@@ -151,6 +150,7 @@ public final class Communication extends Observable implements Runnable {
      * @param editor Qui veut accéder au token ? JsonTreatment seulement est autorisés
      * @param token Token
      */
+    @SuppressWarnings("SameParameterValue")
     protected static synchronized void setRenewToken(Object editor, String token) {
         if (editor instanceof JsonTreatment) {
             if (token == null) {
@@ -174,7 +174,40 @@ public final class Communication extends Observable implements Runnable {
      * @return Connecté ou non
      */
     public static boolean isConnected() {
+        checkTokenValidity();
         return requestToken != null;
+    }
+
+    /**
+     * Vérifie la validité d'un token
+     */
+    private static synchronized void checkTokenValidity() {
+        if (requestToken != null) {
+            String[] splitString = requestToken.split("\\.");
+            Base64.Decoder decoder = Base64.getUrlDecoder();
+            String tokenBody = new String(decoder.decode(splitString[1]));
+
+            JSONParser parser = new JSONParser();
+
+            try {
+                JSONObject parsedResponse = (JSONObject) parser.parse(tokenBody);
+
+                long currentTime = System.currentTimeMillis() / 1000L;
+
+                long expirationTime = (long) parsedResponse.get("exp");
+
+                // long totalTime = expirationTime - (long) parsedResponse.get("iat");
+
+                long remainingTime = expirationTime - currentTime;
+
+                if (remainingTime < TIMEOUT_DELAY.toSeconds()*2) {
+                    requestToken = null;
+                }
+            }
+            catch (ParseException e) {
+                System.err.println("Vérification de token invalide");
+            }
+        }
     }
 
     /**
@@ -192,16 +225,16 @@ public final class Communication extends Observable implements Runnable {
      *
      * @return Formulaire pour POST
      */
-    private static HttpRequest.BodyPublisher buildFormDataFromMap(HashMap<String, String> data) {
+    private static HttpRequest.BodyPublisher buildFormDataFromMap(HashMap<String, Object> data) {
         StringBuilder builder = new StringBuilder();
 
-        for (Map.Entry<String, String> entry : data.entrySet()) {
+        for (Map.Entry<String, Object> entry : data.entrySet()) {
             if (builder.length() > 0) {
                 builder.append("&");
             }
             builder.append(URLEncoder.encode(entry.getKey(), StandardCharsets.UTF_8));
             builder.append("=");
-            builder.append(URLEncoder.encode(entry.getValue(), StandardCharsets.UTF_8));
+            builder.append(URLEncoder.encode(entry.getValue().toString(), StandardCharsets.UTF_8));
         }
 
         return HttpRequest.BodyPublishers.ofString(builder.toString());
@@ -219,7 +252,7 @@ public final class Communication extends Observable implements Runnable {
     /**
      * Data de la requête
      */
-    private HashMap<String, String> requestData;
+    private HashMap<String, Object> requestData;
 
     /**
      * Résultat de la communication
@@ -313,12 +346,7 @@ public final class Communication extends Observable implements Runnable {
      * @return Message
      */
     public String getMessage() {
-        if (message == null) {
-            return "Erreur inconnue";
-        }
-        else {
-            return message;
-        }
+        return Objects.requireNonNullElse(message, "Erreur inconnue");
     }
 
     /**
@@ -430,57 +458,35 @@ public final class Communication extends Observable implements Runnable {
         else {
             // Sinon si l'URL est bien construite, on vérifie la connexion
 
-            if (requestToken == null) {
-                // Si pas encore connecté
-                send();
-            }
-            else {
-                // Si déjà connecté
+            if (typeOfCommunication.checkConnection()) {
+                checkTokenValidity();
 
-                if (typeOfCommunication == CHECK_CONNECTION || typeOfCommunication == UPDATE_CONNECTION) {
-                    // Si l'on est actuellement en vérification ou en update, on envoie
-                    send();
-                }
-                else {
-                    // Sinon on vérifie le token
+                if (requestToken == null) {
+                    // Si le token est périmé on le recrée
 
-                    Communication checkComm = new CommunicationBuilder()
+                    new CommunicationBuilder()
                             .startNow()
                             .sleepUntilFinished()
-                            .checkConnection()
+                            .updateConnection()
                             .build();
 
                     if (requestToken == null) {
-                        // Si le token est périmé on le recrée
-
-                        Communication updateComm = new CommunicationBuilder()
-                                .startNow()
-                                .sleepUntilFinished()
-                                .updateConnection()
-                                .build();
-
-                        if (requestToken == null) {
-                            // S'il n'est pas recréé, euh oups
-                            System.err.println("help");
-                        }
-                        else {
-                            // Si jeton recréé, on reprend
-
-                            if (requestData.get("token") != null) {
-                                requestData.remove("token");
-                                requestData.put("token", requestToken);
-                            }
-
-                            send();
-                        }
+                        // S'il n'est pas recréé, euh oups
+                        System.err.println("help");
                     }
                     else {
-                        // Si jeton valide, on reprend
-                        send();
+                        // Si jeton recréé, on reprend
+
+                        if (requestData.get("token") != null) {
+                            requestData.remove("token");
+                            requestData.put("token", requestToken);
+                        }
                     }
                 }
             }
         }
+
+        send();
 
         loadingFinished = true;
 

@@ -34,7 +34,7 @@ public final class CommunicationBuilder {
     /**
      * Data à envoyer en POST pour la requête
      */
-    protected HashMap<String, String> requestData;
+    protected HashMap<String, Object> requestData;
 
     /**
      * Constructeur
@@ -90,15 +90,18 @@ public final class CommunicationBuilder {
         return this;
     }
 
-    /**
-     * Vérifie la connexion
-     *
-     * @return Builder non terminé avec URL
-     */
-    public CommunicationBuilder checkConnection() {
-        typeOfCommunication = CHECK_CONNECTION;
+    public CommunicationBuilder getUserInfos() {
+        typeOfCommunication = GET_USER_INFOS;
         url = "auth/verify";
         requestData.put("token", Communication.getRequestToken(this));
+        return this;
+    }
+
+    public CommunicationBuilder getHumanRessource(long id) {
+        typeOfCommunication = GET_HUMAN_RESOURCE;
+        url = "resource/h/get";
+        requestData.put("token", Communication.getRequestToken(this));
+        requestData.put("id", id);
         return this;
     }
 
@@ -107,7 +110,7 @@ public final class CommunicationBuilder {
      *
      * @return Builder non terminé avec URL
      */
-    public CommunicationBuilder updateConnection() {
+    protected CommunicationBuilder updateConnection() {
         typeOfCommunication = UPDATE_CONNECTION;
         url = "auth/renew";
         requestData.put("token", Communication.getRenewToken(this));
