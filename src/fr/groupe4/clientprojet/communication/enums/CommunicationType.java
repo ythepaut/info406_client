@@ -8,7 +8,8 @@ public enum CommunicationType {
     UPDATE_CONNECTION(false),
     LIST_PROJECTS,
     GET_USER_INFOS,
-    GET_HUMAN_RESOURCE;
+    GET_HUMAN_RESOURCE,
+    CREATE_PROJECT;
 
     private boolean checkConnection;
 

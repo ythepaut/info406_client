@@ -2,12 +2,14 @@ package fr.groupe4.clientprojet.project.enums;
 
 public enum ProjectStatus {
     PENDING("PENDING"),
-    FINISHED("FINISHED");
+    FINISHED("FINISHED"),
+    ONGOING("ONGOING"),
+    CANCELED("CANCELED");
 
     private String msg;
 
     ProjectStatus(String msg) {
-        this.msg = msg;
+        this.msg = msg.toUpperCase();
     }
 
     /**
@@ -23,7 +25,7 @@ public enum ProjectStatus {
         ProjectStatus statusResult = null;
 
         for (ProjectStatus status : statuses) {
-            if (status.msg.equals(msg)) {
+            if (status.msg.equalsIgnoreCase(msg)) {
                 statusResult = status;
             }
         }

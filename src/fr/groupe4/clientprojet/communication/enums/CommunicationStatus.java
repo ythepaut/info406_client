@@ -18,7 +18,7 @@ public enum CommunicationStatus {
      * @param msg Message
      */
     CommunicationStatus(String msg) {
-        this.msg = msg;
+        this.msg = msg.toLowerCase();
     }
 
     /**
@@ -34,7 +34,7 @@ public enum CommunicationStatus {
         CommunicationStatus statusResult = null;
 
         for (CommunicationStatus status : statuses) {
-            if (status.msg.equals(msg)) {
+            if (status.msg.equalsIgnoreCase(msg)) {
                 statusResult = status;
             }
         }

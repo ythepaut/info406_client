@@ -53,8 +53,12 @@ final class JsonTreatment {
                 getHumanResource(comm, jsonObject);
                 break;
 
+            case CREATE_PROJECT:
+                createProject(comm, jsonObject);
+                break;
+
             default:
-                System.err.println("Traitement JSON : type de communication non reconnu");
+                System.err.println("Traitement JSON : type de communication non reconnu : " + comm.typeOfCommunication.toString());
                 break;
         }
     }
@@ -77,6 +81,21 @@ final class JsonTreatment {
         }
     }
 
+    /**
+     * Création de projet
+     *
+     * @param comm Communication à traiter
+     * @param jsonObject Contenu à traiter
+     */
+    private static void createProject(Communication comm, Object jsonObject) {
+    }
+
+    /**
+     * Récupère une ressource humaine
+     *
+     * @param comm Communication à traiter
+     * @param jsonObject Contenu à traiter
+     */
     private static void getHumanResource(Communication comm, Object jsonObject) {
         if (comm.status.equals(STATUS_SUCCESS)) {
             JSONObject jsonContent = (JSONObject) jsonObject;
@@ -91,6 +110,12 @@ final class JsonTreatment {
         }
     }
 
+    /**
+     * Récupère les infos de l'utilisateur
+     *
+     * @param comm Communication à traiter
+     * @param jsonObject Contenu à traiter
+     */
     private static void getUserInfos(Communication comm, Object jsonObject) {
         if (comm.htmlCode == HTML_OK) {
             JSONObject jsonContent = (JSONObject) jsonObject;

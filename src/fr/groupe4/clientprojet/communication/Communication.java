@@ -376,6 +376,15 @@ public final class Communication extends Observable implements Runnable {
         return loadingFinished;
     }
 
+    /**
+     * Succès de l'action ou non
+     *
+     * @return Succès
+     */
+    public boolean isSuccessful() {
+        return htmlCode.equals(HTML_OK);
+    }
+
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     /**
@@ -415,7 +424,7 @@ public final class Communication extends Observable implements Runnable {
             try {
                 parsedResponse = parser.parse(response.body());
             } catch (ParseException e) {
-                System.err.println("Réponse invalide");
+                System.err.println("Réponse invalide, erreur serveur ? Réponse serveur :\n" + response.body());
             }
 
             if (parsedResponse != null) {

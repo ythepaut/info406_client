@@ -1,6 +1,7 @@
 package fr.groupe4.clientprojet.communication;
 
 import fr.groupe4.clientprojet.communication.enums.CommunicationType;
+import fr.groupe4.clientprojet.project.enums.ProjectStatus;
 
 import java.util.HashMap;
 
@@ -90,6 +91,22 @@ public final class CommunicationBuilder {
         return this;
     }
 
+    public CommunicationBuilder createProject(String name, String description, long deadline, ProjectStatus status) {
+        typeOfCommunication = CREATE_PROJECT;
+        url = "project/create";
+        requestData.put("token", Communication.getRequestToken(this));
+        requestData.put("name", name);
+        requestData.put("description", description);
+        requestData.put("deadline", deadline);
+        requestData.put("status", status.toString());
+        return this;
+    }
+
+    /**
+     * Récupère les infos de l'utilisateur
+     *
+     * @return Builder non terminé avec URL
+     */
     public CommunicationBuilder getUserInfos() {
         typeOfCommunication = GET_USER_INFOS;
         url = "auth/verify";
@@ -97,6 +114,13 @@ public final class CommunicationBuilder {
         return this;
     }
 
+    /**
+     * Récupère une ressource humaine
+     *
+     * @param id Id de la ressource humaine
+     *
+     * @return Builder non terminé avec URL
+     */
     public CommunicationBuilder getHumanRessource(long id) {
         typeOfCommunication = GET_HUMAN_RESOURCE;
         url = "resource/h/get";

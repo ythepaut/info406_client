@@ -17,7 +17,7 @@ public enum HumanRole {
         HumanRole result = null;
 
         for (HumanRole var : vars) {
-            if (var.role.equals(role)) {
+            if (var.role.equalsIgnoreCase(role)) {
                 result = var;
             }
         }
