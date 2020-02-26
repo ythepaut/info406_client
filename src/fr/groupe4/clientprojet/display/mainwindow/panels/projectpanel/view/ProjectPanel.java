@@ -1,21 +1,33 @@
 package fr.groupe4.clientprojet.display.mainwindow.panels.projectpanel.view;
 
+import fr.groupe4.clientprojet.communication.Communication;
 import fr.groupe4.clientprojet.display.mainwindow.panels.projectpanel.controller.EventProjectPanel;
 import fr.groupe4.clientprojet.display.mainwindow.panels.projectpanel.enums.ProjectSlide;
 import fr.groupe4.clientprojet.display.view.RoundButton;
+import fr.groupe4.clientprojet.project.Project;
+import fr.groupe4.clientprojet.project.ProjectList;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class ProjectPanel extends JPanel {
-    private String projectName;
     private ProjectSlide slide;
     private EventProjectPanel eventProjectPanel;
+    private Project project;
 
     public ProjectPanel(String projectName) {
-        this.projectName = projectName;
         slide = ProjectSlide.HOME;
         eventProjectPanel = new EventProjectPanel(this);
+
+        Communication comm = Communication.builder().sleepUntilFinished().startNow().getProjectList().build();
+
+        ProjectList list = (ProjectList) comm.getResult();
+
+        for (Project p: list) {
+            if (p.getName().equals(projectName)) {
+                project = p;
+            }
+        }
 
         drawContent();
     }
@@ -29,7 +41,7 @@ public class ProjectPanel extends JPanel {
         GridBagConstraints c = new GridBagConstraints();
         c.gridx = c.gridy = 0;
         c.insets = new Insets(20, 0, 0, 0);
-        JLabel title = new JLabel(projectName);
+        JLabel title = new JLabel(project.getName());
         title.setFont(new Font("Arial", Font.PLAIN, 30));
         titlePanel.add(title, c);
 
@@ -95,8 +107,9 @@ public class ProjectPanel extends JPanel {
      * @return : le jpanel
      */
     private JPanel homePanel() {
-        JPanel panel = new JPanel();
-        panel.add(new JLabel("HOME"));
+        JPanel panel = new JPanel(new BorderLayout());
+        panel.add(new JLabel("HOME"), BorderLayout.NORTH);
+        panel.add(new JLabel(project.getDescription()), BorderLayout.CENTER);
         // TODO : Construire panel accueil
         return panel;
     }

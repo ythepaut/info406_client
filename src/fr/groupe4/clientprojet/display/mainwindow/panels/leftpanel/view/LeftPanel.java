@@ -1,8 +1,11 @@
 package fr.groupe4.clientprojet.display.mainwindow.panels.leftpanel.view;
 
 
+import fr.groupe4.clientprojet.communication.Communication;
 import fr.groupe4.clientprojet.display.mainwindow.panels.centerpanel.view.CenterPanel;
 import fr.groupe4.clientprojet.display.mainwindow.panels.leftpanel.controller.EventLeftPanel;
+import fr.groupe4.clientprojet.project.Project;
+import fr.groupe4.clientprojet.project.ProjectList;
 import fr.groupe4.clientprojet.utils.Location;
 import fr.groupe4.clientprojet.display.view.RoundButton;
 
@@ -123,20 +126,24 @@ public class LeftPanel extends JPanel {
         JPanel buttonPanel = new JPanel(new GridBagLayout());
         buttonPanel.setBackground(Color.WHITE);
 
-        for (int i = debutListe; i < nbProjetsMax + debutListe; i++) {
-            c.gridy = i;
-            if (i < nbProjet) {
-                RoundButton button = new RoundButton(Integer.toString(i));
-                button.setActionCommand(Integer.toString(i));
+        Communication comm = Communication.builder().sleepUntilFinished().startNow().getProjectList().build();
+
+        ProjectList list = (ProjectList) comm.getResult();
+        nbProjet = list.size();
+
+        int i = 0;
+        for (Project p: list) {
+            if (i >= debutListe && i < nbProjetsMax + debutListe) {
+                c.gridy = i;
+                String name = p.getName();
+                RoundButton button = new RoundButton(name.substring(0,1));
+                button.setActionCommand(name);
                 button.addActionListener(eventLeftPanel);
                 button.setFont(buttonFont);
                 buttonPanel.add(button, c);
                 buttons.add(button);
-            } else {
-                JLabel label = new JLabel(" ");
-                label.setFont(buttonFont);
-                buttonPanel.add(label, c);
             }
+            i++;
         }
 
         projectPanel.add(buttonPanel, BorderLayout.CENTER);

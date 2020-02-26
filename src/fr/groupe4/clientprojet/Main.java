@@ -10,9 +10,9 @@ public class Main {
         if (!Communication.isConnected()) {
             new ConnectionDialog();
         }
-        //if (Communication.isConnected()) {
+        if (Communication.isConnected()) {
             new MainWindow("Team's Project");
-        //}
+        }
     }
 
 }

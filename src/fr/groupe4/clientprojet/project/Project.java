@@ -21,4 +21,24 @@ public class Project {
     public String toString() {
         return id + " - " + name + " - " + description + " - " + deadline + " - " + status;
     }
+
+    public long getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public long getDeadline() {
+        return deadline;
+    }
+
+    public ProjectStatus getStatus() {
+        return status;
+    }
 }
