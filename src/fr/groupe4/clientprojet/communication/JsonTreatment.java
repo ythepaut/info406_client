@@ -1,10 +1,9 @@
 package fr.groupe4.clientprojet.communication;
 
+import fr.groupe4.clientprojet.project.Project;
+import fr.groupe4.clientprojet.project.ProjectList;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-
-import java.util.ArrayList;
-import java.util.HashMap;
 
 import static fr.groupe4.clientprojet.communication.enums.CommunicationStatus.*;
 import static fr.groupe4.clientprojet.communication.enums.HTMLCode.*;
@@ -12,7 +11,7 @@ import static fr.groupe4.clientprojet.communication.enums.HTMLCode.*;
 /**
  * Traite le JSON de la classe Communication
  */
-class JsonTreatment {
+final class JsonTreatment {
     /**
      * Fait quelque chose du contenu de la réponse de l'API <br>
      * synchronized pour éviter les conflits de threads lors de plusieurs traitements simultanés
@@ -112,7 +111,7 @@ class JsonTreatment {
         JSONObject jsonContent = (JSONObject) jsonObject;
         JSONArray projects = (JSONArray) jsonContent.get("projects");
 
-        ArrayList<HashMap<String, Object>> projectsArray = new ArrayList<>();
+        ProjectList projectsArray = new ProjectList();
 
         for (Object projectObject : projects) {
             JSONObject jsonProjectSet = (JSONObject) projectObject;
@@ -121,15 +120,14 @@ class JsonTreatment {
 
             JSONObject jsonProject = (JSONObject) jsonProjectSet.get(key);
 
-            HashMap<String, Object> projectArray = new HashMap<>();
+            Project project = new Project(
+                    (long) jsonProject.get("id"),
+                    (String)jsonProject.get("name"),
+                    (String) jsonProject.get("description"),
+                    (long) jsonProject.get("deadline"),
+                    (String) jsonProject.get("status"));
 
-            projectArray.put("id", jsonProject.get("id"));
-            projectArray.put("name", jsonProject.get("name"));
-            projectArray.put("description", jsonProject.get("description"));
-            projectArray.put("deadline", jsonProject.get("deadline"));
-            projectArray.put("status", jsonProject.get("status"));
-
-            projectsArray.add(projectArray);
+            projectsArray.add(project);
         }
 
         comm.communicationResult = projectsArray;
