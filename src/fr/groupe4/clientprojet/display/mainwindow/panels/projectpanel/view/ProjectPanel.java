@@ -10,11 +10,28 @@ import fr.groupe4.clientprojet.project.ProjectList;
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * Le panel des projets
+ */
 public class ProjectPanel extends JPanel {
+    /**
+     * Le slide sur lequel on est
+     */
     private ProjectSlide slide;
+    /**
+     * Le listener du panel
+     */
     private EventProjectPanel eventProjectPanel;
+    /**
+     * Le projet qui est affiché
+     */
     private Project project;
 
+    /**
+     * Le constructeur
+     *
+     * @param projectName : Le nom du projet
+     */
     public ProjectPanel(String projectName) {
         slide = ProjectSlide.HOME;
         eventProjectPanel = new EventProjectPanel(this);
@@ -32,6 +49,9 @@ public class ProjectPanel extends JPanel {
         drawContent();
     }
 
+    /**
+     * Dessine le contenu
+     */
     private void drawContent() {
         setLayout(new BorderLayout());
 

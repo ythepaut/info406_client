@@ -10,11 +10,26 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.MatteBorder;
 import java.awt.*;
 
+/**
+ * Le panel pour l'utilisateur
+ */
 public class UserPanel extends JPanel {
+    /**
+     * Le champs de modification du mot de passe
+     */
     private JPasswordField passwordField;
+    /**
+     * Le champs de mofication du mail
+     */
     private JTextField mailField;
+    /**
+     * Le listener du panel
+     */
     private EventUserPanel eventUserPanel;
 
+    /**
+     * Le constructeur
+     */
     public UserPanel() {
         setLayout(new GridLayout(2, 1));
         eventUserPanel = new EventUserPanel(this);
@@ -22,6 +37,9 @@ public class UserPanel extends JPanel {
         drawContent();
     }
 
+    /**
+     * Dessine le contenu
+     */
     private void drawContent() {
         // Partie supérieure
         JPanel topPanel = new JPanel(new GridLayout(1, 4));
