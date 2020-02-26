@@ -145,10 +145,6 @@ public final class Communication extends Observable implements Runnable {
         }
     }
 
-    public static void cassetout() {
-        requestToken = "lalala";
-    }
-
     /**
      * Setter du token de renew
      *
