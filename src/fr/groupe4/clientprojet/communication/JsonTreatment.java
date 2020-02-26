@@ -13,6 +13,16 @@ import static fr.groupe4.clientprojet.communication.enums.HTMLCode.*;
  */
 final class JsonTreatment {
     /**
+     * Singleton pour que Communication puisse vérifier l'accès à ses token
+     */
+    private static final JsonTreatment singleton = new JsonTreatment();
+
+    /**
+     * Constructeur vide, utile seulement pour le singleton
+     */
+    private JsonTreatment() {}
+
+    /**
      * Fait quelque chose du contenu de la réponse de l'API <br>
      * synchronized pour éviter les conflits de threads lors de plusieurs traitements simultanés
      *
@@ -54,10 +64,10 @@ final class JsonTreatment {
             JSONObject jsonContent = (JSONObject) jsonObject;
 
             JSONObject jsonRequestToken = (JSONObject) jsonContent.get("requests-token");
-            Communication.requestToken = (String) jsonRequestToken.get("value");
+            Communication.setRequestToken(singleton, (String) jsonRequestToken.get("value"));
 
             JSONObject jsonRenewToken = (JSONObject) jsonContent.get("renew-token");
-            Communication.renewToken = (String) jsonRenewToken.get("value");
+            Communication.setRenewToken(singleton, (String) jsonRenewToken.get("value"));
         }
     }
 
@@ -69,7 +79,7 @@ final class JsonTreatment {
      */
     private static void checkConnection(Communication comm, Object jsonObject) {
         if (comm.htmlCode == HTML_UNAUTHORIZED) {
-            Communication.requestToken = null;
+            Communication.setRequestToken(singleton, null);
         }
         else {
             if (comm.htmlCode == HTML_OK) {
@@ -91,7 +101,11 @@ final class JsonTreatment {
         if (comm.htmlCode == HTML_OK) {
             JSONObject jsonContent = (JSONObject) jsonObject;
 
-            System.out.println(jsonContent.toString());
+            JSONObject jsonTokenContent = (JSONObject) jsonContent.get("requests-token");
+
+            String t2 = Communication.getRenewToken(singleton);
+
+            Communication.setRequestToken(singleton, (String) jsonTokenContent.get("value"));
         }
         else if (comm.htmlCode == HTML_FORBIDDEN) {
             System.err.println("Update interdite !?");

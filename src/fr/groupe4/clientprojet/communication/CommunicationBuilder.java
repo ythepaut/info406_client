@@ -9,7 +9,7 @@ import static fr.groupe4.clientprojet.communication.enums.CommunicationType.*;
 /**
  * Builder de la communication
  */
-public class CommunicationBuilder {
+public final class CommunicationBuilder {
     /**
      * Type de communication
      */
@@ -98,7 +98,7 @@ public class CommunicationBuilder {
     public CommunicationBuilder checkConnection() {
         typeOfCommunication = CHECK_CONNECTION;
         url = "auth/verify";
-        requestData.put("token", Communication.requestToken);
+        requestData.put("token", Communication.getRequestToken(this));
         return this;
     }
 
@@ -110,7 +110,7 @@ public class CommunicationBuilder {
     public CommunicationBuilder updateConnection() {
         typeOfCommunication = UPDATE_CONNECTION;
         url = "auth/renew";
-        requestData.put("token", Communication.renewToken);
+        requestData.put("token", Communication.getRenewToken(this));
         return this;
     }
 
@@ -122,7 +122,7 @@ public class CommunicationBuilder {
     public CommunicationBuilder getProjectList() {
         typeOfCommunication = LIST_PROJECTS;
         url = "project/list";
-        requestData.put("token", Communication.requestToken);
+        requestData.put("token", Communication.getRequestToken(this));
         return this;
     }
 }

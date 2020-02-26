@@ -53,7 +53,7 @@ import static fr.groupe4.clientprojet.communication.enums.HTMLCode.*;
  *
  * @author Romain
  */
-public class Communication extends Observable implements Runnable {
+public final class Communication extends Observable implements Runnable {
     /**
      * Client HTTP pour les requètes
      */
@@ -74,12 +74,12 @@ public class Communication extends Observable implements Runnable {
     /**
      * Token utilisé pour les requêtes, null si non connecté
      */
-    protected static volatile String requestToken = null;
+    private static volatile String requestToken = null;
 
     /**
      * Token utilisé pour renouveler requestToken
      */
-    protected static volatile String renewToken = null;
+    private static volatile String renewToken = null;
 
     /**
      * Si les threads ont le droit de communiquer ou non
@@ -87,6 +87,90 @@ public class Communication extends Observable implements Runnable {
     private static volatile boolean communicationAllowed = true;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    /**
+     * Getter du token de requête
+     *
+     * @param editor Qui veut accéder au token ? JsonTreatment ou CommunicationBuilder seulement sont autorisés
+     *
+     * @return Token
+     */
+    protected static synchronized String getRequestToken(Object editor) {
+        if (editor instanceof CommunicationBuilder || editor instanceof JsonTreatment) {
+            return requestToken;
+        }
+        else {
+            System.err.println("Accès au token non autorisé");
+            return "";
+        }
+    }
+
+    /**
+     * Setter du token de requête
+     *
+     * @param editor Qui veut accéder au token ? JsonTreatment seulement est autorisés
+     * @param token Token
+     */
+    protected static synchronized void setRequestToken(Object editor, String token) {
+        if (editor instanceof JsonTreatment) {
+            if (token == null) {
+                requestToken = null;
+            }
+            else if (token.isEmpty()) {
+                requestToken = null;
+            }
+            else {
+                requestToken = token;
+            }
+        }
+        else {
+            System.err.println("Accès au token non autorisé");
+        }
+    }
+
+    /**
+     * Getter du token de renew
+     *
+     * @param editor Qui veut accéder au token ? JsonTreatment ou CommunicationBuilder seulement sont autorisés
+     *
+     * @return Token
+     */
+    protected static synchronized String getRenewToken(Object editor) {
+        if (editor instanceof CommunicationBuilder || editor instanceof JsonTreatment) {
+            return renewToken;
+        }
+        else {
+            System.err.println("Accès au token non autorisé");
+            return "";
+        }
+    }
+
+    public static void cassetout() {
+        requestToken = "lalala";
+    }
+
+    /**
+     * Setter du token de renew
+     *
+     * @param editor Qui veut accéder au token ? JsonTreatment seulement est autorisés
+     * @param token Token
+     */
+    protected static synchronized void setRenewToken(Object editor, String token) {
+        if (editor instanceof JsonTreatment) {
+            if (token == null) {
+                renewToken = null;
+            }
+            else if (token.isEmpty()) {
+                renewToken = null;
+            }
+            else {
+                renewToken = token;
+            }
+        }
+        else {
+            System.err.println("Accès au token non autorisé");
+        }
+    }
 
     /**
      * Vérifie l'état de la connexion
@@ -385,6 +469,12 @@ public class Communication extends Observable implements Runnable {
                         }
                         else {
                             // Si jeton recréé, on reprend
+
+                            if (requestData.get("token") != null) {
+                                requestData.remove("token");
+                                requestData.put("token", requestToken);
+                            }
+
                             send();
                         }
                     }
