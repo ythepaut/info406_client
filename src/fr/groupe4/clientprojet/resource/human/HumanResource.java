@@ -9,7 +9,7 @@ public class HumanResource {
     /**
      * Id de la ressource
      */
-    private long idResource;
+    private long resourceId;
 
     /**
      * Prénom
@@ -39,15 +39,15 @@ public class HumanResource {
     /**
      * Constructeur
      *
-     * @param idResource Id
+     * @param resourceId Id
      * @param firstname Prénom
      * @param lastname Nom
      * @param job Job
      * @param role Rôle
      * @param description Description
      */
-    public HumanResource(long idResource, String firstname, String lastname, String job, String role, String description) {
-        this.idResource = idResource;
+    public HumanResource(long resourceId, String firstname, String lastname, String job, String role, String description) {
+        this.resourceId = resourceId;
         this.firstname = firstname;
         this.lastname = lastname;
         this.job = job;
@@ -61,7 +61,7 @@ public class HumanResource {
      * @param resource Ressource à copier
      */
     public HumanResource(HumanResource resource) {
-        idResource = resource.idResource;
+        resourceId = resource.resourceId;
         firstname = resource.firstname;
         lastname = resource.lastname;
         job = resource.job;
@@ -69,8 +69,8 @@ public class HumanResource {
         description = resource.description;
     }
 
-    public long getIdResource() {
-        return idResource;
+    public long getResourceId() {
+        return resourceId;
     }
 
     public String getFirstname() {

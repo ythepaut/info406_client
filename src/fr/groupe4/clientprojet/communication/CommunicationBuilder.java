@@ -2,10 +2,14 @@ package fr.groupe4.clientprojet.communication;
 
 import fr.groupe4.clientprojet.communication.enums.CommunicationType;
 import fr.groupe4.clientprojet.project.enums.ProjectStatus;
+import fr.groupe4.clientprojet.resource.human.User;
 
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 
 import static fr.groupe4.clientprojet.communication.enums.CommunicationType.*;
+import static fr.groupe4.clientprojet.message.enums.MessageOrigin.*;
 
 /**
  * Builder de la communication
@@ -99,6 +103,27 @@ public final class CommunicationBuilder {
         requestData.put("description", description);
         requestData.put("deadline", deadline);
         requestData.put("status", status.toString());
+        return this;
+    }
+
+    public CommunicationBuilder getTimeSlotList(GregorianCalendar from, GregorianCalendar to) {
+        long t1 = from.getTimeInMillis()/1000;
+        long t2 = to.getTimeInMillis()/1000;
+        typeOfCommunication = GET_TIME_SLOT_LIST;
+        url = "timeslot/list";
+        requestData.put("token", Communication.getRequestToken(this));
+        requestData.put("from", t1);
+        requestData.put("to", t2);
+        return this;
+    }
+
+    public CommunicationBuilder getUserMessageList(int page) {
+        typeOfCommunication = LIST_USER_MESSAGES;
+        url = "message/list";
+        requestData.put("token", Communication.getRequestToken(this));
+        requestData.put("origin", ORIGIN_HUMANRESOURCE.toString());
+        requestData.put("id", User.getUser().getResourceId());
+        requestData.put("page", page);
         return this;
     }
 

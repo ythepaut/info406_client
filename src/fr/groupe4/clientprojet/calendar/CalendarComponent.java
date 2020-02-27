@@ -2,22 +2,20 @@ package fr.groupe4.clientprojet.calendar;
 
 import javax.swing.*;
 import java.awt.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
-import java.util.Observable;
-import java.util.Observer;
-
-import fr.groupe4.clientprojet.calendar.CalendarType;
 
 /**
  * Composant du calendrier, vue
  *
  * @author Romain
  */
-public class CalendarComponent extends JComponent implements Observer {
+public class CalendarComponent extends JComponent implements PropertyChangeListener {
     /**
      * Calendrier associé
      */
-    private Calendar calendar;
+    private CalendarProject calendar;
 
     /**
      * Type de calendrier
@@ -26,9 +24,9 @@ public class CalendarComponent extends JComponent implements Observer {
 
     private ArrayList<JComponent[]> daysComponent;
 
-    public CalendarComponent(Calendar calendar) {
+    public CalendarComponent(CalendarProject calendar) {
         this.calendar = calendar;
-        calendar.addObserver(this);
+        calendar.addPropertyChangeListener(this);
 
         daysComponent = new ArrayList<>();
 
@@ -56,8 +54,6 @@ public class CalendarComponent extends JComponent implements Observer {
             dayPanel.add(panelContent, BorderLayout.CENTER);
             add(dayPanel);
         }
-
-        this.update(null, null);
     }
 
     /**
@@ -99,10 +95,10 @@ public class CalendarComponent extends JComponent implements Observer {
     }
 
     /**
-     * Update du pattern Observable/Observer
+     * Update
      */
     @Override
-    public void update(Observable obs, Object o) {
+    public void propertyChange(PropertyChangeEvent evt) {
         repaint();
     }
 }

@@ -5,6 +5,8 @@ import fr.groupe4.clientprojet.communication.enums.CommunicationType;
 import fr.groupe4.clientprojet.communication.enums.HTMLCode;
 import org.json.simple.parser.ParseException;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeSupport;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URLEncoder;
@@ -20,6 +22,8 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
 import static fr.groupe4.clientprojet.communication.enums.HTMLCode.*;
+
+import java.beans.PropertyChangeListener;
 
 /**
  * Communication, effectue les appels API <br>
@@ -51,7 +55,7 @@ import static fr.groupe4.clientprojet.communication.enums.HTMLCode.*;
  * @author Romain
  */
 @SuppressWarnings("deprecation")
-public final class Communication extends Observable implements Runnable {
+public final class Communication implements Runnable {
     /**
      * Client HTTP pour les requètes
      */
@@ -249,6 +253,8 @@ public final class Communication extends Observable implements Runnable {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+    private final PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
+
     /**
      * Data de la requête
      */
@@ -310,6 +316,14 @@ public final class Communication extends Observable implements Runnable {
         code = null;
         htmlCode = HTML_CUSTOM_DEFAULT_ERROR;
         message = null;
+
+        if (typeOfCommunication == null) {
+            System.err.println("Type de communication null");
+        }
+
+        if (url == null) {
+            System.err.println("URL null");
+        }
 
         Thread t = new Thread(this);
 
@@ -498,8 +512,14 @@ public final class Communication extends Observable implements Runnable {
         send();
 
         loadingFinished = true;
+        propertyChangeSupport.firePropertyChange("loadingFinished", false, true);
+    }
 
-        setChanged();
-        notifyObservers();
+    public void addPropertyChangeListener(PropertyChangeListener listener) {
+        propertyChangeSupport.addPropertyChangeListener(listener);
+    }
+
+    public void removePropertyChangeListener(PropertyChangeListener listener) {
+        propertyChangeSupport.removePropertyChangeListener(listener);
     }
 }

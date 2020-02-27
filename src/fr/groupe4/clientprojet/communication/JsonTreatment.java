@@ -1,5 +1,7 @@
 package fr.groupe4.clientprojet.communication;
 
+import fr.groupe4.clientprojet.message.Message;
+import fr.groupe4.clientprojet.message.MessageList;
 import fr.groupe4.clientprojet.project.Project;
 import fr.groupe4.clientprojet.project.ProjectList;
 import fr.groupe4.clientprojet.resource.human.HumanResource;
@@ -57,9 +59,53 @@ final class JsonTreatment {
                 createProject(comm, jsonObject);
                 break;
 
+            case LIST_USER_MESSAGES:
+                listUserMessages(comm, jsonObject);
+                break;
+
+            case GET_TIME_SLOT_LIST:
+                getTimeSlotList(comm, jsonObject);
+                break;
+
             default:
                 System.err.println("Traitement JSON : type de communication non reconnu : " + comm.typeOfCommunication.toString());
                 break;
+        }
+    }
+
+    private static void getTimeSlotList(Communication comm, Object jsonObject) {
+        System.out.println(jsonObject);
+    }
+
+    private static void listUserMessages(Communication comm, Object jsonObject) {
+        if (comm.status.equals(STATUS_SUCCESS)) {
+            JSONObject jsonContent = (JSONObject) jsonObject;
+
+            JSONArray jsonMessages = (JSONArray) jsonContent.get("messages");
+
+            MessageList messages = new MessageList();
+
+            for (Object jsonMessageObject : jsonMessages) {
+                JSONObject jsonMessageSet = (JSONObject) jsonMessageObject;
+
+                Object[] keySet = jsonMessageSet.keySet().toArray();
+                String key = String.valueOf(keySet[0]);
+
+                JSONObject jsonMessage = (JSONObject) jsonMessageSet.get(key);
+
+                Message message = new Message(
+                        (long) jsonMessage.get("id"),
+                        (long) jsonMessage.get("date"),
+                        (long) jsonMessage.get("sourceId"),
+                        (long) jsonMessage.get("destinationId"),
+                        (String) jsonMessage.get("destination"),
+                        (String) jsonMessage.get("content")
+                );
+
+                messages.add(message);
+            }
+
+            comm.communicationResult = messages;
         }
     }
 
@@ -78,6 +124,8 @@ final class JsonTreatment {
 
             JSONObject jsonRenewToken = (JSONObject) jsonContent.get("renew-token");
             Communication.setRenewToken(singleton, (String) jsonRenewToken.get("value"));
+
+            Communication.builder().getUserInfos().startNow().sleepUntilFinished().build();
         }
     }
 

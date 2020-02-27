@@ -1,7 +1,7 @@
 package fr.groupe4.clientprojet.display.mainwindow.panels.calendarpanel.view;
 
 
-import fr.groupe4.clientprojet.calendar.Calendar;
+import fr.groupe4.clientprojet.calendar.CalendarProject;
 import fr.groupe4.clientprojet.calendar.CalendarComponent;
 
 import javax.swing.*;
@@ -16,7 +16,7 @@ public class CalendarPanel extends JPanel {
     private void drawContent() {
         setLayout(new BorderLayout());
 
-        Calendar c = new Calendar(6, 2020);
+        CalendarProject c = new CalendarProject(6, 2020);
 
         // Titre
         JPanel titlePanel = new JPanel(new GridLayout(1, 2));

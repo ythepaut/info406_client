@@ -20,17 +20,17 @@ public enum ProjectStatus {
      * @return Status associé
      */
     public static ProjectStatus fromString(String msg) {
-        ProjectStatus[] statuses = ProjectStatus.values();
+        ProjectStatus[] vars = ProjectStatus.values();
 
-        ProjectStatus statusResult = null;
+        ProjectStatus result = null;
 
-        for (ProjectStatus status : statuses) {
-            if (status.msg.equalsIgnoreCase(msg)) {
-                statusResult = status;
+        for (ProjectStatus var : vars) {
+            if (var.msg.equalsIgnoreCase(msg)) {
+                result = var;
             }
         }
 
-        return statusResult;
+        return result;
     }
 
     /**

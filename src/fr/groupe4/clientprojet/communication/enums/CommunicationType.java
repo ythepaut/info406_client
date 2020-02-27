@@ -9,6 +9,8 @@ public enum CommunicationType {
     LIST_PROJECTS,
     GET_USER_INFOS,
     GET_HUMAN_RESOURCE,
+    LIST_USER_MESSAGES,
+    GET_TIME_SLOT_LIST,
     CREATE_PROJECT;
 
     private boolean checkConnection;

@@ -2,6 +2,8 @@ package fr.groupe4.clientprojet.project;
 
 import fr.groupe4.clientprojet.project.enums.ProjectStatus;
 
+import java.util.Date;
+
 public class Project {
     private long id;
     private String name;
@@ -19,7 +21,7 @@ public class Project {
 
     @Override
     public String toString() {
-        return id + " - " + name + " - " + description + " - " + deadline + " - " + status;
+        return id + " - " + name + " - " + description + " - " + getDeadlineAsDate() + " - " + status;
     }
 
     public long getId() {
@@ -36,6 +38,10 @@ public class Project {
 
     public long getDeadline() {
         return deadline;
+    }
+
+    public Date getDeadlineAsDate() {
+        return new Date(deadline*1000);
     }
 
     public ProjectStatus getStatus() {

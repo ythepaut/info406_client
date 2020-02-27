@@ -4,6 +4,8 @@ package fr.groupe4.clientprojet.resource.human;
  * Utilisateur
  */
 public class User extends HumanResource {
+    private static User user = null;
+
     /**
      * Adresse IP
      */
@@ -47,6 +49,8 @@ public class User extends HumanResource {
         this.userId = userId;
         this.username = username;
         this.email = email;
+
+        user = this;
     }
 
     public long getUserId() {
@@ -67,5 +71,9 @@ public class User extends HumanResource {
 
     public String getEmail() {
         return email;
+    }
+
+    public static User getUser() {
+        return user;
     }
 }
