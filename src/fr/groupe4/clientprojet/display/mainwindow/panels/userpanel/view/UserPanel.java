@@ -1,7 +1,9 @@
 package fr.groupe4.clientprojet.display.mainwindow.panels.userpanel.view;
 
+import fr.groupe4.clientprojet.communication.Communication;
 import fr.groupe4.clientprojet.display.mainwindow.panels.userpanel.controller.EventUserPanel;
 import fr.groupe4.clientprojet.display.mainwindow.panels.userpanel.enums.UserChoice;
+import fr.groupe4.clientprojet.resource.human.User;
 import fr.groupe4.clientprojet.utils.Location;
 
 import javax.swing.*;
@@ -26,6 +28,10 @@ public class UserPanel extends JPanel {
      * Le listener du panel
      */
     private EventUserPanel eventUserPanel;
+    /**
+     * L'utilisateur
+     */
+    private User user;
 
     /**
      * Le constructeur
@@ -33,6 +39,7 @@ public class UserPanel extends JPanel {
     public UserPanel() {
         setLayout(new GridLayout(2, 1));
         eventUserPanel = new EventUserPanel(this);
+        user = (User) Communication.builder().getUserInfos().startNow().sleepUntilFinished().build().getResult();
 
         drawContent();
     }
@@ -46,8 +53,8 @@ public class UserPanel extends JPanel {
         JPanel descripPanel = new JPanel(new GridLayout(1, 2));
         descripPanel.add(new JLabel(new ImageIcon(Location.getPath() + "/data/img/user.png")));
         JPanel namePanel = new JPanel(new GridLayout(2, 1));
-        namePanel.add(new JLabel("<html><h1 style='font-size:2em;'>Jean<br/>Dupond</h1></html>"));
-        namePanel.add(new JLabel("<html><p style='text-align:justify;'><em>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed iaculis augue ac augue aliquam, in porta mi ultricies. Donec ornare sit amet turpis sed convallis.</em></p></html>"));
+        namePanel.add(new JLabel("<html><h1 style='font-size:2em;'>" + user.getFirstname() + "<br/>" + user.getLastname() + "</h1></html>"));
+        namePanel.add(new JLabel("<html><p style='text-align:justify;'><em>" + user.getDescription() + "</em></p></html>"));
         descripPanel.add(namePanel);
         descripPanel.setBorder(new CompoundBorder(new MatteBorder(0, 0, 0, 2, Color.BLACK), new EmptyBorder(0, 0, 0, 20)));
         topPanel.add(descripPanel);
@@ -68,7 +75,7 @@ public class UserPanel extends JPanel {
 
         JPanel mailPanel = new JPanel(new BorderLayout());
         mailPanel.add(new JLabel("Adressse mail :"), BorderLayout.NORTH);
-        mailField = new JTextField();
+        mailField = new JTextField(user.getEmail());
         mailPanel.add(mailField, BorderLayout.CENTER);
         JButton mailButton = new JButton("Modifier");
         mailButton.setActionCommand(UserChoice.MAIL.getName());
