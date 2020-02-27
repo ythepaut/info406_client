@@ -1,15 +1,15 @@
 package fr.groupe4.clientprojet.communication;
 
 import fr.groupe4.clientprojet.communication.enums.CommunicationType;
+import fr.groupe4.clientprojet.logger.Logger;
 import fr.groupe4.clientprojet.project.enums.ProjectStatus;
 import fr.groupe4.clientprojet.resource.human.User;
 
-import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 
 import static fr.groupe4.clientprojet.communication.enums.CommunicationType.*;
-import static fr.groupe4.clientprojet.message.enums.MessageOrigin.*;
+import static fr.groupe4.clientprojet.message.enums.MessageResource.*;
 
 /**
  * Builder de la communication
@@ -114,6 +114,8 @@ public final class CommunicationBuilder {
         requestData.put("token", Communication.getRequestToken(this));
         requestData.put("from", t1);
         requestData.put("to", t2);
+        Logger.debug("CommunicationBuilder : à changer !");
+        requestData.put("task", 22);
         return this;
     }
 

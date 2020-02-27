@@ -1,6 +1,6 @@
 package fr.groupe4.clientprojet.message.enums;
 
-public enum MessageOrigin {
+public enum MessageResource {
     ORIGIN_HUMANRESOURCE("HUMANRESOURCE"),
     ORIGIN_PROJECT("PROJECT"),
     ORIGIN_HUMANRESOURCE_ALLOCATION("HUMANRESOURCE_ALLOCATION"),
@@ -8,7 +8,7 @@ public enum MessageOrigin {
 
     private String msg;
 
-    MessageOrigin(String msg) {
+    MessageResource(String msg) {
         this.msg = msg.toUpperCase();
     }
 
@@ -19,12 +19,12 @@ public enum MessageOrigin {
      *
      * @return Enum associé
      */
-    public static MessageOrigin fromString(String msg) {
-        MessageOrigin[] vars = MessageOrigin.values();
+    public static MessageResource fromString(String msg) {
+        MessageResource[] vars = MessageResource.values();
 
-        MessageOrigin result = null;
+        MessageResource result = null;
 
-        for (MessageOrigin var : vars) {
+        for (MessageResource var : vars) {
             if (var.msg.equalsIgnoreCase(msg)) {
                 result = var;
             }
