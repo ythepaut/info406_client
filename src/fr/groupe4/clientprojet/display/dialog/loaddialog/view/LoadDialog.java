@@ -28,7 +28,12 @@ public class LoadDialog extends JDialog implements PropertyChangeListener {
 
         add(new LoadCanvas());
 
-        setVisible(true);
+        if (comm.isFinished()) {
+            dispose();
+        }
+        else {
+            setVisible(true);
+        }
     }
 
     /**
