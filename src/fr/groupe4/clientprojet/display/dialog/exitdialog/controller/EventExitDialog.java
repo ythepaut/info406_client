@@ -1,5 +1,6 @@
 package fr.groupe4.clientprojet.display.dialog.exitdialog.controller;
 
+import fr.groupe4.clientprojet.Main;
 import fr.groupe4.clientprojet.display.dialog.exitdialog.enums.ExitChoice;
 
 import javax.swing.*;
@@ -37,6 +38,7 @@ public class EventExitDialog extends WindowAdapter implements ActionListener {
         switch (ExitChoice.getEnum(e.getActionCommand())) {
             case EXIT:
                 source.getOwner().dispose();
+                Main.exit();
                 break;
             case CANCEL:
                 source.dispose();

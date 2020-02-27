@@ -3,6 +3,7 @@ package fr.groupe4.clientprojet.communication;
 import fr.groupe4.clientprojet.communication.enums.CommunicationStatus;
 import fr.groupe4.clientprojet.communication.enums.CommunicationType;
 import fr.groupe4.clientprojet.communication.enums.HTMLCode;
+import fr.groupe4.clientprojet.logger.Logger;
 import org.json.simple.parser.ParseException;
 
 import java.beans.PropertyChangeEvent;
@@ -102,7 +103,7 @@ public final class Communication implements Runnable {
             return requestToken;
         }
         else {
-            System.err.println("Accès au token non autorisé");
+            Logger.error("Accès au token non autorisé");
             return "";
         }
     }
@@ -127,7 +128,7 @@ public final class Communication implements Runnable {
             }
         }
         else {
-            System.err.println("Accès au token non autorisé");
+            Logger.error("Accès au token non autorisé");
         }
     }
 
@@ -143,7 +144,7 @@ public final class Communication implements Runnable {
             return renewToken;
         }
         else {
-            System.err.println("Accès au token non autorisé");
+            Logger.error("Accès au token non autorisé");
             return "";
         }
     }
@@ -168,7 +169,7 @@ public final class Communication implements Runnable {
             }
         }
         else {
-            System.err.println("Accès au token non autorisé");
+            Logger.error("Accès au token non autorisé");
         }
     }
 
@@ -209,7 +210,7 @@ public final class Communication implements Runnable {
                 }
             }
             catch (ParseException e) {
-                System.err.println("Vérification de token invalide");
+                Logger.error("Vérification de token invalide");
             }
         }
     }
@@ -318,11 +319,11 @@ public final class Communication implements Runnable {
         message = null;
 
         if (typeOfCommunication == null) {
-            System.err.println("Type de communication null");
+            Logger.error("Type de communication null");
         }
 
         if (url == null) {
-            System.err.println("URL null");
+            Logger.error("URL null");
         }
 
         Thread t = new Thread(this);
@@ -422,11 +423,11 @@ public final class Communication implements Runnable {
         }
         catch (IOException e) {
             htmlCode = HTML_CUSTOM_TIMEOUT;
-            System.err.println("Connection timed out");
+            Logger.error("Connection timed out");
         }
         catch (InterruptedException e) {
             htmlCode = HTML_CUSTOM_DEFAULT_ERROR;
-            System.err.println("Requête interrompue");
+            Logger.error("Requête interrompue");
         }
 
         if (response != null) {
@@ -438,7 +439,7 @@ public final class Communication implements Runnable {
             try {
                 parsedResponse = parser.parse(response.body());
             } catch (ParseException e) {
-                System.err.println("Réponse invalide, erreur serveur ? Réponse serveur :\n" + response.body());
+                Logger.error("Réponse invalide, erreur serveur ? Réponse serveur :\n" + response.body());
             }
 
             if (parsedResponse != null) {
@@ -476,7 +477,7 @@ public final class Communication implements Runnable {
     public void run() {
         if (url == null) {
             // Si erreur d'URL
-            System.err.println("Communication inutile, rien n'est effectué");
+            Logger.error("Communication inutile, rien n'est effectué");
         }
         else {
             // Sinon si l'URL est bien construite, on vérifie la connexion
@@ -495,7 +496,7 @@ public final class Communication implements Runnable {
 
                     if (requestToken == null) {
                         // S'il n'est pas recréé, euh oups
-                        System.err.println("help");
+                        Logger.error("help");
                     }
                     else {
                         // Si jeton recréé, on reprend

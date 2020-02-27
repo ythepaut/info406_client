@@ -3,6 +3,7 @@ package fr.groupe4.clientprojet.display.mainwindow.view;
 import fr.groupe4.clientprojet.display.mainwindow.controller.EventMainWindow;
 import fr.groupe4.clientprojet.display.mainwindow.panels.centerpanel.view.CenterPanel;
 import fr.groupe4.clientprojet.display.mainwindow.panels.leftpanel.view.LeftPanel;
+import fr.groupe4.clientprojet.logger.Logger;
 import fr.groupe4.clientprojet.utils.Location;
 
 import javax.imageio.ImageIO;
@@ -31,7 +32,7 @@ public class MainWindow extends JFrame {
         try {
             setIconImage(ImageIO.read(new File(Location.getPath() + "/data/img/icon.png")));
         } catch (IOException e) {
-            System.err.println(e.getMessage());
+            Logger.error(e.getMessage());
         }
         setMinimumSize(new Dimension(1400, 800));
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
