@@ -1,11 +1,14 @@
 package fr.groupe4.clientprojet.communication;
 
+import fr.groupe4.clientprojet.logger.Logger;
 import fr.groupe4.clientprojet.message.Message;
 import fr.groupe4.clientprojet.message.MessageList;
 import fr.groupe4.clientprojet.project.Project;
 import fr.groupe4.clientprojet.project.ProjectList;
 import fr.groupe4.clientprojet.resource.human.HumanResource;
 import fr.groupe4.clientprojet.resource.human.User;
+import fr.groupe4.clientprojet.timeslot.TimeSlot;
+import fr.groupe4.clientprojet.timeslot.TimeSlotList;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -68,13 +71,39 @@ final class JsonTreatment {
                 break;
 
             default:
-                System.err.println("Traitement JSON : type de communication non reconnu : " + comm.typeOfCommunication.toString());
+                Logger.error("Traitement JSON : type de communication non reconnu : " + comm.typeOfCommunication.toString());
                 break;
         }
     }
 
     private static void getTimeSlotList(Communication comm, Object jsonObject) {
-        System.out.println(jsonObject);
+        if (comm.status.equals(STATUS_SUCCESS)) {
+            JSONObject jsonContent = (JSONObject) jsonObject;
+            JSONArray jsonTimeSlots = (JSONArray) jsonContent.get("timeslots");
+
+            TimeSlotList timeSlots = new TimeSlotList();
+
+            for (Object jsonTimeSlotObject : jsonTimeSlots) {
+                JSONObject jsonTimeSlotSet = (JSONObject) jsonTimeSlotObject;
+
+                Object[] keySet = jsonTimeSlotSet.keySet().toArray();
+                String key = String.valueOf(keySet[0]);
+
+                JSONObject jsonTimeSlot = (JSONObject) jsonTimeSlotSet.get(key);
+
+                TimeSlot timeSlot = new TimeSlot(
+                        (long) jsonTimeSlot.get("id"),
+                        (long) jsonTimeSlot.get("start"),
+                        (long) jsonTimeSlot.get("end"),
+                        (long) jsonTimeSlot.get("task"),
+                        (long) jsonTimeSlot.get("room")
+                );
+
+                timeSlots.add(timeSlot);
+            }
+
+            comm.communicationResult = timeSlots;
+        }
     }
 
     private static void listUserMessages(Communication comm, Object jsonObject) {
@@ -93,10 +122,21 @@ final class JsonTreatment {
 
                 JSONObject jsonMessage = (JSONObject) jsonMessageSet.get(key);
 
+                long sourceId = (long) jsonMessage.get("sourceId");
+
+                Communication c = Communication
+                        .builder()
+                        .getHumanRessource(sourceId)
+                        .startNow()
+                        .sleepUntilFinished()
+                        .build();
+
+                HumanResource humanResource = (HumanResource) c.getResult();
+
                 Message message = new Message(
+                        humanResource,
                         (long) jsonMessage.get("id"),
                         (long) jsonMessage.get("date"),
-                        (long) jsonMessage.get("sourceId"),
                         (long) jsonMessage.get("destinationId"),
                         (String) jsonMessage.get("destination"),
                         (String) jsonMessage.get("content")
@@ -188,7 +228,7 @@ final class JsonTreatment {
                     (String) jsonUserContent.get("email"));
         }
         else {
-            System.err.println("Déconnecté en cours de route ?");
+            Logger.error("Déconnecté en cours de route ?");
         }
     }
 
@@ -207,10 +247,10 @@ final class JsonTreatment {
             Communication.setRequestToken(singleton, (String) jsonTokenContent.get("value"));
         }
         else if (comm.htmlCode == HTML_FORBIDDEN) {
-            System.err.println("Update interdite !?");
+            Logger.error("Update interdite !?");
         }
         else {
-            System.err.println("Update malformée !?");
+            Logger.error("Update malformée !?");
         }
     }
 

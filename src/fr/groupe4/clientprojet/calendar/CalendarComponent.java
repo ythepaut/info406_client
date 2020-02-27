@@ -1,10 +1,13 @@
 package fr.groupe4.clientprojet.calendar;
 
+import fr.groupe4.clientprojet.communication.Communication;
+
 import javax.swing.*;
 import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
+import java.util.GregorianCalendar;
 
 /**
  * Composant du calendrier, vue
@@ -29,6 +32,9 @@ public class CalendarComponent extends JComponent implements PropertyChangeListe
         calendar.addPropertyChangeListener(this);
 
         daysComponent = new ArrayList<>();
+
+        // Communication c = Communication.builder().getTimeSlotList(new GregorianCalendar(2020, GregorianCalendar.JANUARY, 1), new GregorianCalendar(2020, GregorianCalendar.DECEMBER, 31)).startNow().sleepUntilFinished().build();
+
 
         setLayout(new GridLayout(1, 7));
 
