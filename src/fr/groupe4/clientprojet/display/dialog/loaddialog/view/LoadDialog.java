@@ -1,6 +1,8 @@
 package fr.groupe4.clientprojet.display.dialog.loaddialog.view;
 
 import fr.groupe4.clientprojet.communication.Communication;
+import fr.groupe4.clientprojet.communication.enums.PropertyName;
+import fr.groupe4.clientprojet.display.dialog.loaddialog.controller.EventLoadDialog;
 
 import javax.swing.*;
 import java.awt.*;
@@ -11,7 +13,7 @@ import java.beans.PropertyChangeListener;
  * Dialog de chargement
  * Permet de notifier l'utilisateur d'un chargement
  */
-public class LoadDialog extends JDialog implements PropertyChangeListener {
+public class LoadDialog extends JDialog {
     /**
      * Le constructeur
      *
@@ -20,7 +22,7 @@ public class LoadDialog extends JDialog implements PropertyChangeListener {
      */
     public LoadDialog(JDialog owner, Communication comm) {
         super(owner, true);
-        comm.addPropertyChangeListener(this);
+        addPropertyChangeListener(new EventLoadDialog(this, comm));
         setUndecorated(true);
         setSize(350, 80);
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
@@ -33,20 +35,6 @@ public class LoadDialog extends JDialog implements PropertyChangeListener {
         }
         else {
             setVisible(true);
-        }
-    }
-
-    /**
-     * Ferme la fenêtre quand le chargement est fini
-     *
-     * @param evt Event de changement de propriété
-     */
-    @Override
-    public void propertyChange(PropertyChangeEvent evt) {
-        String propertyName = evt.getPropertyName();
-
-        if ("loadingFinished".equals(propertyName)) {
-            dispose();
         }
     }
 }
