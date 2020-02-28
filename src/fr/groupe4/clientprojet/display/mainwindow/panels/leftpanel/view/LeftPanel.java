@@ -146,6 +146,13 @@ public class LeftPanel extends JPanel {
             i++;
         }
 
+        while (i < nbProjetsMax + debutListe) {
+            c.gridy = i;
+            buttonPanel.add(new JLabel(" "), c);
+
+            i++;
+        }
+
         projectPanel.add(buttonPanel, BorderLayout.CENTER);
 
 
