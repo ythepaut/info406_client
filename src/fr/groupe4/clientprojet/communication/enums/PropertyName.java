@@ -1,7 +1,8 @@
 package fr.groupe4.clientprojet.communication.enums;
 
 public enum PropertyName {
-    LOADDIALOG("loadingFinished");
+    LOADDIALOG("loadingFinished"),
+    NEWS("newsChanged");
 
     private final String name;
 
@@ -19,6 +20,10 @@ public enum PropertyName {
         switch (name) {
             case "loadingFinished":
                 res = LOADDIALOG;
+                break;
+
+            case "newsChanged":
+                res = NEWS;
                 break;
 
             default:

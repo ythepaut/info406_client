@@ -123,4 +123,15 @@ public class UserPanel extends JPanel {
     public String getEmail() {
         return mailField.getText();
     }
+
+    /**
+     * Redessine le panel
+     */
+    public void redraw() {
+        removeAll();
+        validate();
+        revalidate();
+        repaint();
+        drawContent();
+    }
 }

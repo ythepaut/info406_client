@@ -1,15 +1,18 @@
 package fr.groupe4.clientprojet.display.mainwindow.panels.userpanel.controller;
 
+import fr.groupe4.clientprojet.communication.enums.PropertyName;
 import fr.groupe4.clientprojet.display.mainwindow.panels.userpanel.enums.UserChoice;
 import fr.groupe4.clientprojet.display.mainwindow.panels.userpanel.view.UserPanel;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 /**
  * Le listener du panel utilisateur
  */
-public class EventUserPanel implements ActionListener {
+public class EventUserPanel implements ActionListener, PropertyChangeListener {
     /**
      * Le panel utilisateur
      */
@@ -45,6 +48,20 @@ public class EventUserPanel implements ActionListener {
                 break;
 
             default:
+        }
+    }
+
+    /**
+     * Quand le fil d'actualité change
+     *
+     * @param e : L'event
+     */
+    @Override
+    public void propertyChange(PropertyChangeEvent e) {
+        String propertyName = e.getPropertyName();
+
+        if (PropertyName.NEWS.getName().equals(propertyName)) {
+            source.redraw();
         }
     }
 }
