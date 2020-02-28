@@ -40,6 +40,10 @@ public class LeftPanel extends JPanel {
      */
     private int nbProjet, debutListe = 0;
     private boolean first = true;
+    /**
+     * La liste des projets
+     */
+    private ProjectList projectList;
 
     /**
      * Le constructeur
@@ -49,6 +53,9 @@ public class LeftPanel extends JPanel {
     public LeftPanel(CenterPanel centerPanel) {
         buttons = new ArrayList<>();
         this.centerPanel = centerPanel;
+        Communication comm = Communication.builder().sleepUntilFinished().startNow().getProjectList().build();
+        projectList = (ProjectList) comm.getResult();
+        nbProjet = projectList.size();
 
 
         setLayout(new BorderLayout());
@@ -118,7 +125,6 @@ public class LeftPanel extends JPanel {
     private void drawProjectButton(EventLeftPanel eventLeftPanel, Font buttonFont, GridBagConstraints c) {
         JPanel projectPanel = new JPanel(new BorderLayout());
         projectPanel.addMouseWheelListener(eventLeftPanel);
-        setNbProjets(10); // TODO: Cette variable sera déterminé par le nombre de projets reçu par le modèle
         int nbProjetsMax = 5; // TODO: Valeur à déterminer en fonction de la taille de la fenêtre
 
 
@@ -126,13 +132,8 @@ public class LeftPanel extends JPanel {
         JPanel buttonPanel = new JPanel(new GridBagLayout());
         buttonPanel.setBackground(Color.WHITE);
 
-        Communication comm = Communication.builder().sleepUntilFinished().startNow().getProjectList().build();
-
-        ProjectList list = (ProjectList) comm.getResult();
-        nbProjet = list.size();
-
         int i = 0;
-        for (Project p: list) {
+        for (Project p: projectList) {
             if (i >= debutListe && i < nbProjetsMax + debutListe) {
                 c.gridy = i;
                 String name = p.getName();
