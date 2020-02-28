@@ -3,6 +3,7 @@ package fr.groupe4.clientprojet.communication;
 import fr.groupe4.clientprojet.communication.enums.CommunicationStatus;
 import fr.groupe4.clientprojet.communication.enums.CommunicationType;
 import fr.groupe4.clientprojet.communication.enums.HTMLCode;
+import fr.groupe4.clientprojet.communication.enums.PropertyName;
 import fr.groupe4.clientprojet.logger.Logger;
 import org.json.simple.parser.ParseException;
 
@@ -513,7 +514,7 @@ public final class Communication implements Runnable {
         send();
 
         loadingFinished = true;
-        propertyChangeSupport.firePropertyChange("loadingFinished", false, true);
+        propertyChangeSupport.firePropertyChange(PropertyName.LOADDIALOG.getName(), false, true);
     }
 
     public void addPropertyChangeListener(PropertyChangeListener listener) {
