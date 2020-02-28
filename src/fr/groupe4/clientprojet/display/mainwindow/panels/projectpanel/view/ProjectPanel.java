@@ -1,27 +1,18 @@
 package fr.groupe4.clientprojet.display.mainwindow.panels.projectpanel.view;
 
 import fr.groupe4.clientprojet.communication.Communication;
-import fr.groupe4.clientprojet.display.mainwindow.panels.projectpanel.controller.EventProjectPanel;
-import fr.groupe4.clientprojet.display.mainwindow.panels.projectpanel.enums.ProjectSlide;
-import fr.groupe4.clientprojet.display.view.RoundButton;
+import fr.groupe4.clientprojet.display.view.slide.view.Slide;
 import fr.groupe4.clientprojet.project.Project;
 import fr.groupe4.clientprojet.project.ProjectList;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 
 /**
  * Le panel des projets
  */
 public class ProjectPanel extends JPanel {
-    /**
-     * Le slide sur lequel on est
-     */
-    private ProjectSlide slide;
-    /**
-     * Le listener du panel
-     */
-    private EventProjectPanel eventProjectPanel;
     /**
      * Le projet qui est affiché
      */
@@ -33,9 +24,6 @@ public class ProjectPanel extends JPanel {
      * @param projectName : Le nom du projet
      */
     public ProjectPanel(String projectName) {
-        slide = ProjectSlide.HOME;
-        eventProjectPanel = new EventProjectPanel(this);
-
         Communication comm = Communication.builder().sleepUntilFinished().startNow().getProjectList().build();
 
         ProjectList list = (ProjectList) comm.getResult();
@@ -67,58 +55,15 @@ public class ProjectPanel extends JPanel {
 
         add(titlePanel, BorderLayout.NORTH);
 
-        // Partie centrale (onglets)
-        JPanel slidesPanel = new JPanel(new BorderLayout());
-        slidesPanel.setBackground(Color.WHITE);
+        // Les slides
+        ArrayList<String> slideName = new ArrayList<>();
+        ArrayList<JPanel> slidePanel = new ArrayList<>();
+        slideName.add("HOME"); slidePanel.add(homePanel());
+        slideName.add("TASK"); slidePanel.add(taskPanel());
+        slideName.add("MESSAGE"); slidePanel.add(messagePanel());
 
-        // Bouton gauche
-        RoundButton leftButton = new RoundButton("<");
-        leftButton.setActionCommand(EventProjectPanel.LEFT);
-        leftButton.addActionListener(eventProjectPanel);
-        slidesPanel.add(leftButton, BorderLayout.WEST);
-        // Bouton droite
-        RoundButton rightButton = new RoundButton(">");
-        rightButton.setActionCommand(EventProjectPanel.RIGHT);
-        rightButton.addActionListener(eventProjectPanel);
-        slidesPanel.add(rightButton, BorderLayout.EAST);
-        // Boutons haut
-        JPanel topButtons = new JPanel(new GridBagLayout());
-        topButtons.setBackground(Color.WHITE);
-        c.gridx = c.gridy = 0;
-        JButton homeButton = new JButton("HOME");
-        homeButton.setActionCommand(ProjectSlide.HOME.getNbString());
-        homeButton.addActionListener(eventProjectPanel);
-        topButtons.add(homeButton, c);
-        c.gridx++;
-        JButton taskButton = new JButton("TASK");
-        taskButton.setActionCommand(ProjectSlide.TASK.getNbString());
-        taskButton.addActionListener(eventProjectPanel);
-        topButtons.add(taskButton, c);
-        c.gridx++;
-        JButton messagePanel = new JButton("MESSAGE");
-        messagePanel.setActionCommand(ProjectSlide.MESSAGE.getNbString());
-        messagePanel.addActionListener(eventProjectPanel);
-        topButtons.add(messagePanel, c);
-
-        slidesPanel.add(topButtons, BorderLayout.NORTH);
-
-        switch (slide) {
-            case HOME:
-                slidesPanel.add(homePanel(), BorderLayout.CENTER);
-                break;
-
-            case TASK:
-                slidesPanel.add(taskPanel(), BorderLayout.CENTER);
-                break;
-
-            case MESSAGE:
-                slidesPanel.add(messagePanel(), BorderLayout.CENTER);
-                break;
-
-            default:
-        }
-
-        add(slidesPanel, BorderLayout.CENTER);
+        Slide slides = new Slide(slidePanel, slideName);
+        add(slides, BorderLayout.CENTER);
     }
 
     /**
@@ -156,34 +101,5 @@ public class ProjectPanel extends JPanel {
         panel.add(new JLabel("MESSAGES"));
         // TODO : Construire panel messagerie
         return panel;
-    }
-
-    /**
-     * Défini le slide sur lequel on est
-     *
-     * @param slide : le slide
-     */
-    public void setSlide(int slide) {
-        this.slide = ProjectSlide.getEnum(Math.max(ProjectSlide.HOME.getNb(), Math.min(slide, ProjectSlide.MESSAGE.getNb())));
-    }
-
-    /**
-     * Renvoie le slide sur lequel on est
-     *
-     * @return : le slide
-     */
-    public ProjectSlide getSlide() {
-        return slide;
-    }
-
-    /**
-     * Redessine le panel
-     */
-    public void redraw() {
-        removeAll();
-        validate();
-        revalidate();
-        repaint();
-        drawContent();
     }
 }
