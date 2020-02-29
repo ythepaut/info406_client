@@ -30,6 +30,8 @@ public final class CommunicationBuilder {
      */
     protected boolean startNow;
 
+    protected boolean keepAlive;
+
     /**
      * Attend que la requête soit terminée et bloque le thread
      * Cette variable ne sert que si startNow est à true
@@ -46,6 +48,7 @@ public final class CommunicationBuilder {
      */
     public CommunicationBuilder() {
         startNow = false;
+        keepAlive = false;
         sleepUntilFinished = false;
         requestData = new HashMap<>();
     }
@@ -57,6 +60,16 @@ public final class CommunicationBuilder {
      */
     public CommunicationBuilder startNow() {
         startNow = true;
+        return this;
+    }
+
+    /**
+     * Reste actif ou non
+     *
+     * @return Reste du builder
+     */
+    protected CommunicationBuilder keepAlive() {
+        keepAlive = true;
         return this;
     }
 
