@@ -1,5 +1,6 @@
 package fr.groupe4.clientprojet.display.dialog.connectiondialog.controller;
 
+import fr.groupe4.clientprojet.Main;
 import fr.groupe4.clientprojet.communication.Communication;
 import fr.groupe4.clientprojet.display.dialog.connectiondialog.view.ConnectionDialog;
 import fr.groupe4.clientprojet.display.dialog.connectiondialog.enums.ConnectionChoice;
@@ -46,7 +47,6 @@ public class EventConnectionDialog extends WindowAdapter implements ActionListen
         switch (ConnectionChoice.getEnum(e.getActionCommand())) {
             case OK:
                 Communication comm = Communication.builder()
-                                                  .startNow()
                                                   .connect(source.getUsername(), source.getPassword())
                                                   .build();
 
@@ -61,6 +61,7 @@ public class EventConnectionDialog extends WindowAdapter implements ActionListen
 
             case CANCEL:
                 source.getOwner().dispose();
+                Main.exit();
                 break;
 
             default:

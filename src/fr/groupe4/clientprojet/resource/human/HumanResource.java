@@ -92,4 +92,9 @@ public class HumanResource {
     public String getRole() {
         return role.toString();
     }
+
+    public String toString() {
+        return firstname.substring(0, 1).toUpperCase() + firstname.substring(1).toLowerCase() + " "
+                + lastname.toUpperCase() + ", " + role + ", " + job;
+    }
 }
