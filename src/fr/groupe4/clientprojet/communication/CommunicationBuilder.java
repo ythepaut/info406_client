@@ -4,8 +4,13 @@ import fr.groupe4.clientprojet.communication.enums.CommunicationType;
 import fr.groupe4.clientprojet.logger.Logger;
 import fr.groupe4.clientprojet.project.enums.ProjectStatus;
 import fr.groupe4.clientprojet.resource.human.User;
+import fr.groupe4.clientprojet.room.Room;
+import fr.groupe4.clientprojet.task.Task;
 
-import java.util.GregorianCalendar;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.temporal.Temporal;
 import java.util.HashMap;
 
 import static fr.groupe4.clientprojet.communication.enums.CommunicationType.*;
@@ -119,16 +124,79 @@ public final class CommunicationBuilder {
         return this;
     }
 
-    public CommunicationBuilder getTimeSlotList(GregorianCalendar from, GregorianCalendar to) {
-        long t1 = from.getTimeInMillis()/1000;
-        long t2 = to.getTimeInMillis()/1000;
+    /**
+     * Récupère la liste des créneaux entre deux dates
+     * Si un créneau commence avant t1 mais se termine entre t1 et t2 il sera pris en compte
+     * Fonctionne avec des dates pures (LocalDate) et des dates + temps (LocalDateTime)
+     *
+     * Exemple d'utilisation :
+     *      LocalDateTime from = LocalDateTime.of(2020, 1, 1, 15, 30); // Date et heure, 1er janvier 2020 à 15h30
+     *      LocalDate to = LocalDate.of(2020, 12, 31); // Date seulement, 31 décembre 2020
+     *
+     *      Communication c = Communication.builder()
+     *          .getUserTimeSlotList(from, to)
+     *          .sleepUntilFinished()
+     *          .startNow()
+     *          .build();
+     *
+     * @param from Date de début
+     * @param to Date de fin
+     *
+     * @return Builder non terminé avec URL
+     */
+    public CommunicationBuilder getUserTimeSlotList(Temporal from, Temporal to) {
+        return getTimeSlotList(from, to, "hresource", User.getUser().getResourceId());
+    }
+
+    private CommunicationBuilder getTimeSlotList(Temporal from, Temporal to, String what, long id) {
+        long t1 = 0, t2 = 0;
+
+        if (from instanceof LocalDate) t1 = ((LocalDate) from).atStartOfDay().atZone(ZoneId.systemDefault()).toEpochSecond();
+        else if (from instanceof LocalDateTime) t1 = ((LocalDateTime) from).atZone(ZoneId.systemDefault()).toEpochSecond();
+        else Logger.error("From : type incorrect");
+
+        if (to instanceof LocalDate) t2 = ((LocalDate) to).atStartOfDay().atZone(ZoneId.systemDefault()).toEpochSecond();
+        else if (to instanceof LocalDateTime) t2 = ((LocalDateTime) to).atZone(ZoneId.systemDefault()).toEpochSecond();
+        else Logger.error("To : type incorrect");
+
         typeOfCommunication = GET_TIME_SLOT_LIST;
         url = "timeslot/list";
         requestData.put("token", Communication.getRequestToken(this));
         requestData.put("from", t1);
         requestData.put("to", t2);
-        Logger.debug("CommunicationBuilder : à changer !");
-        requestData.put("task", 22);
+        requestData.put(what, id);
+        return this;
+    }
+
+    /**
+     * Ajoute un créneau
+     * @see #getUserTimeSlotList getUserTimeSlotList pour exemple détaillé d'utilisation de from et de to
+     *
+     * @param from Date de début
+     * @param to Date de fin
+     * @param task Tâche
+     * @param room Salle
+     *
+     * @return Builder non terminé avec URL
+     */
+    public CommunicationBuilder addTimeSlot(Temporal from, Temporal to, Task task, Room room) {
+        long t1 = 0, t2 = 0;
+
+        if (from instanceof LocalDate) t1 = ((LocalDate) from).atStartOfDay().atZone(ZoneId.systemDefault()).toEpochSecond();
+        else if (from instanceof LocalDateTime) t1 = ((LocalDateTime) from).atZone(ZoneId.systemDefault()).toEpochSecond();
+        else Logger.error("From : type incorrect");
+
+        if (to instanceof LocalDate) t2 = ((LocalDate) to).atStartOfDay().atZone(ZoneId.systemDefault()).toEpochSecond();
+        else if (to instanceof LocalDateTime) t2 = ((LocalDateTime) to).atZone(ZoneId.systemDefault()).toEpochSecond();
+        else Logger.error("To : type incorrect");
+
+        typeOfCommunication = ADD_TIME_SLOT;
+        url = "timeslot/create";
+        requestData.put("token", Communication.getRequestToken(this));
+        requestData.put("start", t1);
+        requestData.put("end", t2);
+        requestData.put("task", task.getId());
+        requestData.put("room", room.getId());
         return this;
     }
 

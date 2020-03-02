@@ -71,11 +71,17 @@ final class JsonTreatment {
                 getTimeSlotList(comm, jsonObject);
                 break;
 
+            case ADD_TIME_SLOT:
+                addTimeSlot(comm, jsonObject);
+                break;
+
             default:
                 Logger.error("Traitement JSON : type de communication non reconnu : " + comm.typeOfCommunication.toString());
                 break;
         }
     }
+
+    private static void addTimeSlot(Communication comm, Object jsonObject) {}
 
     private static void getTimeSlotList(Communication comm, Object jsonObject) {
         if (comm.status.equals(STATUS_SUCCESS)) {
@@ -176,8 +182,7 @@ final class JsonTreatment {
      * @param comm Communication à traiter
      * @param jsonObject Contenu à traiter
      */
-    private static void createProject(Communication comm, Object jsonObject) {
-    }
+    private static void createProject(Communication comm, Object jsonObject) {}
 
     /**
      * Récupère une ressource humaine
