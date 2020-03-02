@@ -1,31 +1,39 @@
 package fr.groupe4.clientprojet.timeslot;
 
-import java.util.Date;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 public class TimeSlot {
     private long id;
-    private long startTime;
-    private long endTime;
+    private LocalDateTime startTime;
+    private LocalDateTime endTime;
     private long idTask;
     private long roomId;
 
     public TimeSlot(long id, long startTime, long endTime, long idTask, long roomId) {
         this.id = id;
-        this.startTime = startTime;
-        this.endTime = endTime;
+        this.startTime = Instant.ofEpochMilli(startTime*1000).atZone(ZoneId.systemDefault()).toLocalDateTime();
+        this.endTime = Instant.ofEpochMilli(endTime*1000).atZone(ZoneId.systemDefault()).toLocalDateTime();
         this.idTask = idTask;
         this.roomId = roomId;
     }
 
-    public Date getStartTime() {
-        return new Date(startTime*1000);
+    public LocalDateTime getStartTime() {
+        return startTime;
     }
 
-    public Date getEndTime() {
-        return new Date(endTime*1000);
+    public LocalDateTime getEndTime() {
+        return endTime;
     }
 
+    @Override
     public String toString() {
-        return getStartTime() + ":" + getEndTime();
+        return "from "
+                + startTime.getDayOfMonth() + " " + startTime.getMonth() + " " + startTime.getYear()
+                + " at " + startTime.getHour() + ":" + String.format("%02d", startTime.getMinute()) + ":" + String.format("%02d", startTime.getSecond())
+                + " to "
+                + endTime.getDayOfMonth() + " " + endTime.getMonth() + " " + endTime.getYear()
+                + " at " + endTime.getHour() + ":" + String.format("%02d", endTime.getMinute()) + ":" + String.format("%02d", endTime.getSecond());
     }
 }
