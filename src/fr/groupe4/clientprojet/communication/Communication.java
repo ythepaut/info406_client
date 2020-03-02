@@ -7,11 +7,9 @@ import fr.groupe4.clientprojet.communication.enums.HTMLCode;
 import fr.groupe4.clientprojet.logger.Logger;
 
 import java.beans.PropertyChangeSupport;
-import java.io.IOException;
 import java.net.URI;
 import java.net.URLEncoder;
 import java.net.http.HttpClient;
-import java.net.http.HttpConnectTimeoutException;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
@@ -22,7 +20,9 @@ import java.util.HashMap;
 import java.util.Objects;
 
 import java.beans.PropertyChangeListener;
-import java.util.concurrent.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.CancellationException;
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -30,15 +30,14 @@ import org.json.simple.parser.ParseException;
 
 import static fr.groupe4.clientprojet.communication.enums.HTMLCode.*;
 import static fr.groupe4.clientprojet.communication.enums.CommunicationPropertyName.*;
-import static fr.groupe4.clientprojet.communication.enums.CommunicationKeepAlive.*;
-import static fr.groupe4.clientprojet.logger.enums.LoggerOption.LOG_FILE_ONLY;
+import static fr.groupe4.clientprojet.logger.enums.LoggerOption.*;
 
 /**
- * Communication, effectue les appels API <br>
- * Les appels sont effectués en instance pour thread la connection et éviter de bloquer le thread courant <br>
- * <br>
- * Cette classe utilise le pattern Builder <br>
- * <br>
+ * Communication, effectue les appels API.
+ * Les appels sont effectués en instance pour thread la connection et éviter de bloquer le thread courant.
+ * <br><br>
+ * Cette classe utilise le pattern Builder.
+ * <br><br>
  * Exemple d'utilisation : <br><code>
  *      Communication comm = Communication.builder() <br>
  *                                        .connect("username", "password") <br>

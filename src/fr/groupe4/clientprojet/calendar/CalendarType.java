@@ -9,5 +9,5 @@ public enum CalendarType {
     DAY,
     WEEK,
     MONTH,
-    YEAR;
+    YEAR
 }

@@ -5,9 +5,11 @@ import fr.groupe4.clientprojet.logger.enums.LoggerType;
 import fr.groupe4.clientprojet.utils.Location;
 
 import java.io.*;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 
 import static fr.groupe4.clientprojet.logger.enums.LoggerColor.*;
 import static fr.groupe4.clientprojet.logger.enums.LoggerType.*;
@@ -54,7 +56,7 @@ public abstract class Logger {
 
         try {
             dirCreated = new File(Location.getPath() + "/logs").mkdir();
-            FileWriter fileWriter = new FileWriter(Location.getPath() + "/logs/log_" + getDate() + ".log");
+            FileWriter fileWriter = new FileWriter(Location.getPath() + "/logs/fr-groupe4-clientprojet_log_" + getDate() + ".log");
             bufferedWriter = new BufferedWriter(fileWriter);
             ok = true;
         }
@@ -178,10 +180,12 @@ public abstract class Logger {
      * @return Heure sous forme "hh:mm:ss"
      */
     private static String getHour() {
-        GregorianCalendar c = new GregorianCalendar();
-        return String.format("%02d", c.get(Calendar.HOUR_OF_DAY))
-                + ":" + String.format("%02d", c.get(Calendar.MINUTE))
-                + ":" + String.format("%02d", c.get(Calendar.SECOND));
+        LocalTime now = LocalTime.now();
+
+        return String.format("%02d", now.getHour())
+                + ":" + String.format("%02d", now.getMinute())
+                + ":" + String.format("%02d", now.getSecond())
+                + ":" + String.format("%03d", now.getNano()/1000);
     }
 
     /**
@@ -190,13 +194,14 @@ public abstract class Logger {
      * @return Date sous forme "yyyy-mm-dd_hh-mm-ss"
      */
     private static String getDate() {
-        GregorianCalendar c = new GregorianCalendar();
-        return c.get(Calendar.YEAR)
-                + "-" + String.format("%02d", c.get(Calendar.MONTH)+1)
-                + "-" + String.format("%02d", c.get(Calendar.DAY_OF_MONTH))
-                + "_" + String.format("%02d", c.get(Calendar.HOUR_OF_DAY))
-                + "-" + String.format("%02d", c.get(Calendar.MINUTE))
-                + "-" + String.format("%02d", c.get(Calendar.SECOND));
+        LocalDateTime now = LocalDateTime.now();
+
+        return now.getYear()
+                + "-" + String.format("%02d", now.getMonthValue())
+                + "-" + String.format("%02d", now.getDayOfMonth())
+                + "@" + String.format("%02d", now.getHour())
+                + "-" + String.format("%02d", now.getMinute())
+                + "-" + String.format("%02d", now.getSecond());
     }
 
     /**
@@ -218,10 +223,7 @@ public abstract class Logger {
 
             nbWrite ++;
 
-            if (nbWrite % 10 == 0) {
-                // Sauvegarde auto toutes les 10 lignes
-                printWriter.flush();
-            }
+            printWriter.flush();
         }
     }
 
@@ -230,6 +232,7 @@ public abstract class Logger {
      */
     public static void exit() {
         if (printWriter != null) {
+            writeToFile("Fin des logs, fermeture", INFO);
             printWriter.close();
         }
     }
