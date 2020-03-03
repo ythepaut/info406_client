@@ -1,12 +1,7 @@
 package fr.groupe4.clientprojet.communication;
 
-import fr.groupe4.clientprojet.communication.enums.CommunicationKeepAlive;
-import fr.groupe4.clientprojet.communication.enums.CommunicationStatus;
-import fr.groupe4.clientprojet.communication.enums.CommunicationType;
-import fr.groupe4.clientprojet.communication.enums.HTMLCode;
-import fr.groupe4.clientprojet.logger.Logger;
-
 import java.beans.PropertyChangeSupport;
+import java.beans.PropertyChangeListener;
 import java.net.URI;
 import java.net.URLEncoder;
 import java.net.http.HttpClient;
@@ -17,20 +12,22 @@ import java.time.Duration;
 import java.util.Base64;
 import java.util.Map;
 import java.util.HashMap;
-import java.util.Objects;
-
-import java.beans.PropertyChangeListener;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.CancellationException;
+import java.util.concurrent.atomic.AtomicReference;
+
+import org.jetbrains.annotations.Async;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-import static fr.groupe4.clientprojet.communication.enums.HTMLCode.*;
-import static fr.groupe4.clientprojet.communication.enums.CommunicationPropertyName.*;
-import static fr.groupe4.clientprojet.logger.enums.LoggerOption.*;
+import fr.groupe4.clientprojet.logger.Logger;
+import fr.groupe4.clientprojet.communication.enums.*;
+import fr.groupe4.clientprojet.logger.enums.LoggerOption;
 
 /**
  * Communication, effectue les appels API.
@@ -61,7 +58,7 @@ import static fr.groupe4.clientprojet.logger.enums.LoggerOption.*;
  *
  * @author Romain
  */
-@SuppressWarnings("deprecation")
+@SuppressWarnings("unused")
 public final class Communication implements Runnable {
     /**
      * Client HTTP pour les requètes
@@ -88,12 +85,14 @@ public final class Communication implements Runnable {
     /**
      * Token utilisé pour les requêtes, null si non connecté
      */
-    private static volatile String requestToken = null;
+    @NotNull
+    private static volatile AtomicReference<String> requestToken = new AtomicReference<>("");
 
     /**
      * Token utilisé pour renouveler requestToken
      */
-    private static volatile String renewToken = null;
+    @NotNull
+    private static volatile AtomicReference<String> renewToken = new AtomicReference<>("");
 
     /**
      * Si les threads ont le droit de communiquer ou non
@@ -109,9 +108,10 @@ public final class Communication implements Runnable {
      *
      * @return Token
      */
-    protected static synchronized String getRequestToken(Object editor) {
+    @NotNull
+    protected static synchronized String getRequestToken(@NotNull Object editor) {
         if (editor instanceof CommunicationBuilder || editor instanceof JsonTreatment) {
-            return requestToken;
+            return requestToken.get();
         }
         else {
             Logger.error("Accès au token non autorisé");
@@ -126,17 +126,9 @@ public final class Communication implements Runnable {
      * @param token Token
      */
     @SuppressWarnings("SameParameterValue")
-    protected static synchronized void setRequestToken(Object editor, String token) {
+    protected static synchronized void setRequestToken(@NotNull Object editor, @NotNull String token) {
         if (editor instanceof JsonTreatment) {
-            if (token == null) {
-                requestToken = null;
-            }
-            else if (token.isEmpty()) {
-                requestToken = null;
-            }
-            else {
-                requestToken = token;
-            }
+            requestToken.set(token);
         }
         else {
             Logger.error("Accès au token non autorisé");
@@ -150,9 +142,10 @@ public final class Communication implements Runnable {
      *
      * @return Token
      */
-    protected static synchronized String getRenewToken(Object editor) {
+    @NotNull
+    protected static synchronized String getRenewToken(@NotNull Object editor) {
         if (editor instanceof CommunicationBuilder || editor instanceof JsonTreatment) {
-            return renewToken;
+            return renewToken.get();
         }
         else {
             Logger.error("Accès au token non autorisé");
@@ -167,16 +160,13 @@ public final class Communication implements Runnable {
      * @param token Token
      */
     @SuppressWarnings("SameParameterValue")
-    protected static synchronized void setRenewToken(Object editor, String token) {
+    protected static synchronized void setRenewToken(@NotNull Object editor, @NotNull String token) {
         if (editor instanceof JsonTreatment) {
-            if (token == null) {
-                renewToken = null;
-            }
-            else if (token.isEmpty()) {
-                renewToken = null;
+            if (token.isEmpty()) {
+                renewToken.set("");
             }
             else {
-                renewToken = token;
+                renewToken.set(token);
             }
         }
         else {
@@ -191,15 +181,15 @@ public final class Communication implements Runnable {
      */
     public static boolean isConnected() {
         checkTokenValidity();
-        return requestToken != null;
+        return !requestToken.get().isEmpty();
     }
 
     /**
      * Vérifie la validité d'un token
      */
     private static synchronized void checkTokenValidity() {
-        if (requestToken != null) {
-            String[] splitString = requestToken.split("\\.");
+        if (!requestToken.get().isEmpty()) {
+            String[] splitString = requestToken.get().split("\\.");
             Base64.Decoder decoder = Base64.getUrlDecoder();
             String tokenBody = new String(decoder.decode(splitString[1]));
 
@@ -217,7 +207,7 @@ public final class Communication implements Runnable {
                 long remainingTime = expirationTime - currentTime;
 
                 if (remainingTime < TIMEOUT_DELAY.toSeconds()*2) {
-                    requestToken = null;
+                    requestToken.set("");
                 }
             }
             catch (ParseException e) {
@@ -307,31 +297,37 @@ public final class Communication implements Runnable {
     /**
      * Type de communication
      */
+    @NotNull
     protected final CommunicationType typeOfCommunication;
 
     /**
      * URL à envoyer à l'API
      */
+    @NotNull
     private final String url;
 
     /**
      * Statut de la requête, comme "success" ou "error"
      */
+    @NotNull
     protected CommunicationStatus status;
 
     /**
      * Code de l'API, par exemple "ERROR_INVALID_USER_CREDENTIALS" ou "SUCCESS_AUTHENTICATED"
      */
-    private String code;
+    @NotNull
+    private APICode code;
 
     /**
      * Code HTML de la requête, comme un code 200 (OK) ou 404 (Not Found)
      */
+    @NotNull
     protected HTMLCode htmlCode;
 
     /**
      * Message associé à la requête
      */
+    @NotNull
     private String message;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -341,32 +337,22 @@ public final class Communication implements Runnable {
      *
      * @param builder Builder de la communication
      */
-    protected Communication(CommunicationBuilder builder) {
+    protected Communication(@NotNull CommunicationBuilder builder) {
         started = false;
         keepAlive = builder.keepAlive;
         requestData = builder.requestData;
         communicationResult = null;
         typeOfCommunication = builder.typeOfCommunication;
         url = builder.url;
-        status = null;
-        code = null;
+        status = CommunicationStatus.STATUS_DEFAULT;
+        code = APICode.NOT_FINISHED;
         cancelRequest = false;
-        htmlCode = HTML_CUSTOM_DEFAULT_ERROR;
-        message = null;
+        htmlCode = HTMLCode.HTML_CUSTOM_DEFAULT_ERROR;
+        message = "";
         timeBetweenRequests = Duration.ofSeconds(10);
 
-        if (typeOfCommunication == null) {
-            Logger.error("Type de communication null");
-        }
-
-        if (url == null) {
-            Logger.error("URL null");
-        }
-
-        Thread t = new Thread(this);
-
         if (builder.startNow) {
-            t.start();
+            start();
 
             if (builder.sleepUntilFinished) {
                 sleepUntilFinished();
@@ -379,6 +365,7 @@ public final class Communication implements Runnable {
      *
      * @return Statut
      */
+    @NotNull
     public String getStatus() {
         return status.toString();
     }
@@ -388,8 +375,9 @@ public final class Communication implements Runnable {
      *
      * @return Code API
      */
+    @NotNull
     public String getCode() {
-        return code;
+        return code.toString();
     }
 
     /**
@@ -397,8 +385,14 @@ public final class Communication implements Runnable {
      *
      * @return Message
      */
+    @NotNull
     public String getMessage() {
-        return Objects.requireNonNullElse(message, "Erreur inconnue");
+        if (message.isEmpty()) {
+            return "Erreur inconnue";
+        }
+        else {
+            return message;
+        }
     }
 
     /**
@@ -424,6 +418,7 @@ public final class Communication implements Runnable {
      *
      * @return Résultat
      */
+    @Nullable
     public Object getResult() {
         return communicationResult;
     }
@@ -443,9 +438,12 @@ public final class Communication implements Runnable {
      * @return Succès
      */
     public boolean isSuccessful() {
-        return htmlCode.equals(HTML_OK);
+        return htmlCode.equals(HTMLCode.HTML_OK);
     }
 
+    /**
+     * Annule la requête
+     */
     public void cancelRequest() {
         cancelRequest = true;
 
@@ -456,15 +454,25 @@ public final class Communication implements Runnable {
         }
     }
 
+    /**
+     * Vers String
+     *
+     * @return String
+     */
     @Override
+    @NotNull
     public String toString() {
         return typeOfCommunication.toString();
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+    /**
+     * Lance le Thread
+     */
     public void start() {
         if (!started) {
+            started = true;
             Thread t = new Thread(this);
             t.start();
         }
@@ -473,6 +481,7 @@ public final class Communication implements Runnable {
     /**
      * Méthode pour connecter l'instance à son URL
      */
+    @Async.Execute
     private void send() {
         // Requête API
         HttpRequest request = HttpRequest.newBuilder()
@@ -504,11 +513,11 @@ public final class Communication implements Runnable {
             Logger.error("Erreur inconnue : " + e.toString());
         }
         catch (ExecutionException e) {
-            htmlCode = HTML_CUSTOM_TIMEOUT;
+            htmlCode = HTMLCode.HTML_CUSTOM_TIMEOUT;
             Logger.error("Requête time out : " + toString());
         }
         catch (CancellationException e) {
-            htmlCode = HTML_CUSTOM_CANCEL;
+            htmlCode = HTMLCode.HTML_CUSTOM_CANCEL;
             Logger.error("Requête annulée : " + toString());
         }
 
@@ -528,13 +537,13 @@ public final class Communication implements Runnable {
                 JSONObject jsonMain = (JSONObject) parsedResponse;
 
                 status = CommunicationStatus.fromString((String) jsonMain.get("status"));
-                code = (String) jsonMain.get("code");
+                code = APICode.fromString((String) jsonMain.get("code"));
                 message = (String) jsonMain.get("message");
 
                 Object jsonObject = jsonMain.get("content");
 
-                if (htmlCode != HTML_OK) {
-                    Logger.debug(htmlCode, status, code, message, LOG_FILE_ONLY);
+                if (htmlCode != HTMLCode.HTML_OK) {
+                    Logger.debug(htmlCode, status, code, message, LoggerOption.LOG_FILE_ONLY);
                 }
 
                 JsonTreatment.doSomethingWithData(this, jsonObject);
@@ -546,7 +555,7 @@ public final class Communication implements Runnable {
      * Met en pause le thread actuel le temps que la requête soit effectuée
      */
     public void sleepUntilFinished() {
-        while (!loadingFinished && communicationAllowed) {
+        while (started && !loadingFinished && communicationAllowed) {
             try {
                 Thread.sleep(UPDATE_DELAY.toMillis());
             }
@@ -563,36 +572,28 @@ public final class Communication implements Runnable {
     public void run() {
         started = true;
 
-        if (url == null) {
-            // Si erreur d'URL
-            Logger.error("Communication inutile, rien n'est effectué");
-        }
-        else {
-            // Sinon si l'URL est bien construite, on vérifie la connexion
+        if (typeOfCommunication.checkConnection()) {
+            checkTokenValidity();
 
-            if (typeOfCommunication.checkConnection()) {
-                checkTokenValidity();
+            if (requestToken.get().isEmpty()) {
+                // Si le token est périmé on le recrée
 
-                if (requestToken == null) {
-                    // Si le token est périmé on le recrée
+                new CommunicationBuilder()
+                        .startNow()
+                        .sleepUntilFinished()
+                        .updateConnection()
+                        .build();
 
-                    new CommunicationBuilder()
-                            .startNow()
-                            .sleepUntilFinished()
-                            .updateConnection()
-                            .build();
+                if (requestToken.get().isEmpty()) {
+                    // S'il n'est pas recréé, euh oups
+                    Logger.error("Token invalide une 2nde fois");
+                }
+                else {
+                    // Si jeton recréé, on reprend
 
-                    if (requestToken == null) {
-                        // S'il n'est pas recréé, euh oups
-                        Logger.error("help");
-                    }
-                    else {
-                        // Si jeton recréé, on reprend
-
-                        if (requestData.get("token") != null) {
-                            requestData.remove("token");
-                            requestData.put("token", requestToken);
-                        }
+                    if (requestData.get("token") != null) {
+                        requestData.remove("token");
+                        requestData.put("token", requestToken);
                     }
                 }
             }
@@ -601,7 +602,7 @@ public final class Communication implements Runnable {
         send();
 
         loadingFinished = true;
-        propertyChangeSupport.firePropertyChange(COMMUNICATION_LOADING_FINISHED.toString(), false, true);
+        propertyChangeSupport.firePropertyChange(CommunicationPropertyName.COMMUNICATION_LOADING_FINISHED.toString(), false, true);
 
         if (keepAlive && communicationAllowed) {
             try {
@@ -614,7 +615,12 @@ public final class Communication implements Runnable {
         }
     }
 
-    public void addPropertyChangeListener(PropertyChangeListener listener) {
+    /**
+     * Ajoute un listener pour le pattern observer
+     *
+     * @param listener Listener
+     */
+    public void addPropertyChangeListener(@NotNull PropertyChangeListener listener) {
         if (started) {
             Logger.warning("Attention ! Par sécurité, ne pas ajouter de listener alors que le thread est déjà lancé, et donc potentiellement déjà terminé !");
         }
@@ -622,7 +628,12 @@ public final class Communication implements Runnable {
         propertyChangeSupport.addPropertyChangeListener(listener);
     }
 
-    public void removePropertyChangeListener(PropertyChangeListener listener) {
+    /**
+     * Supprime un listener pour le pattern observer
+     *
+     * @param listener Listener
+     */
+    public void removePropertyChangeListener(@NotNull PropertyChangeListener listener) {
         propertyChangeSupport.removePropertyChangeListener(listener);
     }
 }
