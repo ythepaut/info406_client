@@ -1,5 +1,7 @@
 package fr.groupe4.clientprojet.utils;
 
+import org.jetbrains.annotations.NotNull;
+
 /**
  * Classe abstraite qui permet de connaître le répertoire de l'éxécutable via sa méthode statique getPath();
  */
@@ -11,6 +13,7 @@ public abstract class Location {
      *
      * @return String : sous la forme "blabla/"
      */
+    @NotNull
     public static String getPath() {
         String path = System.getProperty("java.class.path");
 

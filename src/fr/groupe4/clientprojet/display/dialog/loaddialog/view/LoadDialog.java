@@ -19,7 +19,7 @@ public class LoadDialog extends JDialog {
      */
     public LoadDialog(JDialog owner, Communication comm) {
         super(owner, true);
-        addPropertyChangeListener(new EventLoadDialog(this, comm));
+        comm.addPropertyChangeListener(new EventLoadDialog(this));
         comm.start();
         setUndecorated(true);
         setSize(350, 80);

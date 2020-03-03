@@ -1,6 +1,7 @@
 package fr.groupe4.clientprojet.resource.human;
 
 import fr.groupe4.clientprojet.resource.human.enums.HumanRole;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Ressource humaine
@@ -14,26 +15,31 @@ public class HumanResource {
     /**
      * Prénom
      */
+    @NotNull
     private String firstname;
 
     /**
      * Nom
      */
+    @NotNull
     private String lastname;
 
     /**
      * Job
      */
+    @NotNull
     private String job;
 
     /**
      * Rôle
      */
+    @NotNull
     private HumanRole role;
 
     /**
      * Description
      */
+    @NotNull
     private String description;
 
     /**
@@ -46,7 +52,7 @@ public class HumanResource {
      * @param role Rôle
      * @param description Description
      */
-    public HumanResource(long resourceId, String firstname, String lastname, String job, String role, String description) {
+    public HumanResource(long resourceId, @NotNull String firstname, @NotNull String lastname, @NotNull String job, @NotNull String role, @NotNull String description) {
         this.resourceId = resourceId;
         this.firstname = firstname;
         this.lastname = lastname;

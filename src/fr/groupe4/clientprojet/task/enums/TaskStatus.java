@@ -1,5 +1,9 @@
 package fr.groupe4.clientprojet.task.enums;
 
+import fr.groupe4.clientprojet.logger.Logger;
+import fr.groupe4.clientprojet.logger.enums.LoggerOption;
+import org.jetbrains.annotations.NotNull;
+
 public enum TaskStatus {
     PENDING("PENDING"),
     FINISHED("FINISHED"),
@@ -20,7 +24,8 @@ public enum TaskStatus {
      *
      * @return Status associé
      */
-    public static TaskStatus fromString(String msg) {
+    @NotNull
+    public static TaskStatus fromString(String msg) throws IllegalArgumentException {
         TaskStatus[] vars = TaskStatus.values();
 
         TaskStatus result = null;
@@ -29,6 +34,12 @@ public enum TaskStatus {
             if (var.msg.equalsIgnoreCase(msg)) {
                 result = var;
             }
+        }
+
+        if (result == null) {
+            String errorMsg = "Pas d'enum provenant de la chaine '" + msg + "'";
+            Logger.error(errorMsg, LoggerOption.LOG_FILE_ONLY);
+            throw new IllegalArgumentException(errorMsg);
         }
 
         return result;

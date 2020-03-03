@@ -22,11 +22,9 @@ public class EventLoadDialog implements PropertyChangeListener {
      * Le constructeur
      *
      * @param source : Le loadDialog
-     * @param comm : L'instance de Communication qu'on observe
      */
-    public EventLoadDialog(LoadDialog source, Communication comm) {
+    public EventLoadDialog(LoadDialog source) {
         this.source = source;
-        comm.addPropertyChangeListener(this);
     }
 
     /**

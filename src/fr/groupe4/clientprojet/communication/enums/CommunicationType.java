@@ -4,6 +4,7 @@ package fr.groupe4.clientprojet.communication.enums;
  * Types de communication
  */
 public enum CommunicationType {
+    DEFAULT,
     LOGIN(false),
     UPDATE_CONNECTION(false),
     LIST_PROJECTS,

@@ -1,9 +1,14 @@
 package fr.groupe4.clientprojet.communication.enums;
 
+import fr.groupe4.clientprojet.logger.Logger;
+import fr.groupe4.clientprojet.logger.enums.LoggerOption;
+import org.jetbrains.annotations.NotNull;
+
 /**
  * Status de la communication
  */
 public enum CommunicationStatus {
+    STATUS_DEFAULT("default"),
     STATUS_SUCCESS("success"),
     STATUS_ERROR("error");
 
@@ -21,7 +26,8 @@ public enum CommunicationStatus {
         this.msg = msg.toLowerCase();
     }
 
-    public static CommunicationStatus fromString(String msg) {
+    @NotNull
+    public static CommunicationStatus fromString(String msg) throws IllegalArgumentException {
         CommunicationStatus[] vars = CommunicationStatus.values();
 
         CommunicationStatus result = null;
@@ -30,6 +36,12 @@ public enum CommunicationStatus {
             if (var.msg.equalsIgnoreCase(msg)) {
                 result = var;
             }
+        }
+
+        if (result == null) {
+            String errorMsg = "Pas d'enum provenant de la chaine '" + msg + "'";
+            Logger.error(errorMsg, LoggerOption.LOG_FILE_ONLY);
+            throw new IllegalArgumentException(errorMsg);
         }
 
         return result;

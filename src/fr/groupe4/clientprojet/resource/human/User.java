@@ -1,19 +1,25 @@
 package fr.groupe4.clientprojet.resource.human;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 /**
  * Utilisateur
  */
 public class User extends HumanResource {
+    @Nullable
     private static User user = null;
 
     /**
      * Adresse IP
      */
+    @NotNull
     private String ip;
 
     /**
      * Type
      */
+    @NotNull
     private String type;
 
     /**
@@ -24,11 +30,13 @@ public class User extends HumanResource {
     /**
      * Nom d'utilisateur
      */
+    @NotNull
     private String username;
 
     /**
      * Adresse mail
      */
+    @NotNull
     private String email;
 
     /**
@@ -41,7 +49,7 @@ public class User extends HumanResource {
      * @param username Nom d'utilisateur
      * @param email email
      */
-    public User(HumanResource resource, String ip, String type, long userId, String username, String email) {
+    public User(@NotNull HumanResource resource, @NotNull String ip, @NotNull String type, long userId, String username, String email) {
         super(resource);
 
         this.ip = ip;

@@ -1,5 +1,10 @@
 package fr.groupe4.clientprojet.communication;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+
+import fr.groupe4.clientprojet.communication.enums.CommunicationStatus;
+import fr.groupe4.clientprojet.communication.enums.HTMLCode;
 import fr.groupe4.clientprojet.logger.Logger;
 import fr.groupe4.clientprojet.message.Message;
 import fr.groupe4.clientprojet.message.MessageList;
@@ -10,15 +15,10 @@ import fr.groupe4.clientprojet.resource.human.User;
 import fr.groupe4.clientprojet.timeslot.TimeSlot;
 import fr.groupe4.clientprojet.timeslot.TimeSlotList;
 
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-
-import static fr.groupe4.clientprojet.communication.enums.CommunicationStatus.*;
-import static fr.groupe4.clientprojet.communication.enums.HTMLCode.*;
-
 /**
  * Traite le JSON de la classe Communication
  */
+@SuppressWarnings("unused")
 final class JsonTreatment {
     /**
      * Singleton pour que Communication puisse vérifier l'accès à ses token
@@ -81,10 +81,22 @@ final class JsonTreatment {
         }
     }
 
+    /**
+     * Ajoute un créneau
+     *
+     * @param comm Communication à traiter
+     * @param jsonObject Contenu à traiter
+     */
     private static void addTimeSlot(Communication comm, Object jsonObject) {}
 
+    /**
+     * Récupère une liste de créneaux
+     *
+     * @param comm Communication à traiter
+     * @param jsonObject Contenu à traiter
+     */
     private static void getTimeSlotList(Communication comm, Object jsonObject) {
-        if (comm.status.equals(STATUS_SUCCESS)) {
+        if (comm.status.equals(CommunicationStatus.STATUS_SUCCESS)) {
             JSONObject jsonContent = (JSONObject) jsonObject;
             JSONArray jsonTimeSlots = (JSONArray) jsonContent.get("timeslots");
 
@@ -113,8 +125,14 @@ final class JsonTreatment {
         }
     }
 
+    /**
+     * Liste les messages de l'utilisateur
+     *
+     * @param comm Communication à traiter
+     * @param jsonObject Contenu à traiter
+     */
     private static void listUserMessages(Communication comm, Object jsonObject) {
-        if (comm.status.equals(STATUS_SUCCESS)) {
+        if (comm.status.equals(CommunicationStatus.STATUS_SUCCESS)) {
             JSONObject jsonContent = (JSONObject) jsonObject;
 
             JSONArray jsonMessages = (JSONArray) jsonContent.get("messages");
@@ -163,7 +181,7 @@ final class JsonTreatment {
      * @param jsonObject Contenu à traiter
      */
     private static void login(Communication comm, Object jsonObject) {
-        if (comm.status.equals(STATUS_SUCCESS)) {
+        if (comm.status.equals(CommunicationStatus.STATUS_SUCCESS)) {
             JSONObject jsonContent = (JSONObject) jsonObject;
 
             JSONObject jsonRequestToken = (JSONObject) jsonContent.get("requests-token");
@@ -191,7 +209,7 @@ final class JsonTreatment {
      * @param jsonObject Contenu à traiter
      */
     private static void getHumanResource(Communication comm, Object jsonObject) {
-        if (comm.status.equals(STATUS_SUCCESS)) {
+        if (comm.status.equals(CommunicationStatus.STATUS_SUCCESS)) {
             JSONObject jsonContent = (JSONObject) jsonObject;
 
             comm.communicationResult = new HumanResource(
@@ -211,7 +229,7 @@ final class JsonTreatment {
      * @param jsonObject Contenu à traiter
      */
     private static void getUserInfos(Communication comm, Object jsonObject) {
-        if (comm.htmlCode == HTML_OK) {
+        if (comm.htmlCode == HTMLCode.HTML_OK) {
             JSONObject jsonContent = (JSONObject) jsonObject;
             JSONObject jsonDataContent = (JSONObject) jsonContent.get("data");
             JSONObject jsonControlContent = (JSONObject) jsonDataContent.get("control");
@@ -245,14 +263,14 @@ final class JsonTreatment {
      * @param jsonObject Contenu à traiter
      */
     private static void updateConnection(Communication comm, Object jsonObject) {
-        if (comm.htmlCode == HTML_OK) {
+        if (comm.htmlCode == HTMLCode.HTML_OK) {
             JSONObject jsonContent = (JSONObject) jsonObject;
 
             JSONObject jsonTokenContent = (JSONObject) jsonContent.get("requests-token");
 
             Communication.setRequestToken(singleton, (String) jsonTokenContent.get("value"));
         }
-        else if (comm.htmlCode == HTML_FORBIDDEN) {
+        else if (comm.htmlCode == HTMLCode.HTML_FORBIDDEN) {
             Logger.error("Update interdite !?");
         }
         else {

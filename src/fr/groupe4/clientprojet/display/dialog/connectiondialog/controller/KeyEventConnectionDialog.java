@@ -17,7 +17,6 @@ public class KeyEventConnectionDialog extends KeyAdapter {
 
     @Override
     public void keyPressed(KeyEvent e) {
-        System.out.println("ok");
         if (e.getKeyCode() == KeyEvent.VK_ENTER) {
             Communication comm = Communication.builder()
                     .connect(source.getUsername(), source.getPassword())
