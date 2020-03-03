@@ -56,13 +56,11 @@ public class ProjectPanel extends JPanel {
         add(titlePanel, BorderLayout.NORTH);
 
         // Les slides
-        ArrayList<String> slideName = new ArrayList<>();
-        ArrayList<JPanel> slidePanel = new ArrayList<>();
-        slideName.add("HOME"); slidePanel.add(homePanel());
-        slideName.add("TASK"); slidePanel.add(taskPanel());
-        slideName.add("MESSAGE"); slidePanel.add(messagePanel());
+        Slide slides = new Slide();
+        slides.addSlide(homePanel(), "HOME");
+        slides.addSlide(taskPanel(), "TASK");
+        slides.addSlide(messagePanel(), "MESSAGE");
 
-        Slide slides = new Slide(slidePanel, slideName);
         add(slides, BorderLayout.CENTER);
     }
 

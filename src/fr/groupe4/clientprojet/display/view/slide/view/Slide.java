@@ -47,11 +47,22 @@ public class Slide extends JPanel {
         slide = nbSlide > 0 ? 0 : -1;
         eventSlide = new EventSlide(this);
 
-        drawContent();
+        if (nbSlide > 0) {
+            drawContent();
+        }
+    }
+
+    /**
+     * Le constructeur par défaut
+     * Il n'y a aucun slide de base, il faut les rajouter via la méthode addSlide(JPanel, String)
+     */
+    public Slide() {
+        this(new ArrayList<>(), new ArrayList<>());
     }
 
     /**
      * Permet d'ajouter un slide
+     * Redéssine le panel
      *
      * @param panel : le panel
      * @param name : le nom du slide
@@ -60,6 +71,12 @@ public class Slide extends JPanel {
         nbSlide++;
         slideName.add(name);
         slidePanel.add(panel);
+
+        if (slide == -1) {
+            slide = 0;
+        }
+
+        redraw();
     }
 
     /**
@@ -93,8 +110,9 @@ public class Slide extends JPanel {
             c.gridx++;
         }
         add(topButtons, BorderLayout.NORTH);
-
-        add(slidePanel.get(slide), BorderLayout.CENTER);
+        if (nbSlide > 0 && slide != -1) {
+            add(slidePanel.get(slide), BorderLayout.CENTER);
+        }
     }
 
     /**
