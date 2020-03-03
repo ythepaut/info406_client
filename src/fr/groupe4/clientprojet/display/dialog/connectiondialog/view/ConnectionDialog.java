@@ -1,6 +1,7 @@
 package fr.groupe4.clientprojet.display.dialog.connectiondialog.view;
 
 import fr.groupe4.clientprojet.display.dialog.connectiondialog.controller.EventConnectionDialog;
+import fr.groupe4.clientprojet.display.dialog.connectiondialog.controller.KeyEventConnectionDialog;
 import fr.groupe4.clientprojet.display.dialog.connectiondialog.enums.ConnectionChoice;
 
 import javax.swing.*;
@@ -61,6 +62,7 @@ public class ConnectionDialog extends JDialog {
         passwordPanel.setBorder(new EmptyBorder(10, 20, 100, 20));
         passwordPanel.add(new JLabel("Password :"), BorderLayout.CENTER);
         password = new JPasswordField(100);
+        password.addKeyListener(new KeyEventConnectionDialog(this));
         passwordPanel.add(password, BorderLayout.SOUTH);
         fieldPanel.add(passwordPanel);
         add(fieldPanel, BorderLayout.CENTER);
