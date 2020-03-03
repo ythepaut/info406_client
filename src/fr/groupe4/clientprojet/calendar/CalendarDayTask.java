@@ -1,13 +1,11 @@
 package fr.groupe4.clientprojet.calendar;
 
-import java.util.Date;
+import java.time.LocalTime;
 
 /**
  * Tâche quotidienne du calendrier
  * Une tâche peut en effet s'étendre sur plusieurs jours (ex : vacances),
  * voire commencer avant la période, on sépare donc cette tâche en sous-tâches quotidiennes
- *
- * @see fr.groupe4.clientprojet.communication.Task
  *
  * @author Romain
  */
@@ -15,12 +13,12 @@ public class CalendarDayTask {
     /**
      * Heure de début
      */
-    private Date startTime;
+    private LocalTime startTime;
 
     /**
      * Heure de fin
      */
-    private Date endTime;
+    private LocalTime endTime;
 
     /**
      * Journée complète ou non

@@ -1,11 +1,13 @@
 package fr.groupe4.clientprojet.display.dialog.loaddialog.controller;
 
 import fr.groupe4.clientprojet.communication.Communication;
-import fr.groupe4.clientprojet.communication.enums.PropertyName;
+import fr.groupe4.clientprojet.communication.enums.CommunicationPropertyName;
 import fr.groupe4.clientprojet.display.dialog.loaddialog.view.LoadDialog;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+
+import static fr.groupe4.clientprojet.communication.enums.CommunicationPropertyName.*;
 
 /**
  * Le listener du LoadDialog
@@ -36,7 +38,7 @@ public class EventLoadDialog implements PropertyChangeListener {
     public void propertyChange(PropertyChangeEvent evt) {
         String propertyName = evt.getPropertyName();
 
-        if (PropertyName.LOADDIALOG.getName().equals(propertyName)) {
+        if (CommunicationPropertyName.fromString(propertyName) == COMMUNICATION_LOADING_FINISHED) {
             source.dispose();
         }
     }

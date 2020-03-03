@@ -5,7 +5,8 @@ package fr.groupe4.clientprojet.communication.enums;
  */
 public enum HTMLCode {
     HTML_CUSTOM_DEFAULT_ERROR(-1),
-    HTML_CUSTOM_TIMEOUT(608),
+    HTML_CUSTOM_TIMEOUT(-2),
+    HTML_CUSTOM_CANCEL(-3),
     HTML_OK(200),
     HTML_BAD_REQUEST(400),
     HTML_UNAUTHORIZED(401),
@@ -54,5 +55,10 @@ public enum HTMLCode {
         }
 
         return htmlCodeResult;
+    }
+
+    @Override
+    public String toString() {
+        return name() + "(" + code + ")";
     }
 }

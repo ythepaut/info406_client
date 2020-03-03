@@ -1,6 +1,6 @@
 package fr.groupe4.clientprojet.display.mainwindow.panels.userpanel.controller;
 
-import fr.groupe4.clientprojet.communication.enums.PropertyName;
+import fr.groupe4.clientprojet.communication.enums.CommunicationPropertyName;
 import fr.groupe4.clientprojet.display.mainwindow.panels.userpanel.enums.UserChoice;
 import fr.groupe4.clientprojet.display.mainwindow.panels.userpanel.view.UserPanel;
 
@@ -8,6 +8,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+
+import static fr.groupe4.clientprojet.communication.enums.CommunicationPropertyName.COMMUNICATION_NEWS_CHANGED;
 
 /**
  * Le listener du panel utilisateur
@@ -60,7 +62,7 @@ public class EventUserPanel implements ActionListener, PropertyChangeListener {
     public void propertyChange(PropertyChangeEvent e) {
         String propertyName = e.getPropertyName();
 
-        if (PropertyName.NEWS.getName().equals(propertyName)) {
+        if (CommunicationPropertyName.fromString(propertyName) == COMMUNICATION_NEWS_CHANGED) {
             source.redraw();
         }
     }

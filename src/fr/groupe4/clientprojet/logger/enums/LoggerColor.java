@@ -1,5 +1,8 @@
 package fr.groupe4.clientprojet.logger.enums;
 
+/**
+ * Couleurs ANSI pour le log
+ */
 public enum LoggerColor {
     ANSI_RESET("\u001B[0m"),
 

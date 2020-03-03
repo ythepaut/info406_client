@@ -2,26 +2,28 @@ package fr.groupe4.clientprojet.project;
 
 import fr.groupe4.clientprojet.project.enums.ProjectStatus;
 
-import java.util.Date;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
 
 public class Project {
     private long id;
     private String name;
     private String description;
-    private long deadline;
+    private LocalDate deadline;
     private ProjectStatus status;
 
     public Project(long id, String name, String description, long deadline, String status) {
         this.id = id;
         this.name = name;
         this.description = description;
-        this.deadline = deadline;
+        this.deadline = Instant.ofEpochMilli(deadline*1000).atZone(ZoneId.systemDefault()).toLocalDate();
         this.status = ProjectStatus.fromString(status);
     }
 
     @Override
     public String toString() {
-        return id + " - " + name + " - " + description + " - " + getDeadlineAsDate() + " - " + status;
+        return id + " - " + name + " - " + description + " - " + getDeadline() + " - " + status;
     }
 
     public long getId() {
@@ -36,12 +38,12 @@ public class Project {
         return description;
     }
 
-    public long getDeadline() {
+    public LocalDate getDeadline() {
         return deadline;
     }
 
-    public Date getDeadlineAsDate() {
-        return new Date(deadline*1000);
+    public long getDeadlineAsSeconds() {
+        return deadline.atStartOfDay(ZoneId.systemDefault()).toEpochSecond();
     }
 
     public ProjectStatus getStatus() {

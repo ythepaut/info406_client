@@ -1,15 +1,12 @@
 package fr.groupe4.clientprojet.communication;
 
+import fr.groupe4.clientprojet.communication.enums.CommunicationKeepAlive;
 import fr.groupe4.clientprojet.communication.enums.CommunicationStatus;
 import fr.groupe4.clientprojet.communication.enums.CommunicationType;
 import fr.groupe4.clientprojet.communication.enums.HTMLCode;
-import fr.groupe4.clientprojet.communication.enums.PropertyName;
 import fr.groupe4.clientprojet.logger.Logger;
-import org.json.simple.parser.ParseException;
 
-import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeSupport;
-import java.io.IOException;
 import java.net.URI;
 import java.net.URLEncoder;
 import java.net.http.HttpClient;
@@ -17,22 +14,30 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
+import java.util.Base64;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.Objects;
 
-import java.util.*;
+import java.beans.PropertyChangeListener;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.CancellationException;
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 import static fr.groupe4.clientprojet.communication.enums.HTMLCode.*;
-
-import java.beans.PropertyChangeListener;
+import static fr.groupe4.clientprojet.communication.enums.CommunicationPropertyName.*;
+import static fr.groupe4.clientprojet.logger.enums.LoggerOption.*;
 
 /**
- * Communication, effectue les appels API <br>
- * Les appels sont effectués en instance pour thread la connection et éviter de bloquer le thread courant <br>
- * <br>
- * Cette classe utilise le pattern Builder <br>
- * <br>
+ * Communication, effectue les appels API.
+ * Les appels sont effectués en instance pour thread la connection et éviter de bloquer le thread courant.
+ * <br><br>
+ * Cette classe utilise le pattern Builder.
+ * <br><br>
  * Exemple d'utilisation : <br><code>
  *      Communication comm = Communication.builder() <br>
  *                                        .connect("username", "password") <br>
@@ -72,6 +77,11 @@ public final class Communication implements Runnable {
      * Temps avant de timeout
      */
     private static final Duration TIMEOUT_DELAY = Duration.ofSeconds(30);
+
+    /**
+     * Temps avant d'actualiser
+     */
+    private static final Duration UPDATE_DELAY = Duration.ofMillis(10);
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -253,6 +263,17 @@ public final class Communication implements Runnable {
         return new CommunicationBuilder();
     }
 
+    public static Communication getInstance(CommunicationKeepAlive type) {
+        return singletons.get(type);
+    }
+
+    private static HashMap<CommunicationKeepAlive, Communication> singletons;
+
+    static {
+        singletons = new HashMap<>();
+        // singletons.put(KEEP_ALIVE_LIST_MESSAGE, Communication.builder().getUserMessageList(0).startNow().build());
+    }
+
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     private final PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
@@ -260,12 +281,18 @@ public final class Communication implements Runnable {
     /**
      * Data de la requête
      */
-    private HashMap<String, Object> requestData;
+    private final HashMap<String, Object> requestData;
 
     /**
      * Résultat de la communication
      */
     protected Object communicationResult;
+
+    private final boolean keepAlive;
+
+    private boolean cancelRequest;
+
+    private final Duration timeBetweenRequests;
 
     /**
      * Client ayant finit son chargement ou non
@@ -273,14 +300,19 @@ public final class Communication implements Runnable {
     private boolean loadingFinished;
 
     /**
+     * Thread lancé ou non
+     */
+    private boolean started;
+
+    /**
      * Type de communication
      */
-    protected CommunicationType typeOfCommunication;
+    protected final CommunicationType typeOfCommunication;
 
     /**
      * URL à envoyer à l'API
      */
-    private String url;
+    private final String url;
 
     /**
      * Statut de la requête, comme "success" ou "error"
@@ -310,14 +342,18 @@ public final class Communication implements Runnable {
      * @param builder Builder de la communication
      */
     protected Communication(CommunicationBuilder builder) {
+        started = false;
+        keepAlive = builder.keepAlive;
         requestData = builder.requestData;
         communicationResult = null;
         typeOfCommunication = builder.typeOfCommunication;
         url = builder.url;
         status = null;
         code = null;
+        cancelRequest = false;
         htmlCode = HTML_CUSTOM_DEFAULT_ERROR;
         message = null;
+        timeBetweenRequests = Duration.ofSeconds(10);
 
         if (typeOfCommunication == null) {
             Logger.error("Type de communication null");
@@ -366,6 +402,15 @@ public final class Communication implements Runnable {
     }
 
     /**
+     * Commencé ou non
+     *
+     * @return Commencé ?
+     */
+    public boolean isStarted() {
+        return started;
+    }
+
+    /**
      * Retourne le code HTML de la requête, comme un code 200 (OK) ou 404 (Not Found)
      *
      * @return Code HTML
@@ -401,7 +446,29 @@ public final class Communication implements Runnable {
         return htmlCode.equals(HTML_OK);
     }
 
+    public void cancelRequest() {
+        cancelRequest = true;
+
+        while (!loadingFinished) {
+            try {
+                Thread.sleep(UPDATE_DELAY.toMillis()/10);
+            } catch (InterruptedException ignored) {}
+        }
+    }
+
+    @Override
+    public String toString() {
+        return typeOfCommunication.toString();
+    }
+
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public void start() {
+        if (!started) {
+            Thread t = new Thread(this);
+            t.start();
+        }
+    }
 
     /**
      * Méthode pour connecter l'instance à son URL
@@ -416,19 +483,33 @@ public final class Communication implements Runnable {
                 .timeout(TIMEOUT_DELAY)
                 .build();
 
-        HttpResponse<String> response = null;
         // Réponse de l'API
+        CompletableFuture<HttpResponse<String>> requestSent = httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofString());
+
+        HttpResponse<String> response = null;
 
         try {
-            response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-        }
-        catch (IOException e) {
-            htmlCode = HTML_CUSTOM_TIMEOUT;
-            Logger.error("Connection timed out");
+            while (!requestSent.isDone()) {
+                if (communicationAllowed && !cancelRequest) {
+                    Thread.sleep(UPDATE_DELAY.toMillis());
+                }
+                else {
+                    requestSent.cancel(true);
+                }
+            }
+
+            response = requestSent.get();
         }
         catch (InterruptedException e) {
-            htmlCode = HTML_CUSTOM_DEFAULT_ERROR;
-            Logger.error("Requête interrompue");
+            Logger.error("Erreur inconnue : " + e.toString());
+        }
+        catch (ExecutionException e) {
+            htmlCode = HTML_CUSTOM_TIMEOUT;
+            Logger.error("Requête time out : " + toString());
+        }
+        catch (CancellationException e) {
+            htmlCode = HTML_CUSTOM_CANCEL;
+            Logger.error("Requête annulée : " + toString());
         }
 
         if (response != null) {
@@ -452,6 +533,10 @@ public final class Communication implements Runnable {
 
                 Object jsonObject = jsonMain.get("content");
 
+                if (htmlCode != HTML_OK) {
+                    Logger.debug(htmlCode, status, code, message, LOG_FILE_ONLY);
+                }
+
                 JsonTreatment.doSomethingWithData(this, jsonObject);
             }
         }
@@ -463,7 +548,7 @@ public final class Communication implements Runnable {
     public void sleepUntilFinished() {
         while (!loadingFinished && communicationAllowed) {
             try {
-                Thread.sleep(1);
+                Thread.sleep(UPDATE_DELAY.toMillis());
             }
             catch (InterruptedException e) {
                 e.printStackTrace();
@@ -476,6 +561,8 @@ public final class Communication implements Runnable {
      */
     @Override
     public void run() {
+        started = true;
+
         if (url == null) {
             // Si erreur d'URL
             Logger.error("Communication inutile, rien n'est effectué");
@@ -514,10 +601,24 @@ public final class Communication implements Runnable {
         send();
 
         loadingFinished = true;
-        propertyChangeSupport.firePropertyChange(PropertyName.LOADDIALOG.getName(), false, true);
+        propertyChangeSupport.firePropertyChange(COMMUNICATION_LOADING_FINISHED.toString(), false, true);
+
+        if (keepAlive && communicationAllowed) {
+            try {
+                Thread.sleep(timeBetweenRequests.toMillis());
+
+            }
+            catch (InterruptedException e) {
+                Logger.error("Erreur pour keepAlive : " + toString());
+            }
+        }
     }
 
     public void addPropertyChangeListener(PropertyChangeListener listener) {
+        if (started) {
+            Logger.warning("Attention ! Par sécurité, ne pas ajouter de listener alors que le thread est déjà lancé, et donc potentiellement déjà terminé !");
+        }
+
         propertyChangeSupport.addPropertyChangeListener(listener);
     }
 

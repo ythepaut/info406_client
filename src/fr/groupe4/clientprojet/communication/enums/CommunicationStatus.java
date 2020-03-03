@@ -10,7 +10,7 @@ public enum CommunicationStatus {
     /**
      * Message associé
      */
-    String msg;
+    private String msg;
 
     /**
      * Constructeur
@@ -21,25 +21,18 @@ public enum CommunicationStatus {
         this.msg = msg.toLowerCase();
     }
 
-    /**
-     * Transforme une String en son status associé
-     *
-     * @param msg Message
-     *
-     * @return Status associé
-     */
     public static CommunicationStatus fromString(String msg) {
-        CommunicationStatus[] statuses = CommunicationStatus.values();
+        CommunicationStatus[] vars = CommunicationStatus.values();
 
-        CommunicationStatus statusResult = null;
+        CommunicationStatus result = null;
 
-        for (CommunicationStatus status : statuses) {
-            if (status.msg.equalsIgnoreCase(msg)) {
-                statusResult = status;
+        for (CommunicationStatus var : vars) {
+            if (var.msg.equalsIgnoreCase(msg)) {
+                result = var;
             }
         }
 
-        return statusResult;
+        return result;
     }
 
     /**

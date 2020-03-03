@@ -1,13 +1,10 @@
 package fr.groupe4.clientprojet.display.dialog.loaddialog.view;
 
 import fr.groupe4.clientprojet.communication.Communication;
-import fr.groupe4.clientprojet.communication.enums.PropertyName;
 import fr.groupe4.clientprojet.display.dialog.loaddialog.controller.EventLoadDialog;
 
 import javax.swing.*;
 import java.awt.*;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 
 /**
  * Dialog de chargement
@@ -23,6 +20,7 @@ public class LoadDialog extends JDialog {
     public LoadDialog(JDialog owner, Communication comm) {
         super(owner, true);
         addPropertyChangeListener(new EventLoadDialog(this, comm));
+        comm.start();
         setUndecorated(true);
         setSize(350, 80);
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
