@@ -4,6 +4,7 @@ package fr.groupe4.clientprojet.display.mainwindow.panels.leftpanel.view;
 import fr.groupe4.clientprojet.communication.Communication;
 import fr.groupe4.clientprojet.display.mainwindow.panels.centerpanel.view.CenterPanel;
 import fr.groupe4.clientprojet.display.mainwindow.panels.leftpanel.controller.EventLeftPanel;
+import fr.groupe4.clientprojet.display.view.draw.DrawPanel;
 import fr.groupe4.clientprojet.project.Project;
 import fr.groupe4.clientprojet.project.ProjectList;
 import fr.groupe4.clientprojet.utils.Location;
@@ -21,7 +22,7 @@ import java.util.ArrayList;
  * Créé le panel de gauche de la fenêtre
  * Celui qui contient la liste des projets et le bouton 'calendrier' et 'profil'
  */
-public class LeftPanel extends JPanel {
+public class LeftPanel extends DrawPanel {
     /**
      * La largeur des boutons
      */
@@ -77,7 +78,8 @@ public class LeftPanel extends JPanel {
     /**
      * Dessine le contenu du panel
      */
-    private void drawContent() {
+    @Override
+    protected void drawContent() {
         EventLeftPanel eventLeftPanel = new EventLeftPanel(this, centerPanel);
         Font buttonFont = new Font("Arial", Font.PLAIN, TAILLE_BOUTONS);
         GridBagConstraints c = new GridBagConstraints();
@@ -215,16 +217,5 @@ public class LeftPanel extends JPanel {
         if (debutListe < nbProjet && debutListe >= 0) {
             this.debutListe = debutListe;
         }
-    }
-
-    /**
-     * Redéssine le panel
-     */
-    public void redraw() {
-        removeAll();
-        validate();
-        revalidate();
-        repaint();
-        drawContent();
     }
 }

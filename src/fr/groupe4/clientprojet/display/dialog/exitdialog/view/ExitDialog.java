@@ -2,6 +2,7 @@ package fr.groupe4.clientprojet.display.dialog.exitdialog.view;
 
 import fr.groupe4.clientprojet.display.dialog.exitdialog.controller.EventExitDialog;
 import fr.groupe4.clientprojet.display.dialog.exitdialog.enums.ExitChoice;
+import fr.groupe4.clientprojet.display.view.draw.DrawDialog;
 
 import javax.swing.*;
 import java.awt.*;
@@ -9,11 +10,15 @@ import java.awt.*;
 /**
  * Fenêtre de confirmation pour la sortie du logiciel
  */
-public class ExitDialog extends JDialog {
+public class ExitDialog extends DrawDialog {
     /**
      * Le listener du dialog
      */
     private EventExitDialog eventExitDialog;
+    /**
+     * La frame qui appelle ce dialog
+     */
+    private JFrame owner;
 
     /**
      * Le constructeur
@@ -21,7 +26,9 @@ public class ExitDialog extends JDialog {
      * @param owner : la frame à laquelle appartient le dialog
      */
     public ExitDialog(JFrame owner) {
-        super(owner, "Êtes-vous sûr de vouloir quitter ?", true);
+        setTitle("Êtes-vous sûr de vouloir quitter ?");
+        this.owner = owner;
+        setModal(true);
 
         drawContent();
 
@@ -31,7 +38,8 @@ public class ExitDialog extends JDialog {
     /**
      * Dessine le contenu du dialog
      */
-    private void drawContent() {
+    @Override
+    protected void drawContent() {
         eventExitDialog = new EventExitDialog(this);
 
         setSize(300, 70);
@@ -52,4 +60,13 @@ public class ExitDialog extends JDialog {
         getContentPane().add(cancelButton);
     }
 
+    /**
+     * Renvoie la frame qui a appelé ce dialog
+     *
+     * @return : la frame qui a appelé ce dialog
+     */
+    @Override
+    public JFrame getOwner() {
+        return owner;
+    }
 }

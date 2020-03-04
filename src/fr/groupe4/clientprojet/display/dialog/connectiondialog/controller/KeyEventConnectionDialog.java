@@ -17,7 +17,6 @@ public class KeyEventConnectionDialog extends KeyAdapter {
 
     @Override
     public void keyPressed(KeyEvent e) {
-        System.out.println("ok");
         if (e.getKeyCode() == KeyEvent.VK_ENTER) {
             Communication comm = Communication.builder()
                     .connect(source.getUsername(), source.getPassword())
@@ -28,7 +27,7 @@ public class KeyEventConnectionDialog extends KeyAdapter {
             if (Communication.isConnected()) {
                 source.dispose();
             } else {
-                new ErrorDialog(source, comm.getMessage()); // TODO : adapter le message en fonction de l'erreur
+                new ErrorDialog(comm.getMessage()); // TODO : adapter le message en fonction de l'erreur
             }
         }
     }

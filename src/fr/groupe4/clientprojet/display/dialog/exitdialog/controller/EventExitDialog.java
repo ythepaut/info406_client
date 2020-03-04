@@ -38,6 +38,7 @@ public class EventExitDialog extends WindowAdapter implements ActionListener {
         switch (ExitChoice.getEnum(e.getActionCommand())) {
             case EXIT:
                 source.getOwner().dispose();
+                source.dispose();
                 Main.exit();
                 break;
             case CANCEL:

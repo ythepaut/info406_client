@@ -3,6 +3,7 @@ package fr.groupe4.clientprojet.display.dialog.connectiondialog.view;
 import fr.groupe4.clientprojet.display.dialog.connectiondialog.controller.EventConnectionDialog;
 import fr.groupe4.clientprojet.display.dialog.connectiondialog.controller.KeyEventConnectionDialog;
 import fr.groupe4.clientprojet.display.dialog.connectiondialog.enums.ConnectionChoice;
+import fr.groupe4.clientprojet.display.view.draw.DrawDialog;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -11,7 +12,7 @@ import java.awt.*;
 /**
  * Le dialog de connexion
  */
-public class ConnectionDialog extends JDialog {
+public class ConnectionDialog extends DrawDialog {
     /**
      * Le champ texte pour l'identifiant
      */
@@ -47,7 +48,8 @@ public class ConnectionDialog extends JDialog {
     /**
      * Dessine le contenu du dialog
      */
-    private void drawContent() {
+    @Override
+    protected void drawContent() {
         setBackground(Color.WHITE);
         setLayout(new BorderLayout());
 

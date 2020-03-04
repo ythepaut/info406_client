@@ -3,6 +3,7 @@ package fr.groupe4.clientprojet.display.mainwindow.panels.userpanel.view;
 import fr.groupe4.clientprojet.communication.Communication;
 import fr.groupe4.clientprojet.display.mainwindow.panels.userpanel.controller.EventUserPanel;
 import fr.groupe4.clientprojet.display.mainwindow.panels.userpanel.enums.UserChoice;
+import fr.groupe4.clientprojet.display.view.draw.DrawPanel;
 import fr.groupe4.clientprojet.resource.human.User;
 import fr.groupe4.clientprojet.utils.Location;
 
@@ -15,7 +16,7 @@ import java.awt.*;
 /**
  * Le panel pour l'utilisateur
  */
-public class UserPanel extends JPanel {
+public class UserPanel extends DrawPanel {
     /**
      * Le champs de modification du mot de passe
      */
@@ -47,7 +48,8 @@ public class UserPanel extends JPanel {
     /**
      * Dessine le contenu
      */
-    private void drawContent() {
+    @Override
+    protected void drawContent() {
         // Partie supérieure
         JPanel topPanel = new JPanel(new GridLayout(1, 4));
         JPanel descripPanel = new JPanel(new GridLayout(1, 2));
@@ -122,16 +124,5 @@ public class UserPanel extends JPanel {
      */
     public String getEmail() {
         return mailField.getText();
-    }
-
-    /**
-     * Redessine le panel
-     */
-    public void redraw() {
-        removeAll();
-        validate();
-        revalidate();
-        repaint();
-        drawContent();
     }
 }
