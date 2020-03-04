@@ -3,6 +3,10 @@ package fr.groupe4.clientprojet.logger;
 import fr.groupe4.clientprojet.logger.enums.LoggerOption;
 import fr.groupe4.clientprojet.logger.enums.LoggerType;
 import fr.groupe4.clientprojet.utils.Location;
+import org.jetbrains.annotations.Async;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.PropertyKey;
 
 import java.io.*;
 import java.time.Instant;
@@ -35,6 +39,7 @@ public abstract class Logger {
     /**
      * Pour écrire dans le fichier
      */
+    @Nullable
     private static PrintWriter printWriter = null;
 
     /**
@@ -86,7 +91,7 @@ public abstract class Logger {
      * @param args Arguments (messages, options de log...)
      * @param type Type de log (debug, warning...)
      */
-    private static void genericLog(PrintStream where, Object[] args, LoggerType type) {
+    private synchronized static void genericLog(@NotNull PrintStream where, @NotNull Object[] args, @NotNull LoggerType type) {
         ArrayList<String> messages = new ArrayList<>();
         ArrayList<LoggerOption> options = new ArrayList<>();
 
@@ -179,6 +184,7 @@ public abstract class Logger {
      *
      * @return Heure sous forme "hh:mm:ss"
      */
+    @NotNull
     private static String getHour() {
         LocalTime now = LocalTime.now();
 
@@ -193,6 +199,7 @@ public abstract class Logger {
      *
      * @return Date sous forme "yyyy-mm-dd_hh-mm-ss"
      */
+    @NotNull
     private static String getDate() {
         LocalDateTime now = LocalDateTime.now();
 
@@ -210,7 +217,7 @@ public abstract class Logger {
      * @param msg Messsage à écrire
      * @param type Type de log
      */
-    private static void writeToFile(String msg, LoggerType type) {
+    private static synchronized void writeToFile(@NotNull String msg, @NotNull LoggerType type) {
         if (printWriter != null) {
             String toPrint = "[";
             toPrint += nbWrite + "-";

@@ -1,5 +1,8 @@
 package fr.groupe4.clientprojet.communication.enums;
 
+import fr.groupe4.clientprojet.logger.Logger;
+import fr.groupe4.clientprojet.logger.enums.LoggerOption;
+
 /**
  * Codes réponse HTML
  */
@@ -43,18 +46,24 @@ public enum HTMLCode {
      * @param code Code
      * @return Énum
      */
-    public static HTMLCode fromInt(int code) {
-        HTMLCode[] codes = HTMLCode.values();
+    public static HTMLCode fromInt(int code) throws IllegalArgumentException {
+        HTMLCode[] vars = HTMLCode.values();
 
-        HTMLCode htmlCodeResult = HTML_CUSTOM_DEFAULT_ERROR;
+        HTMLCode result = null;
 
-        for (HTMLCode htmlCode : codes) {
-            if (htmlCode.code == code) {
-                htmlCodeResult = htmlCode;
+        for (HTMLCode var : vars) {
+            if (var.code == code) {
+                result = var;
             }
         }
 
-        return htmlCodeResult;
+        if (result == null) {
+            String errorMsg = "Pas d'enum provenant de la chaine '" + code + "'";
+            Logger.error(errorMsg, LoggerOption.LOG_FILE_ONLY);
+            throw new IllegalArgumentException(errorMsg);
+        }
+
+        return result;
     }
 
     @Override

@@ -1,40 +1,46 @@
 package fr.groupe4.clientprojet.communication;
 
-import fr.groupe4.clientprojet.communication.enums.CommunicationType;
-import fr.groupe4.clientprojet.logger.Logger;
-import fr.groupe4.clientprojet.project.enums.ProjectStatus;
-import fr.groupe4.clientprojet.resource.human.User;
-import fr.groupe4.clientprojet.room.Room;
-import fr.groupe4.clientprojet.task.Task;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.temporal.Temporal;
 import java.util.HashMap;
 
-import static fr.groupe4.clientprojet.communication.enums.CommunicationType.*;
-import static fr.groupe4.clientprojet.message.enums.MessageResource.*;
+import org.jetbrains.annotations.NotNull;
+
+import fr.groupe4.clientprojet.logger.Logger;
+import fr.groupe4.clientprojet.resource.human.User;
+import fr.groupe4.clientprojet.room.Room;
+import fr.groupe4.clientprojet.task.Task;
+import fr.groupe4.clientprojet.communication.enums.CommunicationType;
+import fr.groupe4.clientprojet.message.enums.MessageResource;
+import fr.groupe4.clientprojet.project.enums.ProjectStatus;
 
 /**
  * Builder de la communication
  */
+@SuppressWarnings("unused")
 public final class CommunicationBuilder {
     /**
      * Type de communication
      */
+    @NotNull
     protected CommunicationType typeOfCommunication;
 
     /**
      * URL à envoyer à l'API
      */
-    protected String url = null;
+    @NotNull
+    protected String url;
 
     /**
      * Se lance tout de suite après le constructeur ou nécessite un comm.start()
      */
     protected boolean startNow;
 
+    /**
+     * Laisse tourner en daemon
+     */
     protected boolean keepAlive;
 
     /**
@@ -46,6 +52,7 @@ public final class CommunicationBuilder {
     /**
      * Data à envoyer en POST pour la requête
      */
+    @NotNull
     protected HashMap<String, Object> requestData;
 
     /**
@@ -56,6 +63,8 @@ public final class CommunicationBuilder {
         keepAlive = false;
         sleepUntilFinished = false;
         requestData = new HashMap<>();
+        url = "";
+        typeOfCommunication = CommunicationType.DEFAULT;
     }
 
     /**
@@ -106,7 +115,7 @@ public final class CommunicationBuilder {
      * @return Builder non terminé avec URL
      */
     public CommunicationBuilder connect(String username, String password) {
-        typeOfCommunication = LOGIN;
+        typeOfCommunication = CommunicationType.LOGIN;
         url = "auth/connect";
         requestData.put("username", username);
         requestData.put("passwd", password);
@@ -114,7 +123,7 @@ public final class CommunicationBuilder {
     }
 
     public CommunicationBuilder createProject(String name, String description, long deadline, ProjectStatus status) {
-        typeOfCommunication = CREATE_PROJECT;
+        typeOfCommunication = CommunicationType.CREATE_PROJECT;
         url = "project/create";
         requestData.put("token", Communication.getRequestToken(this));
         requestData.put("name", name);
@@ -159,7 +168,7 @@ public final class CommunicationBuilder {
         else if (to instanceof LocalDateTime) t2 = ((LocalDateTime) to).atZone(ZoneId.systemDefault()).toEpochSecond();
         else Logger.error("To : type incorrect");
 
-        typeOfCommunication = GET_TIME_SLOT_LIST;
+        typeOfCommunication = CommunicationType.GET_TIME_SLOT_LIST;
         url = "timeslot/list";
         requestData.put("token", Communication.getRequestToken(this));
         requestData.put("from", t1);
@@ -190,7 +199,7 @@ public final class CommunicationBuilder {
         else if (to instanceof LocalDateTime) t2 = ((LocalDateTime) to).atZone(ZoneId.systemDefault()).toEpochSecond();
         else Logger.error("To : type incorrect");
 
-        typeOfCommunication = ADD_TIME_SLOT;
+        typeOfCommunication = CommunicationType.ADD_TIME_SLOT;
         url = "timeslot/create";
         requestData.put("token", Communication.getRequestToken(this));
         requestData.put("start", t1);
@@ -201,10 +210,10 @@ public final class CommunicationBuilder {
     }
 
     public CommunicationBuilder getUserMessageList(int page) {
-        typeOfCommunication = LIST_USER_MESSAGES;
+        typeOfCommunication = CommunicationType.LIST_USER_MESSAGES;
         url = "message/list";
         requestData.put("token", Communication.getRequestToken(this));
-        requestData.put("origin", ORIGIN_HUMANRESOURCE.toString());
+        requestData.put("origin", MessageResource.ORIGIN_HUMANRESOURCE.toString());
         requestData.put("id", User.getUser().getResourceId());
         requestData.put("page", page);
         return this;
@@ -216,7 +225,7 @@ public final class CommunicationBuilder {
      * @return Builder non terminé avec URL
      */
     public CommunicationBuilder getUserInfos() {
-        typeOfCommunication = GET_USER_INFOS;
+        typeOfCommunication = CommunicationType.GET_USER_INFOS;
         url = "auth/verify";
         requestData.put("token", Communication.getRequestToken(this));
         return this;
@@ -230,7 +239,7 @@ public final class CommunicationBuilder {
      * @return Builder non terminé avec URL
      */
     public CommunicationBuilder getHumanRessource(long id) {
-        typeOfCommunication = GET_HUMAN_RESOURCE;
+        typeOfCommunication = CommunicationType.GET_HUMAN_RESOURCE;
         url = "resource/h/get";
         requestData.put("token", Communication.getRequestToken(this));
         requestData.put("id", id);
@@ -243,7 +252,7 @@ public final class CommunicationBuilder {
      * @return Builder non terminé avec URL
      */
     protected CommunicationBuilder updateConnection() {
-        typeOfCommunication = UPDATE_CONNECTION;
+        typeOfCommunication = CommunicationType.UPDATE_CONNECTION;
         url = "auth/renew";
         requestData.put("token", Communication.getRenewToken(this));
         return this;
@@ -255,7 +264,7 @@ public final class CommunicationBuilder {
      * @return Builder non terminé avec URL
      */
     public CommunicationBuilder getProjectList() {
-        typeOfCommunication = LIST_PROJECTS;
+        typeOfCommunication = CommunicationType.LIST_PROJECTS;
         url = "project/list";
         requestData.put("token", Communication.getRequestToken(this));
         return this;

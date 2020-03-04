@@ -3,14 +3,12 @@ package fr.groupe4.clientprojet.communication.enums;
 import fr.groupe4.clientprojet.logger.Logger;
 import fr.groupe4.clientprojet.logger.enums.LoggerOption;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-/**
- * Status de la communication
- */
-public enum CommunicationStatus {
-    STATUS_DEFAULT("default"),
-    STATUS_SUCCESS("success"),
-    STATUS_ERROR("error");
+public enum APICode {
+    NOT_FINISHED("API_CALL_NOT_FINISHED"),
+    ERROR("ERROR"),
+    SUCCESS("SUCCESS");
 
     /**
      * Message associé
@@ -22,18 +20,17 @@ public enum CommunicationStatus {
      *
      * @param msg Message
      */
-    CommunicationStatus(String msg) {
-        this.msg = msg.toLowerCase();
+    APICode(String msg) {
+        this.msg = msg.toUpperCase();
     }
 
     @NotNull
-    public static CommunicationStatus fromString(String msg) throws IllegalArgumentException {
-        CommunicationStatus[] vars = CommunicationStatus.values();
+    public static APICode fromString(@NotNull String msg) throws IllegalArgumentException {
+        APICode[] vars = values();
+        APICode result = null;
 
-        CommunicationStatus result = null;
-
-        for (CommunicationStatus var : vars) {
-            if (var.msg.equalsIgnoreCase(msg)) {
+        for (APICode var : vars) {
+            if (msg.toUpperCase().contains(var.msg.toUpperCase())) {
                 result = var;
             }
         }
