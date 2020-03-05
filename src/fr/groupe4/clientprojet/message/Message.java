@@ -45,7 +45,7 @@ public class Message {
 
     public Message(@NotNull HumanResource src, long id, long date, long idDst, @NotNull String dst, @NotNull String content) {
         this.id = id;
-        this.date = Instant.ofEpochMilli(date*1000).atZone(ZoneId.systemDefault()).toLocalDateTime();;
+        this.date = Instant.ofEpochMilli(date*1000).atZone(ZoneId.systemDefault()).toLocalDateTime();
         this.src = src;
         this.idDst = idDst;
         this.dst = MessageResource.fromString(dst);
