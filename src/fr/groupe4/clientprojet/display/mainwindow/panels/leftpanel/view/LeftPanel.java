@@ -6,8 +6,6 @@ import fr.groupe4.clientprojet.display.mainwindow.panels.leftpanel.controller.Ev
 import fr.groupe4.clientprojet.model.project.Project;
 import fr.groupe4.clientprojet.model.project.ProjectList;
 import fr.groupe4.clientprojet.display.view.draw.DrawPanel;
-import fr.groupe4.clientprojet.project.Project;
-import fr.groupe4.clientprojet.project.ProjectList;
 import fr.groupe4.clientprojet.utils.Location;
 import fr.groupe4.clientprojet.display.view.RoundButton;
 
