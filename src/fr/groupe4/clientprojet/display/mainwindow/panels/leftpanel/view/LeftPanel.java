@@ -1,9 +1,10 @@
 package fr.groupe4.clientprojet.display.mainwindow.panels.leftpanel.view;
 
-
 import fr.groupe4.clientprojet.communication.Communication;
 import fr.groupe4.clientprojet.display.mainwindow.panels.centerpanel.view.CenterPanel;
 import fr.groupe4.clientprojet.display.mainwindow.panels.leftpanel.controller.EventLeftPanel;
+import fr.groupe4.clientprojet.model.project.Project;
+import fr.groupe4.clientprojet.model.project.ProjectList;
 import fr.groupe4.clientprojet.display.view.draw.DrawPanel;
 import fr.groupe4.clientprojet.project.Project;
 import fr.groupe4.clientprojet.project.ProjectList;

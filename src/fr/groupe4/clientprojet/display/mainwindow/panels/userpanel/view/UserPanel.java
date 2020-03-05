@@ -3,8 +3,7 @@ package fr.groupe4.clientprojet.display.mainwindow.panels.userpanel.view;
 import fr.groupe4.clientprojet.communication.Communication;
 import fr.groupe4.clientprojet.display.mainwindow.panels.userpanel.controller.EventUserPanel;
 import fr.groupe4.clientprojet.display.mainwindow.panels.userpanel.enums.UserChoice;
-import fr.groupe4.clientprojet.display.view.draw.DrawPanel;
-import fr.groupe4.clientprojet.resource.human.User;
+import fr.groupe4.clientprojet.model.resource.human.User;
 import fr.groupe4.clientprojet.utils.Location;
 
 import javax.swing.*;
