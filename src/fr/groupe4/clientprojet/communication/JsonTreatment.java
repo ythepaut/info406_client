@@ -8,12 +8,12 @@ import fr.groupe4.clientprojet.communication.enums.HTMLCode;
 import fr.groupe4.clientprojet.logger.Logger;
 import fr.groupe4.clientprojet.message.Message;
 import fr.groupe4.clientprojet.message.MessageList;
-import fr.groupe4.clientprojet.project.Project;
-import fr.groupe4.clientprojet.project.ProjectList;
-import fr.groupe4.clientprojet.resource.human.HumanResource;
-import fr.groupe4.clientprojet.resource.human.User;
-import fr.groupe4.clientprojet.timeslot.TimeSlot;
-import fr.groupe4.clientprojet.timeslot.TimeSlotList;
+import fr.groupe4.clientprojet.model.project.Project;
+import fr.groupe4.clientprojet.model.project.ProjectList;
+import fr.groupe4.clientprojet.model.resource.human.HumanResource;
+import fr.groupe4.clientprojet.model.resource.human.User;
+import fr.groupe4.clientprojet.model.timeslot.TimeSlot;
+import fr.groupe4.clientprojet.model.timeslot.TimeSlotList;
 
 /**
  * Traite le JSON de la classe Communication

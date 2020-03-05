@@ -276,11 +276,12 @@ public final class Communication implements Runnable {
     /**
      * Résultat de la communication
      */
+    @Nullable
     protected Object communicationResult;
 
     private final boolean keepAlive;
 
-    private boolean cancelRequest;
+    private boolean requestAllowed;
 
     private final Duration timeBetweenRequests;
 
@@ -322,7 +323,7 @@ public final class Communication implements Runnable {
      * Code HTML de la requête, comme un code 200 (OK) ou 404 (Not Found)
      */
     @NotNull
-    protected HTMLCode htmlCode;
+    HTMLCode htmlCode;
 
     /**
      * Message associé à la requête
@@ -346,7 +347,7 @@ public final class Communication implements Runnable {
         url = builder.url;
         status = CommunicationStatus.STATUS_DEFAULT;
         code = APICode.NOT_FINISHED;
-        cancelRequest = false;
+        requestAllowed = true;
         htmlCode = HTMLCode.HTML_CUSTOM_DEFAULT_ERROR;
         message = "";
         timeBetweenRequests = Duration.ofSeconds(10);
@@ -387,12 +388,7 @@ public final class Communication implements Runnable {
      */
     @NotNull
     public String getMessage() {
-        if (message.isEmpty()) {
-            return "Erreur inconnue";
-        }
-        else {
-            return message;
-        }
+        return message.isEmpty() ? "Erreur inconnue" : message;
     }
 
     /**
@@ -445,7 +441,7 @@ public final class Communication implements Runnable {
      * Annule la requête
      */
     public void cancelRequest() {
-        cancelRequest = true;
+        requestAllowed = false;
 
         while (!loadingFinished) {
             try {
@@ -499,7 +495,7 @@ public final class Communication implements Runnable {
 
         try {
             while (!requestSent.isDone()) {
-                if (communicationAllowed && !cancelRequest) {
+                if (communicationAllowed && requestAllowed) {
                     Thread.sleep(UPDATE_DELAY.toMillis());
                 }
                 else {
@@ -521,7 +517,7 @@ public final class Communication implements Runnable {
             Logger.error("Requête annulée : " + toString());
         }
 
-        if (response != null) {
+        if (null != response) {
             htmlCode = HTMLCode.fromInt(response.statusCode());
 
             JSONParser parser = new JSONParser();
@@ -533,7 +529,7 @@ public final class Communication implements Runnable {
                 Logger.error("Réponse invalide, erreur serveur ? Réponse serveur :\n" + response.body());
             }
 
-            if (parsedResponse != null) {
+            if (null != parsedResponse) {
                 JSONObject jsonMain = (JSONObject) parsedResponse;
 
                 status = CommunicationStatus.fromString((String) jsonMain.get("status"));
@@ -542,7 +538,7 @@ public final class Communication implements Runnable {
 
                 Object jsonObject = jsonMain.get("content");
 
-                if (htmlCode != HTMLCode.HTML_OK) {
+                if (HTMLCode.HTML_OK != htmlCode) {
                     Logger.debug(htmlCode, status, code, message, LoggerOption.LOG_FILE_ONLY);
                 }
 

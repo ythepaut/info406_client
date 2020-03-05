@@ -1,4 +1,4 @@
-package fr.groupe4.clientprojet.resource.human;
+package fr.groupe4.clientprojet.model.resource.human;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

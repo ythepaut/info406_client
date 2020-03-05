@@ -22,7 +22,7 @@ public class KeyEventConnectionDialog extends KeyAdapter {
                     .connect(source.getUsername(), source.getPassword())
                     .build();
 
-            new LoadDialog(source, comm);
+            new LoadDialog(comm);
 
             if (Communication.isConnected()) {
                 source.dispose();

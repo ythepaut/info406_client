@@ -1,4 +1,4 @@
-package fr.groupe4.clientprojet.timeslot;
+package fr.groupe4.clientprojet.model.timeslot;
 
 import java.util.ArrayList;
 

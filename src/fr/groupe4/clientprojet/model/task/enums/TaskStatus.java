@@ -1,4 +1,4 @@
-package fr.groupe4.clientprojet.task.enums;
+package fr.groupe4.clientprojet.model.task.enums;
 
 import fr.groupe4.clientprojet.logger.Logger;
 import fr.groupe4.clientprojet.logger.enums.LoggerOption;

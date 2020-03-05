@@ -1,6 +1,5 @@
-package fr.groupe4.clientprojet.room.enums;
+package fr.groupe4.clientprojet.model.room.enums;
 
-import fr.groupe4.clientprojet.communication.enums.CommunicationPropertyName;
 import fr.groupe4.clientprojet.logger.Logger;
 import fr.groupe4.clientprojet.logger.enums.LoggerOption;
 import org.jetbrains.annotations.NotNull;

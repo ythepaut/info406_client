@@ -1,6 +1,6 @@
-package fr.groupe4.clientprojet.room;
+package fr.groupe4.clientprojet.model.room;
 
-import fr.groupe4.clientprojet.room.enums.RoomType;
+import fr.groupe4.clientprojet.model.room.enums.RoomType;
 
 public class Room {
     private long id;

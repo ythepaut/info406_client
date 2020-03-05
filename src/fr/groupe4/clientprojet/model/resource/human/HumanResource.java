@@ -1,6 +1,6 @@
-package fr.groupe4.clientprojet.resource.human;
+package fr.groupe4.clientprojet.model.resource.human;
 
-import fr.groupe4.clientprojet.resource.human.enums.HumanRole;
+import fr.groupe4.clientprojet.model.resource.human.enums.HumanRole;
 import org.jetbrains.annotations.NotNull;
 
 /**

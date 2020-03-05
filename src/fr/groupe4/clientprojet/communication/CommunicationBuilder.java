@@ -9,12 +9,12 @@ import java.util.HashMap;
 import org.jetbrains.annotations.NotNull;
 
 import fr.groupe4.clientprojet.logger.Logger;
-import fr.groupe4.clientprojet.resource.human.User;
-import fr.groupe4.clientprojet.room.Room;
-import fr.groupe4.clientprojet.task.Task;
+import fr.groupe4.clientprojet.model.resource.human.User;
+import fr.groupe4.clientprojet.model.room.Room;
+import fr.groupe4.clientprojet.model.task.Task;
 import fr.groupe4.clientprojet.communication.enums.CommunicationType;
 import fr.groupe4.clientprojet.message.enums.MessageResource;
-import fr.groupe4.clientprojet.project.enums.ProjectStatus;
+import fr.groupe4.clientprojet.model.project.enums.ProjectStatus;
 
 /**
  * Builder de la communication

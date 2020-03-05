@@ -1,4 +1,4 @@
-package fr.groupe4.clientprojet.resource.human.enums;
+package fr.groupe4.clientprojet.model.resource.human.enums;
 
 import fr.groupe4.clientprojet.logger.Logger;
 import fr.groupe4.clientprojet.logger.enums.LoggerOption;

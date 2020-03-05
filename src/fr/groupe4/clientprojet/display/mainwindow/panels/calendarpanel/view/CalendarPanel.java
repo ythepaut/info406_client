@@ -19,13 +19,8 @@ public class CalendarPanel extends JPanel {
         CalendarProject c = new CalendarProject(6, 2020);
 
         // Titre
-        JPanel titlePanel = new JPanel(new GridLayout(1, 2));
         CalendarComponent calendarPanel = new CalendarComponent(c);
 
-        titlePanel.add(new JLabel("Calendrier"));
-
-        add(titlePanel, BorderLayout.NORTH);
-
-        add(calendarPanel);
+        add(calendarPanel, BorderLayout.CENTER);
     }
 }

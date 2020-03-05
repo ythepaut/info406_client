@@ -1,7 +1,7 @@
 package fr.groupe4.clientprojet.message;
 
 import fr.groupe4.clientprojet.message.enums.MessageResource;
-import fr.groupe4.clientprojet.resource.human.HumanResource;
+import fr.groupe4.clientprojet.model.resource.human.HumanResource;
 import org.jetbrains.annotations.NotNull;
 
 import java.time.Instant;

@@ -1,6 +1,6 @@
-package fr.groupe4.clientprojet.project;
+package fr.groupe4.clientprojet.model.project;
 
-import fr.groupe4.clientprojet.project.enums.ProjectStatus;
+import fr.groupe4.clientprojet.model.project.enums.ProjectStatus;
 
 import java.time.Instant;
 import java.time.LocalDate;

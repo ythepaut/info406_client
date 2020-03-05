@@ -1,6 +1,6 @@
-package fr.groupe4.clientprojet.task;
+package fr.groupe4.clientprojet.model.task;
 
-import fr.groupe4.clientprojet.task.enums.TaskStatus;
+import fr.groupe4.clientprojet.model.task.enums.TaskStatus;
 
 import java.time.Instant;
 import java.time.LocalDate;

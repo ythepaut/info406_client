@@ -2,12 +2,11 @@ package fr.groupe4.clientprojet.display.mainwindow.panels.projectpanel.view;
 
 import fr.groupe4.clientprojet.communication.Communication;
 import fr.groupe4.clientprojet.display.view.slide.view.Slide;
-import fr.groupe4.clientprojet.project.Project;
-import fr.groupe4.clientprojet.project.ProjectList;
+import fr.groupe4.clientprojet.model.project.Project;
+import fr.groupe4.clientprojet.model.project.ProjectList;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
 
 /**
  * Le panel des projets

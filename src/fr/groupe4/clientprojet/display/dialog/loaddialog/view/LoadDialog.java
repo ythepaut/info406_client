@@ -14,11 +14,10 @@ public class LoadDialog extends JDialog {
     /**
      * Le constructeur
      *
-     * @param owner : le dialog auquel appartient le loaddialog
      * @param comm : l'instance de communication
      */
-    public LoadDialog(JDialog owner, Communication comm) {
-        super(owner, true);
+    public LoadDialog(Communication comm) {
+        setModal(true);
         comm.addPropertyChangeListener(new EventLoadDialog(this));
         comm.start();
         setUndecorated(true);
