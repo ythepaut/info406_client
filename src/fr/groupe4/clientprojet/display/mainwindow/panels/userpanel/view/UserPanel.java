@@ -16,7 +16,7 @@ import java.awt.*;
 /**
  * Le panel pour l'utilisateur
  */
-public class UserPanel extends JPanel {
+public class UserPanel extends DrawPanel {
     /**
      * Le champs de modification du mot de passe
      */
@@ -48,7 +48,8 @@ public class UserPanel extends JPanel {
     /**
      * Dessine le contenu
      */
-    private void drawContent() {
+    @Override
+    protected void drawContent() {
         // Partie supérieure
         JPanel topPanel = new JPanel(new GridLayout(1, 4));
         JPanel descripPanel = new JPanel(new GridLayout(1, 2));
@@ -123,16 +124,5 @@ public class UserPanel extends JPanel {
      */
     public String getEmail() {
         return mailField.getText();
-    }
-
-    /**
-     * Redessine le panel
-     */
-    public void redraw() {
-        removeAll();
-        validate();
-        revalidate();
-        repaint();
-        drawContent();
     }
 }

@@ -1,6 +1,7 @@
 package fr.groupe4.clientprojet.display.mainwindow.panels.projectpanel.view;
 
 import fr.groupe4.clientprojet.communication.Communication;
+import fr.groupe4.clientprojet.display.view.draw.DrawPanel;
 import fr.groupe4.clientprojet.display.view.slide.view.Slide;
 import fr.groupe4.clientprojet.model.project.Project;
 import fr.groupe4.clientprojet.model.project.ProjectList;
@@ -11,7 +12,7 @@ import java.awt.*;
 /**
  * Le panel des projets
  */
-public class ProjectPanel extends JPanel {
+public class ProjectPanel extends DrawPanel {
     /**
      * Le projet qui est affiché
      */
@@ -39,7 +40,8 @@ public class ProjectPanel extends JPanel {
     /**
      * Dessine le contenu
      */
-    private void drawContent() {
+    @Override
+    protected void drawContent() {
         setLayout(new BorderLayout());
 
         // Titre

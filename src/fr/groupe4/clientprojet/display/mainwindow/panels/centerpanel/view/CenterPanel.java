@@ -1,16 +1,16 @@
 package fr.groupe4.clientprojet.display.mainwindow.panels.centerpanel.view;
 
-import javax.swing.*;
 import java.awt.*;
 
 import fr.groupe4.clientprojet.display.mainwindow.panels.calendarpanel.view.CalendarPanel;
 import fr.groupe4.clientprojet.display.mainwindow.panels.projectpanel.view.ProjectPanel;
 import fr.groupe4.clientprojet.display.mainwindow.panels.userpanel.view.UserPanel;
+import fr.groupe4.clientprojet.display.view.draw.DrawPanel;
 
 /**
  * Créé le panel du centre de la fenêtre
  */
-public class CenterPanel extends JPanel {
+public class CenterPanel extends DrawPanel {
     /**
      * Valeurs que peut prendre la vue
      * Une dernière valeur est possible, dans ce cas c'est le nom du projet
@@ -58,7 +58,8 @@ public class CenterPanel extends JPanel {
     /**
      * Dessine le contenu du panel
      */
-    private void drawContent() {
+    @Override
+    protected void drawContent() {
         setLayout(new BorderLayout());
         switch (view) {
             case CALENDAR:
@@ -72,16 +73,5 @@ public class CenterPanel extends JPanel {
             default:
                 add(new ProjectPanel(view), BorderLayout.CENTER);
         }
-    }
-
-    /**
-     * Redessine le panel
-     */
-    public void redraw() {
-        removeAll();
-        validate();
-        revalidate();
-        repaint();
-        drawContent();
     }
 }

@@ -22,7 +22,7 @@ import java.util.ArrayList;
  * Créé le panel de gauche de la fenêtre
  * Celui qui contient la liste des projets et le bouton 'calendrier' et 'profil'
  */
-public class LeftPanel extends JPanel {
+public class LeftPanel extends DrawPanel {
     /**
      * La largeur des boutons
      */
@@ -78,7 +78,8 @@ public class LeftPanel extends JPanel {
     /**
      * Dessine le contenu du panel
      */
-    private void drawContent() {
+    @Override
+    protected void drawContent() {
         EventLeftPanel eventLeftPanel = new EventLeftPanel(this, centerPanel);
         Font buttonFont = new Font("Arial", Font.PLAIN, TAILLE_BOUTONS);
         GridBagConstraints c = new GridBagConstraints();
@@ -216,16 +217,5 @@ public class LeftPanel extends JPanel {
         if (debutListe < nbProjet && debutListe >= 0) {
             this.debutListe = debutListe;
         }
-    }
-
-    /**
-     * Redéssine le panel
-     */
-    public void redraw() {
-        removeAll();
-        validate();
-        revalidate();
-        repaint();
-        drawContent();
     }
 }

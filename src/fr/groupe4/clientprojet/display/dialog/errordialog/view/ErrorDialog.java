@@ -1,16 +1,17 @@
 package fr.groupe4.clientprojet.display.dialog.errordialog.view;
 
 import fr.groupe4.clientprojet.display.dialog.errordialog.controller.EventErrorDialog;
+import fr.groupe4.clientprojet.display.view.draw.DrawDialog;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class ErrorDialog extends JDialog {
+public class ErrorDialog extends DrawDialog {
     private String message;
     private EventErrorDialog eventErrorDialog;
 
-    public ErrorDialog(JDialog owner, String message) {
-        super(owner, true);
+    public ErrorDialog(String message) {
+        setModal(true);
         this.message = message;
         eventErrorDialog = new EventErrorDialog(this);
         setSize(510, 80);
@@ -26,7 +27,8 @@ public class ErrorDialog extends JDialog {
         setVisible(true);
     }
 
-    private void drawContent() {
+    @Override
+    protected void drawContent() {
         setLayout(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
         c.gridx = c.gridy = 0;
