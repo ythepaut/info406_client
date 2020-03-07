@@ -1,6 +1,7 @@
 package fr.groupe4.clientprojet.display.dialog.exitdialog.view;
 
 import fr.groupe4.clientprojet.display.dialog.exitdialog.controller.EventExitDialog;
+import fr.groupe4.clientprojet.display.dialog.exitdialog.controller.KeyEventExitDialog;
 import fr.groupe4.clientprojet.display.dialog.exitdialog.enums.ExitChoice;
 import fr.groupe4.clientprojet.display.view.draw.DrawDialog;
 
@@ -51,8 +52,10 @@ public class ExitDialog extends DrawDialog {
 
 
         JButton exitButton = new JButton("Quitter");
+        exitButton.requestFocus();
         exitButton.setActionCommand(ExitChoice.EXIT.getName());
         exitButton.addActionListener(eventExitDialog);
+        exitButton.addKeyListener(new KeyEventExitDialog(this));
         getContentPane().add(exitButton);
         JButton cancelButton = new JButton("Annuler");
         cancelButton.setActionCommand(ExitChoice.CANCEL.getName());

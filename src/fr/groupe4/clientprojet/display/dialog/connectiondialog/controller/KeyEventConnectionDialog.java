@@ -1,5 +1,6 @@
 package fr.groupe4.clientprojet.display.dialog.connectiondialog.controller;
 
+import fr.groupe4.clientprojet.Main;
 import fr.groupe4.clientprojet.communication.Communication;
 import fr.groupe4.clientprojet.display.dialog.connectiondialog.view.ConnectionDialog;
 import fr.groupe4.clientprojet.display.dialog.errordialog.view.ErrorDialog;
@@ -17,18 +18,27 @@ public class KeyEventConnectionDialog extends KeyAdapter {
 
     @Override
     public void keyPressed(KeyEvent e) {
-        if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-            Communication comm = Communication.builder()
-                    .connect(source.getUsername(), source.getPassword())
-                    .build();
+        switch (e.getKeyCode()) {
+            case KeyEvent.VK_ENTER:
+                Communication comm = Communication.builder()
+                        .connect(source.getUsername(), source.getPassword())
+                        .build();
 
-            new LoadDialog(comm);
+                new LoadDialog(comm);
 
-            if (Communication.isConnected()) {
-                source.dispose();
-            } else {
-                new ErrorDialog(comm.getMessage()); // TODO : adapter le message en fonction de l'erreur
-            }
+                if (Communication.isConnected()) {
+                    source.dispose();
+                } else {
+                    new ErrorDialog(comm.getMessage()); // TODO : adapter le message en fonction de l'erreur
+                }
+                break;
+
+            case KeyEvent.VK_ESCAPE:
+                source.getOwner().dispose();
+                Main.exit();
+                break;
+
+            default:
         }
     }
 }

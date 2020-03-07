@@ -52,19 +52,21 @@ public class ConnectionDialog extends DrawDialog {
     protected void drawContent() {
         setBackground(Color.WHITE);
         setLayout(new BorderLayout());
+        KeyEventConnectionDialog keyEventConnectionDialog = new KeyEventConnectionDialog(this);
 
         JPanel fieldPanel = new JPanel(new GridLayout(2, 1));
         JPanel usernamePanel = new JPanel(new BorderLayout());
         usernamePanel.setBorder(new EmptyBorder(90, 20, 20, 20));
         usernamePanel.add(new JLabel("Username :"), BorderLayout.CENTER);
         username = new JTextField(100);
+        username.addKeyListener(keyEventConnectionDialog);
         usernamePanel.add(username, BorderLayout.SOUTH);
         fieldPanel.add(usernamePanel);
         JPanel passwordPanel = new JPanel(new BorderLayout());
         passwordPanel.setBorder(new EmptyBorder(10, 20, 100, 20));
         passwordPanel.add(new JLabel("Password :"), BorderLayout.CENTER);
         password = new JPasswordField(100);
-        password.addKeyListener(new KeyEventConnectionDialog(this));
+        password.addKeyListener(keyEventConnectionDialog);
         passwordPanel.add(password, BorderLayout.SOUTH);
         fieldPanel.add(passwordPanel);
         add(fieldPanel, BorderLayout.CENTER);
