@@ -1,58 +1,65 @@
 package fr.groupe4.clientprojet.communication;
 
-import fr.groupe4.clientprojet.utils.Location;
-
-import org.json.simple.parser.ParseException;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import java.io.File;
-
-import java.io.IOException;
+import java.beans.PropertyChangeSupport;
+import java.beans.PropertyChangeListener;
 import java.net.URI;
+import java.net.URLEncoder;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.nio.charset.StandardCharsets;
 import java.time.Duration;
-import java.time.temporal.Temporal;
+import java.util.Base64;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.CancellationException;
+import java.util.concurrent.atomic.AtomicReference;
+
+import org.jetbrains.annotations.Async;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+
+import fr.groupe4.clientprojet.logger.Logger;
+import fr.groupe4.clientprojet.communication.enums.*;
+import fr.groupe4.clientprojet.logger.enums.LoggerOption;
 
 /**
- * Communication, effectue les appels API
- * Les appels sont effectués en instance pour thread la connection et éviter de bloquer le thread courant
- *
- * Cette classe utilise le pattern Builder
- *
- * TODO: Communication comm = new Communication.CommunicationBuilder().startNow().sleepUntilFinished().connect("username", "password").build();
- *
- * Exemple d'utilisation :
- *      Communication comm = new Communication.CommunicationBuilder()
- *                                            .connect("username", "password")
- *                                            .build();
- *      comm.start();
- *      comm.sleepUntilFinished();
- *
- * Autre exemple :
- *      Communication comm = new Communication.CommunicationBuilder(true, true)
- *                                            .connect("username", "password")
- *                                            .build();
- *
- * Résultats de la connexion :
- *      comm.getStatus(); // success
- *      comm.getCode(); // SUCCESS_AUTHENTICATED
- *      comm.getMessage(); // Authentication successful and JWT generated.
- *      comm.getHtmlCode(); // 200
- *      Communication.isConnected(); // true
+ * Communication, effectue les appels API.
+ * Les appels sont effectués en instance pour thread la connection et éviter de bloquer le thread courant.
+ * <br><br>
+ * Cette classe utilise le pattern Builder.
+ * <br><br>
+ * Exemple d'utilisation : <br><code>
+ *      Communication comm = Communication.builder() <br>
+ *                                        .connect("username", "password") <br>
+ *                                        .build(); <br>
+ *      comm.start(); <br>
+ *      comm.sleepUntilFinished(); </code><br>
+ * <br>
+ * Autre exemple : <br><code>
+ *      Communication comm = Communication.builder() <br>
+ *                                        .startNow() <br>
+ *                                        .sleepUntilFinished() <br>
+ *                                        .connect("username", "password") <br>
+ *                                        .build();</code><br>
+ * <br>
+ * Résultats de la connexion : <br>
+ *      comm.getStatus(); // success <br>
+ *      comm.getCode(); // SUCCESS_AUTHENTICATED <br>
+ *      comm.getMessage(); // Authentication successful and JWT generated. <br>
+ *      comm.getHtmlCode(); // 200 <br>
+ *      Communication.isConnected(); // true <br>
  *
  * @author Romain
  */
-public class Communication extends Thread {
+@SuppressWarnings("unused")
+public final class Communication implements Runnable {
     /**
      * Client HTTP pour les requètes
      */
@@ -64,39 +71,108 @@ public class Communication extends Thread {
     private static final String baseApiUrl = "https://api.ythepaut.com/g4/actions/";
 
     /**
-     * Codes réponse HTML
-     */
-    private static final int
-            HTML_CUSTOM_DEFAULT_ERROR = -1,
-            HTML_CUSTOM_TIMEOUT = 608,
-            HTML_OK = 200,
-            HTML_BAD_REQUEST = 400,
-            HTML_UNAUTHORIZED = 401,
-            HTML_FORBIDDEN = 403,
-            HTML_NOT_FOUND = 404,
-            HTML_TIMEOUT = 408;
-
-    /**
-     * Statut de la réponse API
-     */
-    private static final String
-            STATUS_SUCCESS = "success",
-            STATUS_ERROR = "error";
-
-    /**
      * Temps avant de timeout
      */
     private static final Duration TIMEOUT_DELAY = Duration.ofSeconds(30);
 
     /**
-     * Token, null si non connecté
+     * Temps avant d'actualiser
      */
-    private static String token = null;
+    private static final Duration UPDATE_DELAY = Duration.ofMillis(10);
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     /**
-     * Client en train de charger une ressource ou non
+     * Token utilisé pour les requêtes, null si non connecté
      */
-    private static boolean isLoading = false;
+    @NotNull
+    private static volatile AtomicReference<String> requestToken = new AtomicReference<>("");
+
+    /**
+     * Token utilisé pour renouveler requestToken
+     */
+    @NotNull
+    private static volatile AtomicReference<String> renewToken = new AtomicReference<>("");
+
+    /**
+     * Si les threads ont le droit de communiquer ou non
+     */
+    private static volatile boolean communicationAllowed = true;
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    /**
+     * Getter du token de requête
+     *
+     * @param editor Qui veut accéder au token ? JsonTreatment ou CommunicationBuilder seulement sont autorisés
+     *
+     * @return Token
+     */
+    @NotNull
+    protected static synchronized String getRequestToken(@NotNull Object editor) {
+        if (editor instanceof CommunicationBuilder || editor instanceof JsonTreatment) {
+            return requestToken.get();
+        }
+        else {
+            Logger.error("Accès au token non autorisé");
+            return "";
+        }
+    }
+
+    /**
+     * Setter du token de requête
+     *
+     * @param editor Qui veut accéder au token ? JsonTreatment seulement est autorisés
+     * @param token Token
+     */
+    @SuppressWarnings("SameParameterValue")
+    protected static synchronized void setRequestToken(@NotNull Object editor, @NotNull String token) {
+        if (editor instanceof JsonTreatment) {
+            requestToken.set(token);
+        }
+        else {
+            Logger.error("Accès au token non autorisé");
+        }
+    }
+
+    /**
+     * Getter du token de renew
+     *
+     * @param editor Qui veut accéder au token ? JsonTreatment ou CommunicationBuilder seulement sont autorisés
+     *
+     * @return Token
+     */
+    @NotNull
+    protected static synchronized String getRenewToken(@NotNull Object editor) {
+        if (editor instanceof CommunicationBuilder || editor instanceof JsonTreatment) {
+            return renewToken.get();
+        }
+        else {
+            Logger.error("Accès au token non autorisé");
+            return "";
+        }
+    }
+
+    /**
+     * Setter du token de renew
+     *
+     * @param editor Qui veut accéder au token ? JsonTreatment seulement est autorisés
+     * @param token Token
+     */
+    @SuppressWarnings("SameParameterValue")
+    protected static synchronized void setRenewToken(@NotNull Object editor, @NotNull String token) {
+        if (editor instanceof JsonTreatment) {
+            if (token.isEmpty()) {
+                renewToken.set("");
+            }
+            else {
+                renewToken.set(token);
+            }
+        }
+        else {
+            Logger.error("Accès au token non autorisé");
+        }
+    }
 
     /**
      * Vérifie l'état de la connexion
@@ -104,104 +180,110 @@ public class Communication extends Thread {
      * @return Connecté ou non
      */
     public static boolean isConnected() {
-        return token != null;
+        checkTokenValidity();
+        return !requestToken.get().isEmpty();
+    }
+
+    /**
+     * Vérifie la validité d'un token
+     */
+    private static synchronized void checkTokenValidity() {
+        if (!requestToken.get().isEmpty()) {
+            String[] splitString = requestToken.get().split("\\.");
+            Base64.Decoder decoder = Base64.getUrlDecoder();
+            String tokenBody = new String(decoder.decode(splitString[1]));
+
+            JSONParser parser = new JSONParser();
+
+            try {
+                JSONObject parsedResponse = (JSONObject) parser.parse(tokenBody);
+
+                long currentTime = System.currentTimeMillis() / 1000L;
+
+                long expirationTime = (long) parsedResponse.get("exp");
+
+                // long totalTime = expirationTime - (long) parsedResponse.get("iat");
+
+                long remainingTime = expirationTime - currentTime;
+
+                if (remainingTime < TIMEOUT_DELAY.toSeconds()*2) {
+                    requestToken.set("");
+                }
+            }
+            catch (ParseException e) {
+                Logger.error("Vérification de token invalide");
+            }
+        }
+    }
+
+    /**
+     * Quitte tous les threads
+     */
+    public static void exit() {
+        communicationAllowed = false;
+    }
+
+    /**
+     * Transforme une HashMap en formulaire pour POST <br>
+     * https://mkyong.com/java/how-to-send-http-request-getpost-in-java/
+     *
+     * @param data Data en entrée
+     *
+     * @return Formulaire pour POST
+     */
+    private static HttpRequest.BodyPublisher buildFormDataFromMap(HashMap<String, Object> data) {
+        StringBuilder builder = new StringBuilder();
+
+        for (Map.Entry<String, Object> entry : data.entrySet()) {
+            if (builder.length() > 0) {
+                builder.append("&");
+            }
+            builder.append(URLEncoder.encode(entry.getKey(), StandardCharsets.UTF_8));
+            builder.append("=");
+            builder.append(URLEncoder.encode(entry.getValue().toString(), StandardCharsets.UTF_8));
+        }
+
+        return HttpRequest.BodyPublishers.ofString(builder.toString());
     }
 
     /**
      * Builder de la communication
      */
-    public static class CommunicationBuilder {
-        /**
-         * Type de communication
-         */
-        private CommunicationType typeOfCommunication;
-
-        /**
-         * URL à envoyer à l'API
-         */
-        private String url = null;
-
-        /**
-         * Se lance tout de suite après le constructeur ou nécessite un comm.start()
-         */
-        private boolean startNow;
-
-        /**
-         * Attend que la requête soit terminée et bloque le thread
-         * Cette variable ne sert que si startNow est à true
-         */
-        private boolean sleepUntilFinished;
-
-        /**
-         * Constructeur n'envoyant pas automatiquement l'appel API
-         */
-        public CommunicationBuilder() {
-            startNow = false;
-            sleepUntilFinished = false;
-        }
-
-        /**
-         * Constructeur envoyant tout de suite la requête à l'API
-         *
-         * @param startNow Lance le thread immédiatement ou non, si non il faudra lancer comm.start()
-         */
-        public CommunicationBuilder(boolean startNow) {
-            this();
-            this.startNow = startNow;
-        }
-
-        /**
-         * Constructeur envoyant
-         *
-         * @param startNow Lance le thread
-         * @param sleepUntilFinished Met le thread principal en pause tant que la requête n'est pas terminée
-         */
-        public CommunicationBuilder(boolean startNow, boolean sleepUntilFinished) {
-            this(startNow);
-            this.sleepUntilFinished = sleepUntilFinished;
-        }
-
-        /**
-         * Builder final
-         *
-         * @return Communication bien formée
-         */
-        public Communication build() {
-            return new Communication(this);
-        }
-
-        /**
-         * Connecte le client au serveur
-         *
-         * @param username Nom d'utilisateur
-         * @param password Mot de passe
-         *
-         * @return Builder non terminé avec URL
-         */
-        public CommunicationBuilder connect(String username, String password) {
-            typeOfCommunication = CommunicationType.LOGIN;
-            url = "auth?username=" + username + "&passwd=" + password;
-            return this;
-        }
-
-        /**
-         * Vérifie la connexion
-         *
-         * @return Builder non terminé avec URL
-         */
-        public CommunicationBuilder updateConnection() {
-            typeOfCommunication = CommunicationType.UPDATE_CONNECTION;
-
-            if (token == null) {
-                url = "verify-token?token=null";
-            }
-            else {
-                url = "verify-token?token=" + token;
-            }
-
-            return this;
-        }
+    public static CommunicationBuilder builder() {
+        return new CommunicationBuilder();
     }
+
+    public static Communication getInstance(CommunicationKeepAlive type) {
+        return singletons.get(type);
+    }
+
+    private static HashMap<CommunicationKeepAlive, Communication> singletons;
+
+    static {
+        singletons = new HashMap<>();
+        // singletons.put(KEEP_ALIVE_LIST_MESSAGE, Communication.builder().getUserMessageList(0).startNow().build());
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private final PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
+
+    /**
+     * Data de la requête
+     */
+    private final HashMap<String, Object> requestData;
+
+    /**
+     * Résultat de la communication
+     */
+    @Nullable
+    protected Object communicationResult;
+
+    private final boolean keepAlive;
+
+    private boolean requestAllowed;
+
+    private final Duration timeBetweenRequests;
 
     /**
      * Client ayant finit son chargement ou non
@@ -209,47 +291,66 @@ public class Communication extends Thread {
     private boolean loadingFinished;
 
     /**
+     * Thread lancé ou non
+     */
+    private boolean started;
+
+    /**
      * Type de communication
      */
-    private CommunicationType typeOfCommunication;
+    @NotNull
+    protected final CommunicationType typeOfCommunication;
 
     /**
      * URL à envoyer à l'API
      */
-    private String url;
+    @NotNull
+    private final String url;
 
     /**
      * Statut de la requête, comme "success" ou "error"
      */
-    private String status;
+    @NotNull
+    protected CommunicationStatus status;
 
     /**
      * Code de l'API, par exemple "ERROR_INVALID_USER_CREDENTIALS" ou "SUCCESS_AUTHENTICATED"
      */
-    private String code;
+    @NotNull
+    private APICode code;
 
     /**
      * Code HTML de la requête, comme un code 200 (OK) ou 404 (Not Found)
      */
-    private int htmlCode;
+    @NotNull
+    HTMLCode htmlCode;
 
     /**
      * Message associé à la requête
      */
+    @NotNull
     private String message;
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     /**
      * Constructeur de la Communication
      *
      * @param builder Builder de la communication
      */
-    private Communication(CommunicationBuilder builder) {
+    protected Communication(@NotNull CommunicationBuilder builder) {
+        started = false;
+        keepAlive = builder.keepAlive;
+        requestData = builder.requestData;
+        communicationResult = null;
         typeOfCommunication = builder.typeOfCommunication;
         url = builder.url;
-        status = null;
-        code = null;
-        htmlCode = HTML_CUSTOM_DEFAULT_ERROR;
-        message = null;
+        status = CommunicationStatus.STATUS_DEFAULT;
+        code = APICode.NOT_FINISHED;
+        requestAllowed = true;
+        htmlCode = HTMLCode.HTML_CUSTOM_DEFAULT_ERROR;
+        message = "";
+        timeBetweenRequests = Duration.ofSeconds(10);
 
         if (builder.startNow) {
             start();
@@ -265,8 +366,9 @@ public class Communication extends Thread {
      *
      * @return Statut
      */
+    @NotNull
     public String getStatus() {
-        return status;
+        return status.toString();
     }
 
     /**
@@ -274,8 +376,9 @@ public class Communication extends Thread {
      *
      * @return Code API
      */
+    @NotNull
     public String getCode() {
-        return code;
+        return code.toString();
     }
 
     /**
@@ -283,13 +386,18 @@ public class Communication extends Thread {
      *
      * @return Message
      */
+    @NotNull
     public String getMessage() {
-        if (message == null) {
-            return "Erreur inconnue";
-        }
-        else {
-            return message;
-        }
+        return message.isEmpty() ? "Erreur inconnue" : message;
+    }
+
+    /**
+     * Commencé ou non
+     *
+     * @return Commencé ?
+     */
+    public boolean isStarted() {
+        return started;
     }
 
     /**
@@ -298,60 +406,17 @@ public class Communication extends Thread {
      * @return Code HTML
      */
     public int getHtmlCode() {
-        return htmlCode;
+        return htmlCode.getCode();
     }
 
     /**
-     * Méthode pour connecter l'instance à son URL
+     * Renvoie le résultat de l'action
+     *
+     * @return Résultat
      */
-    private void connectFromUrl() {
-        // Requête API
-        HttpRequest request = HttpRequest.newBuilder()
-                .GET()
-                .uri(URI.create(baseApiUrl + url))
-                .setHeader("User-Agent", "Java 11 HttpClient Bot")
-                .timeout(TIMEOUT_DELAY)
-                .build();
-
-        HttpResponse<String> response = null;
-        // Réponse de l'API
-
-        try {
-            response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-        }
-        catch (IOException e) {
-            htmlCode = HTML_CUSTOM_TIMEOUT;
-            System.err.println("Connection timed out");
-        }
-        catch (InterruptedException e) {
-            htmlCode = HTML_CUSTOM_DEFAULT_ERROR;
-            System.err.println("Requête interrompue");
-        }
-
-        if (response != null) {
-            htmlCode = response.statusCode();
-
-            JSONParser parser = new JSONParser();
-            Object parsedResponse = null;
-
-            try {
-                parsedResponse = parser.parse(response.body());
-            } catch (ParseException e) {
-                System.err.println("Réponse invalide");
-            }
-
-            if (parsedResponse != null) {
-                JSONObject jsonMain = (JSONObject) parsedResponse;
-
-                status = (String) jsonMain.get("status");
-                code = (String) jsonMain.get("code");
-                message = (String) jsonMain.get("message");
-
-                Object jsonObject = jsonMain.get("content");
-
-                doSomethingWithData(jsonObject);
-            }
-        }
+    @Nullable
+    public Object getResult() {
+        return communicationResult;
     }
 
     /**
@@ -364,12 +429,131 @@ public class Communication extends Thread {
     }
 
     /**
+     * Succès de l'action ou non
+     *
+     * @return Succès
+     */
+    public boolean isSuccessful() {
+        return htmlCode.equals(HTMLCode.HTML_OK);
+    }
+
+    /**
+     * Annule la requête
+     */
+    public void cancelRequest() {
+        requestAllowed = false;
+
+        while (!loadingFinished) {
+            try {
+                Thread.sleep(UPDATE_DELAY.toMillis()/10);
+            } catch (InterruptedException ignored) {}
+        }
+    }
+
+    /**
+     * Vers String
+     *
+     * @return String
+     */
+    @Override
+    @NotNull
+    public String toString() {
+        return typeOfCommunication.toString();
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    /**
+     * Lance le Thread
+     */
+    public void start() {
+        if (!started) {
+            started = true;
+            Thread t = new Thread(this);
+            t.start();
+        }
+    }
+
+    /**
+     * Méthode pour connecter l'instance à son URL
+     */
+    @Async.Execute
+    private void send() {
+        // Requête API
+        HttpRequest request = HttpRequest.newBuilder()
+                .POST(buildFormDataFromMap(requestData))
+                .uri(URI.create(baseApiUrl + url))
+                .setHeader("User-Agent", "Java 11 HttpClient Bot")
+                .header("Content-Type", "application/x-www-form-urlencoded")
+                .timeout(TIMEOUT_DELAY)
+                .build();
+
+        // Réponse de l'API
+        CompletableFuture<HttpResponse<String>> requestSent = httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofString());
+
+        HttpResponse<String> response = null;
+
+        try {
+            while (!requestSent.isDone()) {
+                if (communicationAllowed && requestAllowed) {
+                    Thread.sleep(UPDATE_DELAY.toMillis());
+                }
+                else {
+                    requestSent.cancel(true);
+                }
+            }
+
+            response = requestSent.get();
+        }
+        catch (InterruptedException e) {
+            Logger.error("Erreur inconnue : " + e.toString());
+        }
+        catch (ExecutionException e) {
+            htmlCode = HTMLCode.HTML_CUSTOM_TIMEOUT;
+            Logger.error("Requête time out : " + toString());
+        }
+        catch (CancellationException e) {
+            htmlCode = HTMLCode.HTML_CUSTOM_CANCEL;
+            Logger.error("Requête annulée : " + toString());
+        }
+
+        if (null != response) {
+            htmlCode = HTMLCode.fromInt(response.statusCode());
+
+            JSONParser parser = new JSONParser();
+            Object parsedResponse = null;
+
+            try {
+                parsedResponse = parser.parse(response.body());
+            } catch (ParseException e) {
+                Logger.error("Réponse invalide, erreur serveur ? Réponse serveur :\n" + response.body());
+            }
+
+            if (null != parsedResponse) {
+                JSONObject jsonMain = (JSONObject) parsedResponse;
+
+                status = CommunicationStatus.fromString((String) jsonMain.get("status"));
+                code = APICode.fromString((String) jsonMain.get("code"));
+                message = (String) jsonMain.get("message");
+
+                Object jsonObject = jsonMain.get("content");
+
+                if (HTMLCode.HTML_OK != htmlCode) {
+                    Logger.debug(htmlCode, status, code, message, LoggerOption.LOG_FILE_ONLY);
+                }
+
+                JsonTreatment.doSomethingWithData(this, jsonObject);
+            }
+        }
+    }
+
+    /**
      * Met en pause le thread actuel le temps que la requête soit effectuée
      */
     public void sleepUntilFinished() {
-        while (!isFinished()  ) {
+        while (started && !loadingFinished && communicationAllowed) {
             try {
-                Thread.sleep(1);
+                Thread.sleep(UPDATE_DELAY.toMillis());
             }
             catch (InterruptedException e) {
                 e.printStackTrace();
@@ -378,96 +562,74 @@ public class Communication extends Thread {
     }
 
     /**
-     * Fait quelque chose du contenu de la réponse de l'API
-     *
-     * @param jsonObject Contenu à traiter
-     */
-    private synchronized void doSomethingWithData(Object jsonObject) {
-        switch (typeOfCommunication) {
-            case LOGIN:
-                if (status.equals(STATUS_SUCCESS)) {
-                    JSONObject jsonContent = (JSONObject) jsonObject;
-                    token = (String) jsonContent.get("token");
-                }
-                break;
-
-            case UPDATE_CONNECTION:
-                if (htmlCode == HTML_OK) {
-                    // OK
-                }
-                else if (htmlCode == HTML_UNAUTHORIZED) {
-                    token = null;
-                }
-                break;
-
-            default:
-                break;
-        }
-    }
-
-    /**
      * Lance le thread de connexion à l'API
      */
     @Override
     public void run() {
-        if (url == null) {
-            System.err.println("Communication inutile, rien n'est effectué");
-        }
-        else {
-            connectFromUrl();
+        started = true;
+
+        if (typeOfCommunication.checkConnection()) {
+            checkTokenValidity();
+
+            if (requestToken.get().isEmpty()) {
+                // Si le token est périmé on le recrée
+
+                new CommunicationBuilder()
+                        .startNow()
+                        .sleepUntilFinished()
+                        .updateConnection()
+                        .build();
+
+                if (requestToken.get().isEmpty()) {
+                    // S'il n'est pas recréé, euh oups
+                    Logger.error("Token invalide une 2nde fois");
+                }
+                else {
+                    // Si jeton recréé, on reprend
+
+                    if (requestData.get("token") != null) {
+                        requestData.remove("token");
+                        requestData.put("token", requestToken);
+                    }
+                }
+            }
         }
 
+        send();
+
         loadingFinished = true;
+        propertyChangeSupport.firePropertyChange(CommunicationPropertyName.COMMUNICATION_LOADING_FINISHED.toString(), false, true);
+
+        if (keepAlive && communicationAllowed) {
+            try {
+                Thread.sleep(timeBetweenRequests.toMillis());
+
+            }
+            catch (InterruptedException e) {
+                Logger.error("Erreur pour keepAlive : " + toString());
+            }
+        }
     }
 
     /**
-     * Récupère les tâches
+     * Ajoute un listener pour le pattern observer
      *
-     * @deprecated À transformer en instance
-     *
-     * @return Liste des tâches
+     * @param listener Listener
      */
-    @Deprecated
-    public static TaskList getWeekTasks(int week, int year) throws IOException {
-        if (!isConnected()) {
-            throw new IOException("Non connecté");
+    public void addPropertyChangeListener(@NotNull PropertyChangeListener listener) {
+        if (started) {
+            Logger.warning("Attention ! Par sécurité, ne pas ajouter de listener alors que le thread est déjà lancé, et donc potentiellement déjà terminé !");
         }
 
-        TaskList tasks = new TaskList();
+        propertyChangeSupport.addPropertyChangeListener(listener);
+    }
 
-        try {
-            File fileXml = new File(Location.getPath() + "/fr/groupe4/clientprojet/data/XML/calendar.xml");
-            // Récupération du XML
-
-            DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-            Document doc = dBuilder.parse(fileXml);
-
-            doc.getDocumentElement().normalize();
-
-            NodeList nodeList = doc.getElementsByTagName("calendar");
-            // Liste des nodes XML
-
-            for (int i=0; i<nodeList.getLength(); i++) {
-                Node node = nodeList.item(i);
-
-                if (node.getNodeType() == Node.ELEMENT_NODE) {
-                    // Création de la tâche à partir du node actuel
-
-                    Element element = (Element) node;
-
-                    Task task = new Task(element.getAttribute("id"));
-
-                    task.setDescription(element.getElementsByTagName("description").item(0).getTextContent());
-
-                    tasks.add(task);
-                }
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return tasks;
+    /**
+     * Supprime un listener pour le pattern observer
+     *
+     * @param listener Listener
+     */
+    public void removePropertyChangeListener(@NotNull PropertyChangeListener listener) {
+        propertyChangeSupport.removePropertyChangeListener(listener);
     }
 }

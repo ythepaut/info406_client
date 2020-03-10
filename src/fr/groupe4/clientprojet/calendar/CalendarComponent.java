@@ -1,71 +1,112 @@
 package fr.groupe4.clientprojet.calendar;
 
+import fr.groupe4.clientprojet.communication.Communication;
+import fr.groupe4.clientprojet.display.dialog.loaddialog.view.LoadDialog;
+import fr.groupe4.clientprojet.logger.Logger;
+import fr.groupe4.clientprojet.model.timeslot.TimeSlot;
+import fr.groupe4.clientprojet.model.timeslot.TimeSlotList;
+
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.Observable;
-import java.util.Observer;
-
-import fr.groupe4.clientprojet.calendar.CalendarType;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.time.LocalDate;
 
 /**
  * Composant du calendrier, vue
  *
  * @author Romain
  */
-public class CalendarComponent extends JComponent implements Observer {
+public class CalendarComponent extends JComponent implements PropertyChangeListener {
     /**
      * Calendrier associé
      */
-    private Calendar calendar;
+    private CalendarProject calendar;
 
     /**
      * Type de calendrier
      */
     private CalendarType type = CalendarType.WEEK;
 
-    private ArrayList<JComponent[]> daysComponent;
+    private JLabel[] daysTitle;
+    private JPanel[] daysPanel;
 
-    public CalendarComponent(Calendar calendar) {
+    private TimeSlotList timeSlots;
+
+    public CalendarComponent(CalendarProject calendar) {
         this.calendar = calendar;
-        calendar.addObserver(this);
+        calendar.addPropertyChangeListener(this);
 
-        daysComponent = new ArrayList<>();
+        Communication c = Communication.builder()
+                .getUserTimeSlotList(LocalDate.of(2020, 3, 2), LocalDate.of(2020, 3, 9))
+                .startNow()
+                .sleepUntilFinished()
+                .build();
+
+        timeSlots = (TimeSlotList) c.getResult();
+
+        Logger.info(timeSlots);
+
+        initComponent();
+    }
+
+    private void initWeek() {
+        daysTitle = new JLabel[7];
+        daysPanel = new JPanel[7];
 
         setLayout(new GridLayout(1, 7));
 
-        for (int i=0; i<7; i++) {
-            JPanel dayPanel = new JPanel(new BorderLayout());
+        for (int i = 0; i < 7; i++) {
+            daysTitle[i] = new JLabel("", SwingConstants.CENTER);
+            daysPanel[i] = new JPanel();
+            daysPanel[i].setLayout(null);
 
-            JLabel panelLabel = new JLabel("", SwingConstants.CENTER);
-            JPanel panelContent = new JPanel();
+            JPanel dayTitlePanel = new JPanel(new BorderLayout());
+            dayTitlePanel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
+            dayTitlePanel.add(daysTitle[i]);
+            daysTitle[i].setOpaque(true);
+            daysTitle[i].setBackground(Color.WHITE);
 
+            daysPanel[i].setBackground(Color.WHITE);
+            daysPanel[i].setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1));
 
-            panelLabel.setBorder(BorderFactory.createLineBorder(Color.black));
-            panelContent.setBorder(BorderFactory.createLineBorder(Color.black));
+            Font f = daysTitle[i].getFont();
+            daysTitle[i].setFont(f.deriveFont(f.getStyle() | Font.BOLD)); // Met le label en gras
 
-            panelLabel.setOpaque(true);
-            panelLabel.setBackground(Color.WHITE);
-            panelContent.setBackground(Color.WHITE);
+            JPanel generalPanel = new JPanel(new BorderLayout());
+            generalPanel.add(daysTitle[i], BorderLayout.NORTH);
+            generalPanel.add(daysPanel[i], BorderLayout.CENTER);
 
-            Font f = panelLabel.getFont();
-            panelLabel.setFont(f.deriveFont(f.getStyle() | Font.BOLD)); // Met le label en gras
-
-            daysComponent.add(new JComponent[] {panelLabel, panelContent});
-            dayPanel.add(panelLabel, BorderLayout.NORTH);
-            dayPanel.add(panelContent, BorderLayout.CENTER);
-            add(dayPanel);
+            add(generalPanel);
         }
+    }
 
-        this.update(null, null);
+    private void initComponent() throws IllegalArgumentException {
+        switch (type) {
+            case DAY:
+                break;
+
+            case WEEK:
+                initWeek();
+                break;
+
+            case MONTH:
+                break;
+
+            case YEAR:
+                break;
+
+            default:
+                throw new IllegalArgumentException("Type de calendrier inconnu");
+        }
     }
 
     /**
      * Méthode appelée pour peindre le calendrier
      */
     @Override
-    public void paintComponent(Graphics g) {
-        switch (this.type) {
+    public void paintComponent(Graphics g) throws IllegalArgumentException {
+        switch (type) {
             case DAY:
                 break;
 
@@ -91,18 +132,16 @@ public class CalendarComponent extends JComponent implements Observer {
         final String[] days = {"Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche"};
 
         for (int i=0; i<7; i++) {
-            JComponent[] dayComponents = daysComponent.get(i);
-
-            JLabel dayLabel = (JLabel) dayComponents[0];
+            JLabel dayLabel = daysTitle[i];
             dayLabel.setText("<html><div style='color:blue'>" + days[i] + "</div></html>");
         }
     }
 
     /**
-     * Update du pattern Observable/Observer
+     * Update
      */
     @Override
-    public void update(Observable obs, Object o) {
+    public void propertyChange(PropertyChangeEvent evt) {
         repaint();
     }
 }
