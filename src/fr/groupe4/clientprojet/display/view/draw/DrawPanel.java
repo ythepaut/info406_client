@@ -15,7 +15,7 @@ public abstract class DrawPanel extends JPanel {
     /**
      * Redessine le panel
      */
-    public void redraw() {
+    public final void redraw() {
         removeAll();
         validate();
         revalidate();
