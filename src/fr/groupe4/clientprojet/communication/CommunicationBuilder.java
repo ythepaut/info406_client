@@ -226,6 +226,16 @@ public final class CommunicationBuilder {
         return this;
     }
 
+    public CommunicationBuilder getProjectMessageList(int page, long idProject) {
+        typeOfCommunication = CommunicationType.LIST_USER_MESSAGES;
+        url = "message/list";
+        requestData.put("token", Communication.getRequestToken(this));
+        requestData.put("origin", MessageResource.ORIGIN_PROJECT.toString());
+        requestData.put("id", User.getUser().getResourceId());
+        requestData.put("page", page);
+        return this;
+    }
+
     public CommunicationBuilder sendMessage(String content, MessageResource dst, long id) {
         typeOfCommunication = CommunicationType.SEND_MESSAGE;
         url = "message/create";

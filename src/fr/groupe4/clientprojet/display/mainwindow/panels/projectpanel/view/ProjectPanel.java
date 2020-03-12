@@ -98,6 +98,8 @@ public class ProjectPanel extends DrawPanel {
      * @return : le jpanel
      */
     private JPanel messagePanel() {
-        return new MessagePanel(Communication.builder().getUserMessageList(0).startNow().sleepUntilFinished().build());
+        MessagePanel m = new MessagePanel(Communication.builder().getUserMessageList(0));
+        m.setIdProject(project.getId());
+        return m;
     }
 }

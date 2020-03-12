@@ -99,21 +99,21 @@ public class LeftPanel extends DrawPanel {
         bottomPanel.setBackground(Color.WHITE);
 
         c.gridy = 0;
-        RoundButton button = new RoundButton(new File(Location.getPath() + "/data/img/plus.png"));
+        RoundButton button = new RoundButton(new File(Location.getImgDataPath() + "/plus.png"));
         buttons.add(button);
         button.setActionCommand(EventLeftPanel.NEWPROJECT);
         button.addActionListener(eventLeftPanel);
         button.setFont(buttonFont);
         bottomPanel.add(button, c);
         c.gridy = 1;
-        button = new RoundButton(new File(Location.getPath() + "/data/img/calendar.png"));
+        button = new RoundButton(new File(Location.getImgDataPath() + "/calendar.png"));
         buttons.add(button);
         button.setActionCommand(CenterPanel.CALENDAR);
         button.addActionListener(eventLeftPanel);
         button.setFont(buttonFont);
         bottomPanel.add(button, c);
         c.gridy = 2;
-        button = new RoundButton(new File(Location.getPath() + "/data/img/user.png"));
+        button = new RoundButton(new File(Location.getImgDataPath() + "/user.png"));
         buttons.add(button);
         button.setActionCommand(CenterPanel.USER);
         if (first) {

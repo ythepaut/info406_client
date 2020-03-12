@@ -53,7 +53,7 @@ public class UserPanel extends DrawPanel {
         // Partie supérieure
         JPanel topPanel = new JPanel(new GridLayout(1, 4));
         JPanel descripPanel = new JPanel(new GridLayout(1, 2));
-        descripPanel.add(new JLabel(new ImageIcon(Location.getPath() + "/data/img/user.png")));
+        descripPanel.add(new JLabel(new ImageIcon(Location.getImgDataPath() + "/user.png")));
         JPanel namePanel = new JPanel(new GridLayout(2, 1));
         namePanel.add(new JLabel("<html><h1 style='font-size:2em;'>" + user.getFirstname() + "<br/>" + user.getLastname() + "</h1></html>"));
         namePanel.add(new JLabel("<html><p style='text-align:justify;'><em>" + user.getDescription() + "</em></p></html>"));
