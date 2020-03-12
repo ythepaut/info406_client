@@ -195,7 +195,7 @@ final class JsonTreatment {
 
                 Communication c = Communication
                         .builder()
-                        .getHumanRessource(sourceId)
+                        .getHumanResource(sourceId)
                         .startNow()
                         .sleepUntilFinished()
                         .build();
@@ -283,7 +283,7 @@ final class JsonTreatment {
                     .builder()
                     .startNow()
                     .sleepUntilFinished()
-                    .getHumanRessource((long) jsonUserContent.get("id_h_resource"))
+                    .getHumanResource((long) jsonUserContent.get("id_h_resource"))
                     .build();
 
             HumanResource humanResource = (HumanResource) c.getResult();

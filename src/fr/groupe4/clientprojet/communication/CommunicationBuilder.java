@@ -6,6 +6,7 @@ import java.time.ZoneId;
 import java.time.temporal.Temporal;
 import java.util.HashMap;
 
+import fr.groupe4.clientprojet.model.message.Message;
 import org.jetbrains.annotations.NotNull;
 
 import fr.groupe4.clientprojet.logger.Logger;
@@ -122,13 +123,19 @@ public final class CommunicationBuilder {
         return this;
     }
 
-    public CommunicationBuilder createProject(String name, String description, long deadline, ProjectStatus status) {
+    public CommunicationBuilder createProject(String name, String description, Temporal deadline, ProjectStatus status) {
+        long deadlineSecond = 0;
+
+        if (deadline instanceof LocalDate) deadlineSecond = ((LocalDate) deadline).atStartOfDay().atZone(ZoneId.systemDefault()).toEpochSecond();
+        else if (deadline instanceof LocalDateTime) deadlineSecond = ((LocalDateTime) deadline).atZone(ZoneId.systemDefault()).toEpochSecond();
+        else Logger.error("From : type incorrect");
+
         typeOfCommunication = CommunicationType.CREATE_PROJECT;
         url = "project/create";
         requestData.put("token", Communication.getRequestToken(this));
         requestData.put("name", name);
         requestData.put("description", description);
-        requestData.put("deadline", deadline);
+        requestData.put("deadline", deadlineSecond);
         requestData.put("status", status.toString());
         return this;
     }
@@ -219,6 +226,16 @@ public final class CommunicationBuilder {
         return this;
     }
 
+    public CommunicationBuilder sendMessage(String content, MessageResource dst, long id) {
+        typeOfCommunication = CommunicationType.SEND_MESSAGE;
+        url = "message/create";
+        requestData.put("token", Communication.getRequestToken(this));
+        requestData.put("content", content);
+        requestData.put("destination", dst.toString());
+        requestData.put("id", id);
+        return this;
+    }
+
     /**
      * Récupère les infos de l'utilisateur
      *
@@ -246,7 +263,7 @@ public final class CommunicationBuilder {
      *
      * @return Builder non terminé avec URL
      */
-    public CommunicationBuilder getHumanRessource(long id) {
+    public CommunicationBuilder getHumanResource(long id) {
         typeOfCommunication = CommunicationType.GET_HUMAN_RESOURCE;
         url = "resource/h/get";
         requestData.put("token", Communication.getRequestToken(this));
