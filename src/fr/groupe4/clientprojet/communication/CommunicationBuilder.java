@@ -13,7 +13,7 @@ import fr.groupe4.clientprojet.model.resource.human.User;
 import fr.groupe4.clientprojet.model.room.Room;
 import fr.groupe4.clientprojet.model.task.Task;
 import fr.groupe4.clientprojet.communication.enums.CommunicationType;
-import fr.groupe4.clientprojet.message.enums.MessageResource;
+import fr.groupe4.clientprojet.model.message.enums.MessageResource;
 import fr.groupe4.clientprojet.model.project.enums.ProjectStatus;
 
 /**

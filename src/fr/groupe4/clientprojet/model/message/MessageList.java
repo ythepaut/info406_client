@@ -1,4 +1,4 @@
-package fr.groupe4.clientprojet.message;
+package fr.groupe4.clientprojet.model.message;
 
 import java.util.ArrayList;
 
