@@ -2,6 +2,7 @@ package fr.groupe4.clientprojet.display.mainwindow.panels.projectpanel.view;
 
 import fr.groupe4.clientprojet.communication.Communication;
 import fr.groupe4.clientprojet.display.view.draw.DrawPanel;
+import fr.groupe4.clientprojet.display.view.messagepanel.view.MessagePanel;
 import fr.groupe4.clientprojet.display.view.slide.view.Slide;
 import fr.groupe4.clientprojet.model.project.Project;
 import fr.groupe4.clientprojet.model.project.ProjectList;
@@ -28,6 +29,7 @@ public class ProjectPanel extends DrawPanel {
 
         ProjectList list = (ProjectList) comm.getResult();
 
+        assert list != null;
         for (Project p: list) {
             if (p.getName().equals(projectName)) {
                 project = p;
@@ -96,9 +98,6 @@ public class ProjectPanel extends DrawPanel {
      * @return : le jpanel
      */
     private JPanel messagePanel() {
-        JPanel panel = new JPanel();
-        panel.add(new JLabel("MESSAGES"));
-        // TODO : Construire panel messagerie
-        return panel;
+        return new MessagePanel(Communication.builder().getUserMessageList(0).startNow().sleepUntilFinished().build());
     }
 }
