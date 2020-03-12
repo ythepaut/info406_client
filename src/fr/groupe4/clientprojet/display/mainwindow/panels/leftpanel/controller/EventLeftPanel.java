@@ -1,6 +1,8 @@
 package fr.groupe4.clientprojet.display.mainwindow.panels.leftpanel.controller;
 
+import fr.groupe4.clientprojet.display.dialog.projectcreationdialog.view.ProjectCreationDialog;
 import fr.groupe4.clientprojet.display.mainwindow.panels.centerpanel.view.CenterPanel;
+import fr.groupe4.clientprojet.display.mainwindow.view.MainWindow;
 import fr.groupe4.clientprojet.display.view.RoundButton;
 import fr.groupe4.clientprojet.display.mainwindow.panels.leftpanel.view.LeftPanel;
 
@@ -18,6 +20,7 @@ public class EventLeftPanel implements ActionListener, MouseWheelListener {
      * Le panel qui fait les appels
      */
     private LeftPanel source;
+    public static final String NEWPROJECT = "newproject";
 
     /**
      * Le constructeur
@@ -37,11 +40,17 @@ public class EventLeftPanel implements ActionListener, MouseWheelListener {
      */
     @Override
     public void actionPerformed(ActionEvent e) {
+        switch(e.getActionCommand()){
+            case NEWPROJECT :
+                    new ProjectCreationDialog(source.getOwner());
+                break ;
+            default:
         centerPanel.setView(e.getActionCommand());
 
         for (RoundButton button : source.getButtons()) {
             if (button.getActionCommand().equals(centerPanel.getView())) button.setSelected(true);
             else button.setSelected(false);
+        }
         }
     }
 
