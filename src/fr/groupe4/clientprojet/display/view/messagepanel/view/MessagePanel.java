@@ -13,11 +13,24 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.io.File;
 
+/**
+ * Panel de messagerie
+ */
 public class MessagePanel extends DrawPanel {
+    /**
+     * La liste des messages
+     */
     private MessageList messageList;
+    /**
+     * L'entrée texte d'envoie de message
+     */
     private JTextField messageField;
 
-
+    /**
+     * Le constructeur
+     *
+     * @param messageList : L'instance de communication qui contient la liste de messages
+     */
     public MessagePanel(Communication messageList) {
         this.messageList = (MessageList) messageList.getResult();
 
@@ -59,7 +72,19 @@ public class MessagePanel extends DrawPanel {
         add(messagePanel, BorderLayout.CENTER);
     }
 
+    /**
+     * Renvoie le message qui doit être envoyé
+     *
+     * @return : String
+     */
     public String getMessage() {
         return messageField.getText();
+    }
+
+    /**
+     * Vide le textField du message
+     */
+    public void resetMessage() {
+        messageField.setText("");
     }
 }
