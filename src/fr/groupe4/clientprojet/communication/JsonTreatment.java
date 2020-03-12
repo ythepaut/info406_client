@@ -1,5 +1,7 @@
 package fr.groupe4.clientprojet.communication;
 
+import fr.groupe4.clientprojet.model.task.Task;
+import fr.groupe4.clientprojet.model.task.TaskList;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -75,9 +77,51 @@ final class JsonTreatment {
                 addTimeSlot(comm, jsonObject);
                 break;
 
-            default:
-                Logger.error("Traitement JSON : type de communication non reconnu : " + comm.typeOfCommunication.toString());
+            case GET_TASK_LIST:
+                getTaskList(comm, jsonObject);
                 break;
+
+            default:
+                Logger.error("Traitement JSON : type de communication non reconnu : " + comm.typeOfCommunication);
+                break;
+        }
+    }
+
+    /**
+     * Récupère la liste des tâches
+     *
+     * @param comm Communication à traiter
+     * @param jsonObject Contenu à traiter
+     */
+    private static void getTaskList(Communication comm, Object jsonObject) {
+        if (comm.status == CommunicationStatus.STATUS_SUCCESS) {
+            JSONObject jsonContent = (JSONObject) jsonObject;
+
+            JSONArray jsonTasks = (JSONArray) jsonContent.get("tasks");
+
+            TaskList taskList = new TaskList();
+
+            for (Object jsonTaskObject : jsonTasks) {
+                JSONObject jsonTasksSet = (JSONObject) jsonTaskObject;
+
+                Object[] keySet = jsonTasksSet.keySet().toArray();
+                String key = String.valueOf(keySet[0]);
+
+                JSONObject jsonTask = (JSONObject) jsonTasksSet.get(key);
+
+                Task task = new Task(
+                        (long) jsonTask.get("id"),
+                        (String) jsonTask.get("name"),
+                        (String) jsonTask.get("description"),
+                        (String) jsonTask.get("status"),
+                        (long) jsonTask.get("deadline"),
+                        (long) jsonTask.get("project")
+                );
+
+                taskList.add(task);
+            }
+
+            comm.communicationResult = taskList;
         }
     }
 

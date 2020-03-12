@@ -231,6 +231,14 @@ public final class CommunicationBuilder {
         return this;
     }
 
+    public CommunicationBuilder getTaskList(long projectId) {
+        typeOfCommunication = CommunicationType.GET_TASK_LIST;
+        url = "task/list";
+        requestData.put("token", Communication.getRequestToken(this));
+        requestData.put("project", projectId);
+        return this;
+    }
+
     /**
      * Récupère une ressource humaine
      *
