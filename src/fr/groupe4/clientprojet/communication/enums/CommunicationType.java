@@ -13,6 +13,7 @@ public enum CommunicationType {
     LIST_USER_MESSAGES,
     GET_TIME_SLOT_LIST,
     ADD_TIME_SLOT,
+    GET_TASK_LIST,
     CREATE_PROJECT;
 
     private boolean checkConnection;
