@@ -67,4 +67,31 @@ public class Message {
     public String toString() {
         return src.getFirstname() + " " + src.getLastname() + ", " + getDate() + " : " + content;
     }
+
+    /**
+     * Retourne le contenu du message
+     *
+     * @return : String
+     */
+    public String getContent() {
+        return content;
+    }
+
+    /**
+     * Renvoie l'utilisateur source
+     *
+     * @return
+     */
+    public HumanResource getSrc() {
+        return src;
+    }
+
+    /**
+     * Renvoie l'utilisateur destinataire
+     *
+     * @return
+     */
+    public MessageResource getDst() {
+        return dst;
+    }
 }
