@@ -38,4 +38,8 @@ public class Task {
     public long getDeadlineAsSeconds() {
         return deadline.atStartOfDay(ZoneId.systemDefault()).toEpochSecond();
     }
+
+    public String getName(){return name;}
+
+    public String getDescription(){return description;}
 }
