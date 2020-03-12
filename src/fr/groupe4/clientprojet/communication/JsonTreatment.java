@@ -81,11 +81,17 @@ final class JsonTreatment {
                 getTaskList(comm, jsonObject);
                 break;
 
+            case SEND_MESSAGE:
+                sendMessage(comm, jsonObject);
+                break;
+
             default:
                 Logger.error("Traitement JSON : type de communication non reconnu : " + comm.typeOfCommunication);
                 break;
         }
     }
+
+    private static void sendMessage(Communication comm, Object jsonObject) {}
 
     /**
      * Récupère la liste des tâches
