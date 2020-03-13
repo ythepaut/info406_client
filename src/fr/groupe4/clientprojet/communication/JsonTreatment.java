@@ -17,6 +17,8 @@ import fr.groupe4.clientprojet.model.resource.human.User;
 import fr.groupe4.clientprojet.model.timeslot.TimeSlot;
 import fr.groupe4.clientprojet.model.timeslot.TimeSlotList;
 
+import java.awt.*;
+
 /**
  * Traite le JSON de la classe Communication
  */
@@ -65,8 +67,8 @@ final class JsonTreatment {
                 createProject(comm, jsonObject);
                 break;
 
-            case LIST_USER_MESSAGES:
-                listUserMessages(comm, jsonObject);
+            case LIST_MESSAGES:
+                listMessages(comm, jsonObject);
                 break;
 
             case GET_TIME_SLOT_LIST:
@@ -85,9 +87,30 @@ final class JsonTreatment {
                 sendMessage(comm, jsonObject);
                 break;
 
+            case GET_PROJECT:
+                getProject(comm, jsonObject);
+                break;
+
             default:
                 Logger.error("Traitement JSON : type de communication non reconnu : " + comm.typeOfCommunication);
                 break;
+        }
+    }
+
+    private static void getProject(Communication comm, Object jsonObject) {
+        if (comm.status == CommunicationStatus.STATUS_SUCCESS) {
+            JSONObject jsonContent = (JSONObject) jsonObject;
+            JSONObject jsonProject = (JSONObject) jsonContent.get("project");
+
+            Project p = new Project(
+                    (long) jsonProject.get("id"),
+                    (String) jsonProject.get("name"),
+                    (String) jsonProject.get("description"),
+                    (long) jsonProject.get("deadline"),
+                    (String) jsonProject.get("status")
+            );
+
+            comm.communicationResult = p;
         }
     }
 
@@ -181,7 +204,7 @@ final class JsonTreatment {
      * @param comm Communication à traiter
      * @param jsonObject Contenu à traiter
      */
-    private static void listUserMessages(Communication comm, Object jsonObject) {
+    private static void listMessages(Communication comm, Object jsonObject) {
         if (comm.status.equals(CommunicationStatus.STATUS_SUCCESS)) {
             JSONObject jsonContent = (JSONObject) jsonObject;
 
