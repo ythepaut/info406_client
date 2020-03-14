@@ -151,7 +151,6 @@ public class MessagePanel extends DrawPanel {
      * Redessine le panel si liste différente
      */
     public void refresh() {
-        System.out.println(cBuilder.build().getMessage());
         MessageList temp = (MessageList) cBuilder.startNow().sleepUntilFinished().build().getResult();
         if (temp != null && !temp.equals(messageList)) {
             messageList = temp;

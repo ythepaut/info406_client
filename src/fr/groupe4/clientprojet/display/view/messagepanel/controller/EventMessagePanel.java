@@ -56,7 +56,7 @@ public class EventMessagePanel extends KeyAdapter implements ActionListener {
             message = message.substring(1);
         }
         if (!message.isEmpty()) {
-            Communication.builder().sendMessage(message, MessageResource.MESSAGE_RESOURCE_PROJECT, source.getIdProject()).build();
+            Communication.builder().sendMessage(message, MessageResource.MESSAGE_RESOURCE_PROJECT, source.getIdProject()).sleepUntilFinished().startNow().build();
             source.refresh();
         }
         source.resetMessage();
