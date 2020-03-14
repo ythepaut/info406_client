@@ -11,7 +11,6 @@ import fr.groupe4.clientprojet.model.resource.human.User;
 import fr.groupe4.clientprojet.utils.Location;
 
 import javax.swing.*;
-import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.MatteBorder;
 import java.awt.*;
@@ -85,6 +84,7 @@ public class MessagePanel extends DrawPanel {
             messagePanel.setLayout(new GridBagLayout());
             GridBagConstraints c = new GridBagConstraints();
             c.gridx = c.gridy = 0;
+            c.insets = new Insets(10, 0, 10, 0);
 
             for (Message message: messageList) {
                 JPanel panel = new JPanel(new BorderLayout());
@@ -152,7 +152,7 @@ public class MessagePanel extends DrawPanel {
      */
     public void refresh() {
         MessageList temp = (MessageList) cBuilder.startNow().sleepUntilFinished().build().getResult();
-        if (!temp.equals(messageList)) {
+        if (temp != null && !temp.equals(messageList)) {
             messageList = temp;
             redraw();
         } else {
