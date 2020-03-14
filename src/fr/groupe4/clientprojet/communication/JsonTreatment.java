@@ -1,19 +1,23 @@
 package fr.groupe4.clientprojet.communication;
 
+import fr.groupe4.clientprojet.model.task.Task;
+import fr.groupe4.clientprojet.model.task.TaskList;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import fr.groupe4.clientprojet.communication.enums.CommunicationStatus;
 import fr.groupe4.clientprojet.communication.enums.HTMLCode;
 import fr.groupe4.clientprojet.logger.Logger;
-import fr.groupe4.clientprojet.message.Message;
-import fr.groupe4.clientprojet.message.MessageList;
+import fr.groupe4.clientprojet.model.message.Message;
+import fr.groupe4.clientprojet.model.message.MessageList;
 import fr.groupe4.clientprojet.model.project.Project;
 import fr.groupe4.clientprojet.model.project.ProjectList;
 import fr.groupe4.clientprojet.model.resource.human.HumanResource;
 import fr.groupe4.clientprojet.model.resource.human.User;
 import fr.groupe4.clientprojet.model.timeslot.TimeSlot;
 import fr.groupe4.clientprojet.model.timeslot.TimeSlotList;
+
+import java.awt.*;
 
 /**
  * Traite le JSON de la classe Communication
@@ -63,8 +67,8 @@ final class JsonTreatment {
                 createProject(comm, jsonObject);
                 break;
 
-            case LIST_USER_MESSAGES:
-                listUserMessages(comm, jsonObject);
+            case LIST_MESSAGES:
+                listMessages(comm, jsonObject);
                 break;
 
             case GET_TIME_SLOT_LIST:
@@ -75,9 +79,78 @@ final class JsonTreatment {
                 addTimeSlot(comm, jsonObject);
                 break;
 
-            default:
-                Logger.error("Traitement JSON : type de communication non reconnu : " + comm.typeOfCommunication.toString());
+            case GET_TASK_LIST:
+                getTaskList(comm, jsonObject);
                 break;
+
+            case SEND_MESSAGE:
+                sendMessage(comm, jsonObject);
+                break;
+
+            case GET_PROJECT:
+                getProject(comm, jsonObject);
+                break;
+
+            default:
+                Logger.error("Traitement JSON : type de communication non reconnu : " + comm.typeOfCommunication);
+                break;
+        }
+    }
+
+    private static void getProject(Communication comm, Object jsonObject) {
+        if (comm.status == CommunicationStatus.STATUS_SUCCESS) {
+            JSONObject jsonContent = (JSONObject) jsonObject;
+            JSONObject jsonProject = (JSONObject) jsonContent.get("project");
+
+            Project p = new Project(
+                    (long) jsonProject.get("id"),
+                    (String) jsonProject.get("name"),
+                    (String) jsonProject.get("description"),
+                    (long) jsonProject.get("deadline"),
+                    (String) jsonProject.get("status")
+            );
+
+            comm.communicationResult = p;
+        }
+    }
+
+    private static void sendMessage(Communication comm, Object jsonObject) {}
+
+    /**
+     * Récupère la liste des tâches
+     *
+     * @param comm Communication à traiter
+     * @param jsonObject Contenu à traiter
+     */
+    private static void getTaskList(Communication comm, Object jsonObject) {
+        if (comm.status == CommunicationStatus.STATUS_SUCCESS) {
+            JSONObject jsonContent = (JSONObject) jsonObject;
+
+            JSONArray jsonTasks = (JSONArray) jsonContent.get("tasks");
+
+            TaskList taskList = new TaskList();
+
+            for (Object jsonTaskObject : jsonTasks) {
+                JSONObject jsonTasksSet = (JSONObject) jsonTaskObject;
+
+                Object[] keySet = jsonTasksSet.keySet().toArray();
+                String key = String.valueOf(keySet[0]);
+
+                JSONObject jsonTask = (JSONObject) jsonTasksSet.get(key);
+
+                Task task = new Task(
+                        (long) jsonTask.get("id"),
+                        (String) jsonTask.get("name"),
+                        (String) jsonTask.get("description"),
+                        (String) jsonTask.get("status"),
+                        (long) jsonTask.get("deadline"),
+                        (long) jsonTask.get("project")
+                );
+
+                taskList.add(task);
+            }
+
+            comm.communicationResult = taskList;
         }
     }
 
@@ -131,7 +204,7 @@ final class JsonTreatment {
      * @param comm Communication à traiter
      * @param jsonObject Contenu à traiter
      */
-    private static void listUserMessages(Communication comm, Object jsonObject) {
+    private static void listMessages(Communication comm, Object jsonObject) {
         if (comm.status.equals(CommunicationStatus.STATUS_SUCCESS)) {
             JSONObject jsonContent = (JSONObject) jsonObject;
 
@@ -151,7 +224,7 @@ final class JsonTreatment {
 
                 Communication c = Communication
                         .builder()
-                        .getHumanRessource(sourceId)
+                        .getHumanResource(sourceId)
                         .startNow()
                         .sleepUntilFinished()
                         .build();
@@ -239,7 +312,7 @@ final class JsonTreatment {
                     .builder()
                     .startNow()
                     .sleepUntilFinished()
-                    .getHumanRessource((long) jsonUserContent.get("id_h_resource"))
+                    .getHumanResource((long) jsonUserContent.get("id_h_resource"))
                     .build();
 
             HumanResource humanResource = (HumanResource) c.getResult();

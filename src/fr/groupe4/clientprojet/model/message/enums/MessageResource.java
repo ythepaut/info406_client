@@ -1,14 +1,14 @@
-package fr.groupe4.clientprojet.message.enums;
+package fr.groupe4.clientprojet.model.message.enums;
 
 import fr.groupe4.clientprojet.logger.Logger;
 import fr.groupe4.clientprojet.logger.enums.LoggerOption;
 import org.jetbrains.annotations.NotNull;
 
 public enum MessageResource {
-    ORIGIN_HUMANRESOURCE("HUMANRESOURCE"),
-    ORIGIN_PROJECT("PROJECT"),
-    ORIGIN_HUMANRESOURCE_ALLOCATION("HUMANRESOURCE_ALLOCATION"),
-    ORIGIN_MATERIALRESOURCE_ALLOCATION("MATERIALRESOURCE_ALLOCATION");
+    MESSAGE_RESOURCE_HUMAN("HUMANRESOURCE"),
+    MESSAGE_RESOURCE_PROJECT("PROJECT"),
+    MESSAGE_RESOURCE_HUMAN_ALLOCATION("HUMANRESOURCE_ALLOCATION"),
+    MESSAGE_RESOURCE_MATERIAL_ALLOCATION("MATERIALRESOURCE_ALLOCATION");
 
     private String msg;
 

@@ -15,7 +15,7 @@ public abstract class DrawDialog extends JDialog {
     /**
      * Redessine le panel
      */
-    public void redraw() {
+    public final void redraw() {
         removeAll();
         validate();
         revalidate();

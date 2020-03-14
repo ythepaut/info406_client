@@ -6,6 +6,8 @@ import java.time.ZoneId;
 import java.time.temporal.Temporal;
 import java.util.HashMap;
 
+import fr.groupe4.clientprojet.model.message.Message;
+import fr.groupe4.clientprojet.model.task.enums.TaskStatus;
 import org.jetbrains.annotations.NotNull;
 
 import fr.groupe4.clientprojet.logger.Logger;
@@ -13,7 +15,7 @@ import fr.groupe4.clientprojet.model.resource.human.User;
 import fr.groupe4.clientprojet.model.room.Room;
 import fr.groupe4.clientprojet.model.task.Task;
 import fr.groupe4.clientprojet.communication.enums.CommunicationType;
-import fr.groupe4.clientprojet.message.enums.MessageResource;
+import fr.groupe4.clientprojet.model.message.enums.MessageResource;
 import fr.groupe4.clientprojet.model.project.enums.ProjectStatus;
 
 /**
@@ -122,13 +124,19 @@ public final class CommunicationBuilder {
         return this;
     }
 
-    public CommunicationBuilder createProject(String name, String description, long deadline, ProjectStatus status) {
+    public CommunicationBuilder createProject(String name, String description, Temporal deadline, ProjectStatus status) {
+        long deadlineSecond = 0;
+
+        if (deadline instanceof LocalDate) deadlineSecond = ((LocalDate) deadline).atStartOfDay().atZone(ZoneId.systemDefault()).toEpochSecond();
+        else if (deadline instanceof LocalDateTime) deadlineSecond = ((LocalDateTime) deadline).atZone(ZoneId.systemDefault()).toEpochSecond();
+        else Logger.error("From : type incorrect");
+
         typeOfCommunication = CommunicationType.CREATE_PROJECT;
         url = "project/create";
         requestData.put("token", Communication.getRequestToken(this));
         requestData.put("name", name);
         requestData.put("description", description);
-        requestData.put("deadline", deadline);
+        requestData.put("deadline", deadlineSecond);
         requestData.put("status", status.toString());
         return this;
     }
@@ -209,13 +217,63 @@ public final class CommunicationBuilder {
         return this;
     }
 
-    public CommunicationBuilder getUserMessageList(int page) {
-        typeOfCommunication = CommunicationType.LIST_USER_MESSAGES;
+    public CommunicationBuilder getProject(long id) {
+        typeOfCommunication = CommunicationType.GET_PROJECT;
+        url = "project/get";
+        requestData.put("token", Communication.getRequestToken(this));
+        requestData.put("id", id);
+        return this;
+    }
+
+    private CommunicationBuilder getMessageList(int page, long id, MessageResource origin) {
+        typeOfCommunication = CommunicationType.LIST_MESSAGES;
         url = "message/list";
         requestData.put("token", Communication.getRequestToken(this));
-        requestData.put("origin", MessageResource.ORIGIN_HUMANRESOURCE.toString());
-        requestData.put("id", User.getUser().getResourceId());
+        requestData.put("origin", origin.toString());
+        requestData.put("id", id);
         requestData.put("page", page);
+        return this;
+    }
+
+    public CommunicationBuilder getHumanResourceList() {
+        typeOfCommunication = CommunicationType.LIST_HUMAN_RESOURCE;
+        url = "resource/h/list";
+        requestData.put("token", Communication.getRequestToken(this));
+        return this;
+    }
+
+    public CommunicationBuilder createTask(String name, String description, TaskStatus status, Temporal deadline, long projectId) {
+        long t = 0;
+        if (deadline instanceof LocalDate) t = ((LocalDate) deadline).atStartOfDay().atZone(ZoneId.systemDefault()).toEpochSecond();
+        else if (deadline instanceof LocalDateTime) t = ((LocalDateTime) deadline).atZone(ZoneId.systemDefault()).toEpochSecond();
+        else Logger.error("From : type incorrect");
+
+        typeOfCommunication = CommunicationType.CREATE_TASK;
+        url = "task/create";
+        requestData.put("token", Communication.getRequestToken(this));
+        requestData.put("name", name);
+        requestData.put("description", description);
+        requestData.put("status", status.toString());
+        requestData.put("deadline", t);
+        requestData.put("project", projectId);
+        return this;
+    }
+
+    public CommunicationBuilder getUserMessageList(int page) {
+        return getMessageList(page, User.getUser().getResourceId(), MessageResource.MESSAGE_RESOURCE_HUMAN);
+    }
+
+    public CommunicationBuilder getProjectMessageList(int page, long idProject) {
+        return getMessageList(page, User.getUser().getResourceId(), MessageResource.MESSAGE_RESOURCE_PROJECT);
+    }
+
+    public CommunicationBuilder sendMessage(String content, MessageResource dst, long id) {
+        typeOfCommunication = CommunicationType.SEND_MESSAGE;
+        url = "message/create";
+        requestData.put("token", Communication.getRequestToken(this));
+        requestData.put("content", content);
+        requestData.put("destination", dst.toString());
+        requestData.put("id", id);
         return this;
     }
 
@@ -231,6 +289,14 @@ public final class CommunicationBuilder {
         return this;
     }
 
+    public CommunicationBuilder getTaskList(long projectId) {
+        typeOfCommunication = CommunicationType.GET_TASK_LIST;
+        url = "task/list";
+        requestData.put("token", Communication.getRequestToken(this));
+        requestData.put("project", projectId);
+        return this;
+    }
+
     /**
      * Récupère une ressource humaine
      *
@@ -238,7 +304,7 @@ public final class CommunicationBuilder {
      *
      * @return Builder non terminé avec URL
      */
-    public CommunicationBuilder getHumanRessource(long id) {
+    public CommunicationBuilder getHumanResource(long id) {
         typeOfCommunication = CommunicationType.GET_HUMAN_RESOURCE;
         url = "resource/h/get";
         requestData.put("token", Communication.getRequestToken(this));

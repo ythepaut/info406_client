@@ -1,6 +1,6 @@
-package fr.groupe4.clientprojet.message;
+package fr.groupe4.clientprojet.model.message;
 
-import fr.groupe4.clientprojet.message.enums.MessageResource;
+import fr.groupe4.clientprojet.model.message.enums.MessageResource;
 import fr.groupe4.clientprojet.model.resource.human.HumanResource;
 import org.jetbrains.annotations.NotNull;
 
@@ -66,5 +66,32 @@ public class Message {
     @Override
     public String toString() {
         return src.getFirstname() + " " + src.getLastname() + ", " + getDate() + " : " + content;
+    }
+
+    /**
+     * Retourne le contenu du message
+     *
+     * @return : String
+     */
+    public String getContent() {
+        return content;
+    }
+
+    /**
+     * Renvoie l'utilisateur source
+     *
+     * @return
+     */
+    public HumanResource getSrc() {
+        return src;
+    }
+
+    /**
+     * Renvoie l'utilisateur destinataire
+     *
+     * @return
+     */
+    public MessageResource getDst() {
+        return dst;
     }
 }

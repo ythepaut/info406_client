@@ -3,6 +3,7 @@ package fr.groupe4.clientprojet.display.mainwindow.panels.leftpanel.view;
 import fr.groupe4.clientprojet.communication.Communication;
 import fr.groupe4.clientprojet.display.mainwindow.panels.centerpanel.view.CenterPanel;
 import fr.groupe4.clientprojet.display.mainwindow.panels.leftpanel.controller.EventLeftPanel;
+import fr.groupe4.clientprojet.display.mainwindow.view.MainWindow;
 import fr.groupe4.clientprojet.model.project.Project;
 import fr.groupe4.clientprojet.model.project.ProjectList;
 import fr.groupe4.clientprojet.display.view.draw.DrawPanel;
@@ -34,6 +35,7 @@ public class LeftPanel extends DrawPanel {
      * le panel du centre
      */
     private CenterPanel centerPanel;
+    private MainWindow owner;
     /**
      * le nombre de projets
      * le début de la liste des projets
@@ -50,9 +52,10 @@ public class LeftPanel extends DrawPanel {
      *
      * @param centerPanel : le panel du centre
      */
-    public LeftPanel(CenterPanel centerPanel) {
+    public LeftPanel(CenterPanel centerPanel, MainWindow owner) {
         buttons = new ArrayList<>();
         this.centerPanel = centerPanel;
+        this.owner = owner;
         Communication comm = Communication.builder().sleepUntilFinished().startNow().getProjectList().build();
         projectList = (ProjectList) comm.getResult();
         nbProjet = projectList.size();
@@ -94,15 +97,23 @@ public class LeftPanel extends DrawPanel {
         JPanel bottomPanel = new JPanel(new GridBagLayout());
         bottomPanel.setBorder(new MatteBorder(3, 0, 0, 0, Color.BLACK));
         bottomPanel.setBackground(Color.WHITE);
+
         c.gridy = 0;
-        RoundButton button = new RoundButton(new File(Location.getPath() + "/data/img/calendar.png"));
+        RoundButton button = new RoundButton(new File(Location.getImgDataPath() + "/plus.png"));
+        buttons.add(button);
+        button.setActionCommand(EventLeftPanel.NEWPROJECT);
+        button.addActionListener(eventLeftPanel);
+        button.setFont(buttonFont);
+        bottomPanel.add(button, c);
+        c.gridy = 1;
+        button = new RoundButton(new File(Location.getImgDataPath() + "/calendar.png"));
         buttons.add(button);
         button.setActionCommand(CenterPanel.CALENDAR);
         button.addActionListener(eventLeftPanel);
         button.setFont(buttonFont);
         bottomPanel.add(button, c);
-        c.gridy = 1;
-        button = new RoundButton(new File(Location.getPath() + "/data/img/user.png"));
+        c.gridy = 2;
+        button = new RoundButton(new File(Location.getImgDataPath() + "/user.png"));
         buttons.add(button);
         button.setActionCommand(CenterPanel.USER);
         if (first) {
@@ -126,7 +137,7 @@ public class LeftPanel extends DrawPanel {
     private void drawProjectButton(EventLeftPanel eventLeftPanel, Font buttonFont, GridBagConstraints c) {
         JPanel projectPanel = new JPanel(new BorderLayout());
         projectPanel.addMouseWheelListener(eventLeftPanel);
-        int nbProjetsMax = 5; // TODO: Valeur à déterminer en fonction de la taille de la fenêtre
+        int nbProjetsMax = 4; // TODO: Valeur à déterminer en fonction de la taille de la fenêtre
 
 
         // Les boutons
@@ -216,5 +227,9 @@ public class LeftPanel extends DrawPanel {
         if (debutListe < nbProjet && debutListe >= 0) {
             this.debutListe = debutListe;
         }
+    }
+
+    public MainWindow getOwner(){
+        return owner;
     }
 }
