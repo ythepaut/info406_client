@@ -225,7 +225,7 @@ public final class CommunicationBuilder {
         return this;
     }
 
-    private CommunicationBuilder getMessageList(int page, long id, MessageResource origin) {
+    public CommunicationBuilder getMessageList(int page, long id, MessageResource origin) {
         typeOfCommunication = CommunicationType.LIST_MESSAGES;
         url = "message/list";
         requestData.put("token", Communication.getRequestToken(this));
@@ -264,7 +264,7 @@ public final class CommunicationBuilder {
     }
 
     public CommunicationBuilder getProjectMessageList(int page, long idProject) {
-        return getMessageList(page, User.getUser().getResourceId(), MessageResource.MESSAGE_RESOURCE_PROJECT);
+        return getMessageList(page, idProject, MessageResource.MESSAGE_RESOURCE_PROJECT);
     }
 
     public CommunicationBuilder sendMessage(String content, MessageResource dst, long id) {
