@@ -1,10 +1,9 @@
 package fr.groupe4.clientprojet.display.mainwindow.panels.calendarpanel.view;
 
-import fr.groupe4.clientprojet.calendar.CalendarProject;
-import fr.groupe4.clientprojet.calendar.CalendarComponent;
+import fr.groupe4.clientprojet.model.calendar.CalendarProject;
+import fr.groupe4.clientprojet.display.view.calendar.CalendarComponent;
 import fr.groupe4.clientprojet.display.view.draw.DrawPanel;
 
-import javax.swing.*;
 import java.awt.*;
 
 public class CalendarPanel extends DrawPanel {
