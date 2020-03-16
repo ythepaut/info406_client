@@ -30,6 +30,7 @@ public class KeyEventConnectionDialog extends KeyAdapter {
                     source.dispose();
                 } else {
                     new ErrorDialog(comm.getMessage()); // TODO : adapter le message en fonction de l'erreur
+                    source.resetPassword();
                 }
                 break;
 
