@@ -5,15 +5,12 @@ import fr.groupe4.clientprojet.display.view.messagepanel.enums.MessageButton;
 import fr.groupe4.clientprojet.display.view.messagepanel.view.MessagePanel;
 import fr.groupe4.clientprojet.model.message.enums.MessageResource;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
+import java.awt.event.*;
 
 /**
  * Le listener de la messagerie
  */
-public class EventMessagePanel extends KeyAdapter implements ActionListener {
+public class EventMessagePanel extends KeyAdapter implements ActionListener, MouseWheelListener {
     /**
      * Le MessagePanel qui appelle les events
      */
@@ -50,6 +47,15 @@ public class EventMessagePanel extends KeyAdapter implements ActionListener {
         }
     }
 
+    @Override
+    public void mouseWheelMoved(MouseWheelEvent e) {
+        source.setDebutListe(source.getDebutListe() + e.getWheelRotation());
+        source.redraw();
+    }
+
+    /**
+     * Envoie un message
+     */
     private void sendMessage() {
         String message = source.getMessage();
         while (!message.isEmpty() && message.charAt(0) == ' ') {

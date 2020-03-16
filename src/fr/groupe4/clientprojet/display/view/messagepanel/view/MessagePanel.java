@@ -15,6 +15,9 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.MatteBorder;
 import java.awt.*;
 import java.io.File;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 
 /**
  * Panel de messagerie
@@ -40,6 +43,14 @@ public class MessagePanel extends DrawPanel {
      * L'instance de CommunicationBuidler pour récuperer la liste des messages
      */
     private CommunicationBuilder cBuilder;
+    /**
+     * Le début de la liste des messages
+     */
+    private int debutListe = -1;
+    /**
+     * Le nombre de messages pouvant être affiché en même temps
+     */
+    private static final int nbMessageMax = 15;
 
     /**
      * Le constructeur
@@ -50,6 +61,7 @@ public class MessagePanel extends DrawPanel {
         this.cBuilder = cBuilder;
         refresh();
         eventMessagePanel = new EventMessagePanel(this);
+        addMouseWheelListener(eventMessagePanel);
 
         drawContent();
     }
@@ -60,11 +72,15 @@ public class MessagePanel extends DrawPanel {
     @Override
     protected void drawContent() {
         setLayout(new BorderLayout());
+        setBorder(new EmptyBorder(5, 5, 5, 5));
+        setBackground(Color.WHITE);
 
         // Panel du bas
         JPanel bottomPanel = new JPanel(new BorderLayout());
+        bottomPanel.setBackground(Color.WHITE);
         bottomPanel.setBorder(new EmptyBorder(10, 50, 10, 50));
-        messageField = new JTextField();
+        messageField = new JTextField(120);
+        messageField.grabFocus();
         messageField.addKeyListener(eventMessagePanel);
         bottomPanel.add(messageField, BorderLayout.CENTER);
         RoundButton sentButton = new RoundButton(new File(Location.getImgDataPath() + "/sent.png"));
@@ -79,35 +95,65 @@ public class MessagePanel extends DrawPanel {
         add(bottomPanel, BorderLayout.SOUTH);
 
         // Liste des messages
+        drawMessageList();
+    }
+
+    private void drawMessageList() {
         JPanel messagePanel = new JPanel();
+        messagePanel.setBackground(Color.WHITE);
         if (messageList != null && !messageList.isEmpty()) {
             messagePanel.setLayout(new GridBagLayout());
             GridBagConstraints c = new GridBagConstraints();
             c.gridx = c.gridy = 0;
-            c.insets = new Insets(10, 0, 10, 0);
+            c.insets = new Insets(5, 0, 5, 0);
 
+            boolean fond = true;
+
+            int i = 0;
             for (Message message: messageList) {
-                JPanel panel = new JPanel(new BorderLayout());
-                panel.add(new JLabel(message.getContent()), BorderLayout.CENTER);
+                if (i >= debutListe && i < debutListe + nbMessageMax) {
+                    JPanel panel = new JPanel(new BorderLayout());
 
-                JLabel sender = new JLabel(message.getSrc().getFirstname() + " " + message.getSrc().getLastname());
-                sender.setBorder(new EmptyBorder(0, 20, 0, 20));
-                if (message.getSrc().getResourceId() == User.getUser().getResourceId()) {
-                    panel.add(sender, BorderLayout.EAST);
-                    panel.setBorder(new MatteBorder(0, 0, 0, 2, Color.BLACK));
-                    c.anchor = GridBagConstraints.LINE_END;
-                } else {
-                    panel.add(sender, BorderLayout.WEST);
-                    panel.setBorder(new MatteBorder(0, 2, 0, 0, Color.BLACK));
-                    c.anchor = GridBagConstraints.LINE_START;
+                    JLabel content = new JLabel(message.getContent());
+                    panel.add(content, BorderLayout.CENTER);
+
+                    JPanel infoPanel = new JPanel(new GridLayout(2, 1));
+                    infoPanel.setBorder(new EmptyBorder(0, 20, 0, 20));
+                    if (message.getDate().isAfter(LocalDateTime.now().minusDays(1))) { // Si le message est d'aujourd'hui
+                        infoPanel.add(new JLabel(message.getDate().getHour() + ":" + message.getDate().getMinute()));
+                    } else {
+                        infoPanel.add(new JLabel(message.getDate().format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM, FormatStyle.SHORT))));
+                    }
+
+                    infoPanel.add(new JLabel(message.getSrc().getFirstname() + " " + message.getSrc().getLastname()));
+                    if (message.getSrc().getResourceId() == User.getUser().getResourceId()) {
+                        panel.add(infoPanel, BorderLayout.EAST);
+                        panel.setBorder(new MatteBorder(0, 0, 0, 2, Color.BLACK));
+                        content.setBorder(new EmptyBorder(0, 10, 0, 0));
+                    } else {
+                        panel.add(infoPanel, BorderLayout.WEST);
+                        panel.setBorder(new MatteBorder(0, 2, 0, 0, Color.BLACK));
+                        content.setBorder(new EmptyBorder(0, 0, 0, 10));
+                    }
+
+                    if (fond) {
+                        panel.setBackground(Color.LIGHT_GRAY);
+                        infoPanel.setBackground(Color.LIGHT_GRAY);
+                        fond = false;
+                    } else {
+                        panel.setBackground(Color.GRAY);
+                        infoPanel.setBackground(Color.GRAY);
+                        fond = true;
+                    }
+
+                    messagePanel.add(panel, c);
+                    c.gridy++;
                 }
-
-                messagePanel.add(panel, c);
-                c.gridy++;
+                i++;
             }
         } else {
             messagePanel.setLayout(new GridBagLayout());
-            messagePanel.add(new JLabel("<html><h2><strong>Aucun message !</strong></h2></html>"));
+            messagePanel.add(new JLabel("<html><div style=\"text-align:center;\"><h2><strong>Aucun message</strong></h2><p>Envoyez en un premier !</p></div></html>"));
         }
         add(messagePanel, BorderLayout.CENTER);
     }
@@ -147,16 +193,32 @@ public class MessagePanel extends DrawPanel {
     }
 
     /**
+     * Modifie le début de la liste
+     *
+     * @param debutListe : Le début de la liste
+     */
+    public void setDebutListe(int debutListe) {
+        this.debutListe = Math.max(0, Math.min(debutListe, messageList.size() - nbMessageMax));
+    }
+
+    /**
+     * Renvoie le début de la liste
+     *
+     * @return int
+     */
+    public int getDebutListe() {
+        return debutListe;
+    }
+
+    /**
      * Rafraichi la liste des messages
      * Redessine le panel si liste différente
      */
     public void refresh() {
-        MessageList temp = (MessageList) cBuilder.startNow().sleepUntilFinished().build().getResult();
-        if (temp != null && !temp.equals(messageList)) {
-            messageList = temp;
-            redraw();
-        } else {
-            messageList = temp;
+        messageList = (MessageList) cBuilder.startNow().sleepUntilFinished().build().getResult();
+        if (debutListe == -1) {
+            setDebutListe(messageList.size());
         }
+        redraw();
     }
 }
