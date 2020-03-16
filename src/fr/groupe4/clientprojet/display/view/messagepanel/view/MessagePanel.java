@@ -119,10 +119,11 @@ public class MessagePanel extends DrawPanel {
 
                     JPanel infoPanel = new JPanel(new GridLayout(2, 1));
                     infoPanel.setBorder(new EmptyBorder(0, 20, 0, 20));
-                    if (message.getDate().isAfter(LocalDateTime.now().minusDays(1))) { // Si le message est d'aujourd'hui
+                    if (message.getDate().isAfter(LocalDateTime.now().minusDays(1))) { //Si le message est d'aujourd'hui
                         infoPanel.add(new JLabel(message.getDate().getHour() + ":" + message.getDate().getMinute()));
                     } else {
-                        infoPanel.add(new JLabel(message.getDate().format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM, FormatStyle.SHORT))));
+                        infoPanel.add(new JLabel(message.getDate().
+                                format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM, FormatStyle.SHORT))));
                     }
 
                     infoPanel.add(new JLabel(message.getSrc().getFirstname() + " " + message.getSrc().getLastname()));
@@ -153,7 +154,9 @@ public class MessagePanel extends DrawPanel {
             }
         } else {
             messagePanel.setLayout(new GridBagLayout());
-            messagePanel.add(new JLabel("<html><div style=\"text-align:center;\"><h2><strong>Aucun message</strong></h2><p>Envoyez en un premier !</p></div></html>"));
+            messagePanel.add(new JLabel("<html><div style=\"text-align:center;\">" +
+                    "<h2><strong>Aucun message</strong></h2>" +
+                    "<p>Envoyez en un premier !</p></div></html>"));
         }
         add(messagePanel, BorderLayout.CENTER);
     }
@@ -216,7 +219,7 @@ public class MessagePanel extends DrawPanel {
      */
     public void refresh() {
         messageList = (MessageList) cBuilder.startNow().sleepUntilFinished().build().getResult();
-        if (debutListe == -1) {
+        if (debutListe == -1 && messageList != null) {
             setDebutListe(messageList.size());
         }
         redraw();
