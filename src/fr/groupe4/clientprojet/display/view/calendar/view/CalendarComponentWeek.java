@@ -1,132 +1,81 @@
-package fr.groupe4.clientprojet.display.view.calendar;
+package fr.groupe4.clientprojet.display.view.calendar.view;
 
-import fr.groupe4.clientprojet.communication.Communication;
 import fr.groupe4.clientprojet.logger.Logger;
 import fr.groupe4.clientprojet.model.calendar.CalendarProject;
-import fr.groupe4.clientprojet.model.calendar.enums.CalendarType;
 import fr.groupe4.clientprojet.model.timeslot.TimeSlot;
 import fr.groupe4.clientprojet.model.timeslot.TimeSlotList;
-import org.jetbrains.annotations.NotNull;
 
-import javax.swing.*;
-import java.awt.*;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
+import javax.swing.JPanel;
+import javax.swing.JLabel;
+import javax.swing.SwingConstants;
+import javax.swing.BorderFactory;
+
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.GridLayout;
+import java.awt.Graphics;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Font;
+
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 
 /**
- * Composant du calendrier, vue
+ * Calendrier pour la semaine
  *
  * @author Romain
  */
-public class CalendarComponent extends JComponent implements PropertyChangeListener {
+class CalendarComponentWeek extends GenericCalendarComponent {
     /**
-     * Calendrier associé
+     * Constructeur
+     *
+     * @param parent Fenêtre parente
+     * @param calendar Calendrier
      */
-    private CalendarProject calendar;
-
-    /**
-     * Type de calendrier
-     */
-    @NotNull
-    private CalendarType type;
-
-    /**
-     * Labels des titres
-     */
-    @NotNull
-    private JLabel[] daysTitle;
-
-    /**
-     * Panels des jours
-     */
-    @NotNull
-    private JPanel[] daysPanel;
-
-    /**
-     * Contraintes du GridBagLayout
-     */
-    @NotNull
-    private GridBagConstraints[] constraints;
-
-    /**
-     * Liste de tous les créneaux
-     */
-    private TimeSlotList allTimeSlots;
-
-    public CalendarComponent(CalendarProject calendar) {
-        this(calendar, CalendarType.WEEK);
+    CalendarComponentWeek(JPanel parent, CalendarProject calendar) {
+        super(parent, calendar);
     }
 
-    public CalendarComponent(CalendarProject calendar, @NotNull CalendarType type) throws IllegalArgumentException {
-        this.calendar = calendar;
-        calendar.addPropertyChangeListener(this);
+    /**
+     * Initialisation (ici, les labels des jours)
+     */
+    @Override
+    public void init() {
+        allTimeSlots = calendar.getTimeSlots();
 
-        this.type = type;
-
-        // LocalDate now = LocalDate.now();
-        LocalDate now = LocalDate.of(2020, 3, 5);
-
-        LocalDate from = null, to = null;
-
-        switch (type) {
-            case DAY:
-                break;
-
-            case WEEK:
-                from = now.with(DayOfWeek.MONDAY);
-                to = now.with(DayOfWeek.SUNDAY);
-                break;
-
-            case MONTH:
-                break;
-
-            case YEAR:
-                break;
-
-            default:
-                throw new IllegalArgumentException("Type de calendrier inconnu");
-        }
-
-        Communication c = Communication.builder()
-                .getUserTimeSlotList(from, to)
-                .startNow()
-                .sleepUntilFinished()
-                .build();
-
-        allTimeSlots = (TimeSlotList) c.getResult();
-
-        switch (type) {
-            case DAY:
-                break;
-
-            case WEEK:
-                initWeek();
-                break;
-
-            case MONTH:
-                break;
-
-            case YEAR:
-                break;
-
-            default:
-                throw new IllegalArgumentException("Type de calendrier inconnu");
-        }
-    }
-
-    private void initWeek() {
         daysTitle = new JLabel[7];
         daysPanel = new JPanel[7];
         constraints = new GridBagConstraints[7];
 
-        setLayout(new GridLayout(1, 7));
+        parent.setLayout(new GridLayout(1, 7));
 
-        final String[] days = {"Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche"};
+        final Object[][] days = {
+                {"Lundi", DayOfWeek.MONDAY},
+                {"Mardi", DayOfWeek.TUESDAY},
+                {"Mercredi", DayOfWeek.WEDNESDAY},
+                {"Jeudi", DayOfWeek.THURSDAY},
+                {"Vendredi", DayOfWeek.FRIDAY},
+                {"Samedi", DayOfWeek.SATURDAY},
+                {"Dimanche", DayOfWeek.SUNDAY}
+        };
 
         for (int i = 0; i < 7; i++) {
-            daysTitle[i] = new JLabel("<html><div style='color:blue'>" + days[i] + "</div></html>", SwingConstants.CENTER);
+            LocalDate date = calendar.getDate().with((DayOfWeek) days[i][1]);
+
+            daysTitle[i] = new JLabel(
+                    "<html><div style='color:"
+                            + (LocalDate.now().isEqual(date) ? "red":"blue")
+                            + "'>"
+                            + days[i][0]
+                            + " "
+                            + String.format("%02d", date.getDayOfMonth())
+                            + "/"
+                            + String.format("%02d", date.getMonthValue())
+                            + "</div></html>",
+                    SwingConstants.CENTER
+            );
+
             daysPanel[i] = new JPanel();
             daysPanel[i].setLayout(new GridBagLayout());
 
@@ -148,50 +97,25 @@ public class CalendarComponent extends JComponent implements PropertyChangeListe
             generalPanel.add(daysTitle[i], BorderLayout.NORTH);
             generalPanel.add(daysPanel[i], BorderLayout.CENTER);
 
-            add(generalPanel);
+            parent.add(generalPanel);
         }
     }
 
     /**
-     * Méthode appelée pour peindre le calendrier
+     * Affichage
+     *
+     * @param g Graphics, où afficher
      */
     @Override
-    public void paintComponent(Graphics g) throws IllegalArgumentException {
+    protected void paintComponent(Graphics g) {
         for (JPanel panel : daysPanel) {
+            // Suppression de ce qu'il y avait avant
             panel.removeAll();
         }
 
-        switch (type) {
-            case DAY:
-                Logger.warning("Type de calendrier pas encore supporté");
-                break;
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // Découpage en 7 sous-listes pour chaque jour
 
-            case WEEK:
-                paintWeek(g);
-                break;
-
-            case MONTH:
-                Logger.warning("Type de calendrier pas encore supporté");
-                break;
-
-            case YEAR:
-                Logger.warning("Type de calendrier pas encore supporté");
-                break;
-
-            default:
-                Logger.error("Type de calendrier inconnu :", type);
-                throw new IllegalArgumentException("Type de calendrier inconnu");
-        }
-
-        for (int i=0; i<daysPanel.length; i++) {
-            daysPanel[i].updateUI();
-        }
-    }
-
-    /**
-     * Méthode peignant une semaine
-     */
-    private void paintWeek(Graphics g) {
         final TimeSlotList[] weekTimeSlots = new TimeSlotList[7];
 
         for (int i=0; i<weekTimeSlots.length; i++) {
@@ -203,6 +127,9 @@ public class CalendarComponent extends JComponent implements PropertyChangeListe
 
             weekTimeSlots[dayPlacement].add(timeSlot);
         }
+
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // Calcul des chevauchements et des créneaux qu'il faudra combler avec un panel vide
 
         boolean[] present;
         JPanel subPanel;
@@ -233,14 +160,17 @@ public class CalendarComponent extends JComponent implements PropertyChangeListe
                 }
             }
 
-            for (int index=0; index<dayTimeSlots.size(); index++) {
-                TimeSlot timeSlot = dayTimeSlots.get(index);
+            ////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            // Remplissage avec les créneaux
 
-                final int startTime = Math.max(TimeSlot.LOWEST_TIME,
+            for (TimeSlot timeSlot : dayTimeSlots) {
+                final int startTime =
+                        Math.max(TimeSlot.LOWEST_TIME,
                         Math.min(TimeSlot.HIGHEST_TIME,
                                 timeSlot.getStartTime().toLocalTime().toSecondOfDay()));
 
-                final int duration = Math.max(0,
+                final int duration =
+                        Math.max(0,
                         Math.min(TimeSlot.HIGHEST_TIME - startTime,
                                 timeSlot.getEndTime().toLocalTime().toSecondOfDay() - startTime));
 
@@ -262,12 +192,15 @@ public class CalendarComponent extends JComponent implements PropertyChangeListe
                 constraints[day].gridx = 0;
                 constraints[day].gridy = startPlacement;
 
-                if (startPlacement+durationPlacement == present.length-1) {
+                if (startPlacement + durationPlacement == present.length - 1) {
                     constraints[day].anchor = GridBagConstraints.PAGE_END;
                 }
 
                 daysPanel[day].add(subPanel, constraints[day]);
             }
+
+            ////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            // Remplissage avec les panels vides
 
             constraints[day].weightx = 1.0;
             constraints[day].weighty = 1.0;
@@ -276,14 +209,14 @@ public class CalendarComponent extends JComponent implements PropertyChangeListe
             constraints[day].gridheight = 1;
             constraints[day].weighty = 1.0 / ((float) present.length);
 
-            for (int i=0; i<present.length; i++) {
+            for (int i = 0; i < present.length; i++) {
                 if (!present[i]) {
                     empty = new JPanel();
                     empty.setBackground(Color.WHITE);
                     constraints[day].gridx = 0;
                     constraints[day].gridy = i;
 
-                    if (i == present.length-1) {
+                    if (i == present.length - 1) {
                         constraints[day].anchor = GridBagConstraints.PAGE_END;
                     }
 
@@ -291,13 +224,12 @@ public class CalendarComponent extends JComponent implements PropertyChangeListe
                 }
             }
         }
-    }
 
-    /**
-     * Update
-     */
-    @Override
-    public void propertyChange(PropertyChangeEvent evt) {
-        repaint();
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // Mise à jour finale
+
+        for (JPanel jPanel : daysPanel) {
+            jPanel.updateUI();
+        }
     }
 }
