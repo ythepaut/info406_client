@@ -13,21 +13,17 @@ import java.awt.*;
  */
 public class ExitDialog extends DrawDialog {
     /**
-     * Le listener du dialog
-     */
-    private EventExitDialog eventExitDialog;
-    /**
      * La frame qui appelle ce dialog
      */
-    private JFrame owner;
+    private Window owner;
 
     /**
      * Le constructeur
      *
      * @param owner : la frame à laquelle appartient le dialog
      */
-    public ExitDialog(JFrame owner) {
-        setTitle("Êtes-vous sûr de vouloir quitter ?");
+    public ExitDialog(Window owner, String avertissement) {
+        setTitle(avertissement);
         this.owner = owner;
         setModal(true);
 
@@ -41,7 +37,7 @@ public class ExitDialog extends DrawDialog {
      */
     @Override
     protected void drawContent() {
-        eventExitDialog = new EventExitDialog(this);
+        EventExitDialog eventExitDialog = new EventExitDialog(this); // Le listener du dialog
 
         setSize(300, 70);
         setResizable(false);
@@ -69,7 +65,7 @@ public class ExitDialog extends DrawDialog {
      * @return : la frame qui a appelé ce dialog
      */
     @Override
-    public JFrame getOwner() {
+    public Window getOwner() {
         return owner;
     }
 }

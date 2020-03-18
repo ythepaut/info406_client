@@ -2,6 +2,7 @@ package fr.groupe4.clientprojet.display.dialog.exitdialog.controller;
 
 import fr.groupe4.clientprojet.Main;
 import fr.groupe4.clientprojet.display.dialog.exitdialog.enums.ExitChoice;
+import fr.groupe4.clientprojet.display.dialog.exitdialog.view.ExitDialog;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -16,14 +17,14 @@ public class EventExitDialog extends WindowAdapter implements ActionListener {
     /**
      * Le dialog en question
      */
-    private JDialog source;
+    private ExitDialog source;
 
     /**
      * Le constructeur
      *
      * @param source : le dialog
      */
-    public EventExitDialog(JDialog source) {
+    public EventExitDialog(ExitDialog source) {
         this.source = source;
     }
 
