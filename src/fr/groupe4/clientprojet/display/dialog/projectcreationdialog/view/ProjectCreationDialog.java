@@ -4,6 +4,7 @@ import fr.groupe4.clientprojet.display.dialog.exitdialog.controller.EventExitDia
 import fr.groupe4.clientprojet.display.dialog.projectcreationdialog.controller.EventExitCreationDialog;
 import fr.groupe4.clientprojet.display.dialog.projectcreationdialog.controller.EventProjectCreation;
 import fr.groupe4.clientprojet.display.view.draw.DrawDialog;
+import fr.groupe4.clientprojet.logger.Logger;
 import org.jdatepicker.DateModel;
 import org.jdatepicker.impl.*;
 
@@ -132,8 +133,8 @@ public class ProjectCreationDialog extends DrawDialog {
         };
 
         JDatePickerImpl datePicker = new JDatePickerImpl(datePanel,form);
-        strdate = datePicker.getJFormattedTextField().getText();
-       // localDate = LocalDate.parse(strdate, formatter);
+        // strdate = datePicker.getJFormattedTextField().getText();
+        // localDate = LocalDate.parse(strdate, formatter);
         c.gridy++;
         add(datePicker,c);
 
@@ -143,7 +144,7 @@ public class ProjectCreationDialog extends DrawDialog {
         c.gridwidth = 1;
         c.gridy++;
         JButton creeprojet = new JButton("Création Projet");
-        creeprojet.addActionListener(new EventProjectCreation(this));
+        creeprojet.addActionListener(new EventProjectCreation(this, model, nomprojet, description));
         add(creeprojet,c);
         c.gridx++;
         JButton cancelButton = new JButton("Annuler");
