@@ -3,6 +3,7 @@ package fr.groupe4.clientprojet.display.dialog.exitdialog.view;
 import fr.groupe4.clientprojet.display.dialog.exitdialog.controller.EventExitDialog;
 import fr.groupe4.clientprojet.display.dialog.exitdialog.controller.KeyEventExitDialog;
 import fr.groupe4.clientprojet.display.dialog.exitdialog.enums.ExitChoice;
+import fr.groupe4.clientprojet.display.dialog.projectcreationdialog.view.ProjectCreationDialog;
 import fr.groupe4.clientprojet.display.view.draw.DrawDialog;
 
 import javax.swing.*;

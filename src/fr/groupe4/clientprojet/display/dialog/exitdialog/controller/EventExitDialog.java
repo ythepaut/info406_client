@@ -2,6 +2,8 @@ package fr.groupe4.clientprojet.display.dialog.exitdialog.controller;
 
 import fr.groupe4.clientprojet.Main;
 import fr.groupe4.clientprojet.display.dialog.exitdialog.enums.ExitChoice;
+import fr.groupe4.clientprojet.display.dialog.projectcreationdialog.controller.EventExitCreationDialog;
+import fr.groupe4.clientprojet.display.dialog.projectcreationdialog.view.ProjectCreationDialog;
 import fr.groupe4.clientprojet.display.dialog.exitdialog.view.ExitDialog;
 
 import javax.swing.*;
