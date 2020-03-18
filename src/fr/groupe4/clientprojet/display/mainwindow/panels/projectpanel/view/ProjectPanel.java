@@ -6,6 +6,7 @@ import fr.groupe4.clientprojet.display.view.messagepanel.view.MessagePanel;
 import fr.groupe4.clientprojet.display.view.slide.view.Slide;
 import fr.groupe4.clientprojet.model.project.Project;
 import fr.groupe4.clientprojet.model.project.ProjectList;
+import fr.groupe4.clientprojet.model.task.TaskList;
 
 import javax.swing.*;
 import java.awt.*;
@@ -87,8 +88,26 @@ public class ProjectPanel extends DrawPanel {
      */
     private JPanel taskPanel() {
         JPanel panel = new JPanel();
-        panel.add(new JLabel("TÂCHES"));
-        // TODO : Construire panel tâches
+        Communication c = Communication.builder().sleepUntilFinished().startNow().getTaskList(project.getId()).build();
+        TaskList tasks = (TaskList) c.getResult();
+        panel.setLayout(new GridLayout());
+        JPanel panelL = new JPanel();
+        JPanel panelC = new JPanel();
+        JPanel panelR = new JPanel();
+        panel.add(panelL);
+        panel.add(panelC);
+        panel.add(panelR);
+        panelL.setLayout(new BoxLayout(panelL, BoxLayout.Y_AXIS));
+        panelC.setLayout(new BoxLayout(panelC, BoxLayout.Y_AXIS));
+        panelR.setLayout(new BoxLayout(panelR, BoxLayout.Y_AXIS));
+        panelL.add(new JLabel("TÂCHES"));
+        panelC.add(new JLabel("DESCRIPTION"));
+        panelR.add(new JLabel("DATE LIMITE"));
+        for(int i=0;i<tasks.size();i++){
+            panelL.add(new JLabel(tasks.get(i).getName()));
+            panelC.add(new JLabel(tasks.get(i).getDescription()));
+            panelR.add(new JLabel(tasks.get(i).getDeadline().toString()));
+    }
         return panel;
     }
 
