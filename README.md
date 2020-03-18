@@ -1,7 +1,7 @@
 # INFO406
 
 
-Sujet : Allocation de ressources 
+Sujet : Allocation de ressources
 
 
 # A propos

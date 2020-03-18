@@ -1,4 +1,4 @@
-package fr.groupe4.clientprojet.calendar;
+package fr.groupe4.clientprojet.model.calendar.enums;
 
 /**
  * Type de calendrier : quotidien, hebdomadaire, mensuel ou annuel.

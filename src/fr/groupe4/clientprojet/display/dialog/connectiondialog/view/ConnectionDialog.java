@@ -110,4 +110,11 @@ public class ConnectionDialog extends DrawDialog {
         }
         return res.toString();
     }
+
+    /**
+     * Vide le champs mot de passe
+     */
+    public void resetPassword() {
+        password.setText("");
+    }
 }

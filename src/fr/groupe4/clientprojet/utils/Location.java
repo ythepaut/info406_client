@@ -11,7 +11,7 @@ public abstract class Location {
      * Renvoie le répertoire de l'exécutable java
      * Renvoie "/" si non trouvé
      *
-     * @return String : sous la forme "blabla/"
+     * @return String : sous la forme "blabla"
      */
     @NotNull
     public static String getPath() {
@@ -20,5 +20,15 @@ public abstract class Location {
         path = path.split(System.getProperty("path.separator"))[0];
 
         return path;
+    }
+
+    /**
+     * Renvoie le répertoire img
+     *
+     * @return String
+     */
+    @NotNull
+    public static String getImgDataPath() {
+        return getPath() + "/data/img";
     }
 }
