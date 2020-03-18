@@ -1,5 +1,6 @@
 package fr.groupe4.clientprojet.model.resource.human;
 
+import fr.groupe4.clientprojet.model.message.Message;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -83,5 +84,9 @@ public class User extends HumanResource {
 
     public static User getUser() {
         return user;
+    }
+
+    public boolean isSender(@NotNull Message message) {
+        return message.getSrc().getResourceId() == getResourceId();
     }
 }

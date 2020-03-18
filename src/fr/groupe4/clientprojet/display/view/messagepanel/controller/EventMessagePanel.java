@@ -15,14 +15,16 @@ public class EventMessagePanel extends KeyAdapter implements ActionListener, Mou
      * Le MessagePanel qui appelle les events
      */
     private MessagePanel source;
+    private MessageResource dest;
 
     /**
      * Le constructeur
      *
      * @param source : Le MessagePanel
      */
-    public EventMessagePanel(MessagePanel source) {
+    public EventMessagePanel(MessagePanel source, MessageResource dest) {
         this.source = source;
+        this.dest = dest;
     }
 
     @Override
@@ -50,7 +52,6 @@ public class EventMessagePanel extends KeyAdapter implements ActionListener, Mou
     @Override
     public void mouseWheelMoved(MouseWheelEvent e) {
         source.setDebutListe(source.getDebutListe() + e.getWheelRotation());
-        source.redraw();
     }
 
     /**
@@ -63,12 +64,13 @@ public class EventMessagePanel extends KeyAdapter implements ActionListener, Mou
         }
         if (!message.isEmpty()) {
             Communication.builder().
-                    sendMessage(message, MessageResource.MESSAGE_RESOURCE_PROJECT, source.getIdProject()).
+                    sendMessage(message, dest, source.getIdProject()).
                     sleepUntilFinished().
                     startNow().
                     build();
             source.refresh();
         }
+        source.setDebutListeMax();
         source.resetMessage();
     }
 }
