@@ -66,6 +66,7 @@ public class EventConnectionDialog extends WindowAdapter implements ActionListen
                 break;
 
             default:
+                break;
         }
 
     }

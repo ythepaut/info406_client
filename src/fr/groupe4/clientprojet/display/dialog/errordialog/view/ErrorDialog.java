@@ -12,9 +12,21 @@ public class ErrorDialog extends DrawDialog {
     private EventErrorDialog eventErrorDialog;
     private KeyEventErrorDialog keyEventErrorDialog;
 
+    private Color color;
+
     public ErrorDialog(String message) {
-        setModal(true);
+        this(message, "ERREUR");
+    }
+
+    public ErrorDialog(String message, String title) {
+        this(message, title, Color.RED);
+    }
+
+    public ErrorDialog(String message, String title, Color color) {
         this.message = message;
+        this.color = color;
+
+        setModal(true);
         eventErrorDialog = new EventErrorDialog(this);
         keyEventErrorDialog = new KeyEventErrorDialog(this);
         setSize(510, 80);
@@ -24,7 +36,7 @@ public class ErrorDialog extends DrawDialog {
         setResizable(false);
         addWindowListener(eventErrorDialog);
         addKeyListener(keyEventErrorDialog);
-        setTitle("ERREUR");
+        setTitle(title);
 
         drawContent();
 
@@ -37,7 +49,7 @@ public class ErrorDialog extends DrawDialog {
         GridBagConstraints c = new GridBagConstraints();
         c.gridx = c.gridy = 0;
         JLabel errorLabel = new JLabel(message);
-        errorLabel.setForeground(Color.RED);
+        errorLabel.setForeground(color);
         errorLabel.setFont(new Font(Font.MONOSPACED, Font.BOLD, 16));
         add(errorLabel, c);
         JButton closeButton = new JButton("Fermer");

@@ -480,31 +480,13 @@ public final class Communication implements Runnable {
      */
     @Override @NotNull
     public String toString() {
-        StackTraceElement[] stackTrace = new Throwable().getStackTrace();
-
-        StringBuilder builder = new StringBuilder();
-
-        builder.append(htmlCode);
-        builder.append(" | ");
-        builder.append(status);
-        builder.append(" | ");
-        builder.append(code);
-        builder.append(" | ");
-        builder.append(typeOfCommunication);
-        builder.append(" | started=");
-        builder.append(started);
-        builder.append(" | loadingFinished=");
-        builder.append(loadingFinished);
-        builder.append(" | ");
-        builder.append(message);
-        builder.append("\n@");
-
-        for (StackTraceElement stackTraceElement : stackTrace) {
-            builder.append(" : ");
-            builder.append(stackTraceElement);
-        }
-
-        return builder.toString();
+        return htmlCode
+                + " | " + status
+                + " | " + code
+                + " | " + typeOfCommunication
+                + " | started=" + started
+                + " | loadingFinished=" + loadingFinished
+                + " | " + message;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

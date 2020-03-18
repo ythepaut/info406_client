@@ -1,23 +1,22 @@
 package fr.groupe4.clientprojet.logger;
 
+import fr.groupe4.clientprojet.logger.enums.LoggerColor;
 import fr.groupe4.clientprojet.logger.enums.LoggerOption;
 import fr.groupe4.clientprojet.logger.enums.LoggerType;
 import fr.groupe4.clientprojet.utils.Location;
-import org.jetbrains.annotations.Async;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.annotations.PropertyKey;
 
-import java.io.*;
-import java.time.Instant;
-import java.time.LocalDate;
+import java.io.IOException;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.BufferedWriter;
+import java.io.PrintWriter;
+import java.io.PrintStream;
+
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
-
-import static fr.groupe4.clientprojet.logger.enums.LoggerColor.*;
-import static fr.groupe4.clientprojet.logger.enums.LoggerType.*;
-import static fr.groupe4.clientprojet.logger.enums.LoggerOption.*;
 
 /**
  * Gestion des logs <br>
@@ -50,7 +49,7 @@ public abstract class Logger {
     /**
      * Initialisation
      */
-    public static void init() {
+    public static synchronized void init() {
         if (printWriter != null) {
             return;
         }
@@ -61,7 +60,13 @@ public abstract class Logger {
 
         try {
             dirCreated = new File(Location.getPath() + "/logs").mkdir();
-            FileWriter fileWriter = new FileWriter(Location.getPath() + "/logs/fr-groupe4-clientprojet_log_" + getDate() + ".log");
+
+            FileWriter fileWriter = new FileWriter(
+                    Location.getPath()
+                            + "/logs/fr-groupe4-clientprojet_log_"
+                            + getDate() + ".log"
+            );
+
             bufferedWriter = new BufferedWriter(fileWriter);
             ok = true;
         }
@@ -73,7 +78,7 @@ public abstract class Logger {
         if (ok) {
             printWriter = new PrintWriter(bufferedWriter);
 
-            info("Début des logs", LOG_FILE_ONLY);
+            info("Début des logs", LoggerOption.LOG_FILE_ONLY);
 
             if (dirCreated) {
                 warning("Dossier logs créé");
@@ -91,7 +96,9 @@ public abstract class Logger {
      * @param args Arguments (messages, options de log...)
      * @param type Type de log (debug, warning...)
      */
-    private synchronized static void genericLog(@NotNull PrintStream where, @NotNull Object[] args, @NotNull LoggerType type) {
+    private static synchronized void genericLog(@NotNull PrintStream where,
+                                                @NotNull Object[] args,
+                                                @NotNull LoggerType type) {
         ArrayList<String> messages = new ArrayList<>();
         ArrayList<LoggerOption> options = new ArrayList<>();
 
@@ -116,11 +123,11 @@ public abstract class Logger {
             }
         }
 
-        if (!options.contains(LOG_FILE_ONLY)) {
-            where.println(type.getTextColor() + message.toString() + ANSI_RESET);
+        if (!options.contains(LoggerOption.LOG_FILE_ONLY)) {
+            where.println(type.getTextColor() + message.toString() + LoggerColor.ANSI_RESET);
         }
 
-        if (!options.contains(LOG_CONSOLE_ONLY)) {
+        if (!options.contains(LoggerOption.LOG_CONSOLE_ONLY)) {
             writeToFile(message.toString(), type);
         }
     }
@@ -131,7 +138,7 @@ public abstract class Logger {
      * @param args Arguments (messages, options de log...)
      */
     public static void info(Object... args) {
-        genericLog(System.out, args, INFO);
+        genericLog(System.out, args, LoggerType.INFO);
     }
 
     /**
@@ -140,7 +147,7 @@ public abstract class Logger {
      * @param args Arguments (messages, options de log...)
      */
     public static void stats(Object... args) {
-        genericLog(System.out, args, STATS);
+        genericLog(System.out, args, LoggerType.STATS);
     }
 
     /**
@@ -149,7 +156,7 @@ public abstract class Logger {
      * @param args Arguments (messages, options de log...)
      */
     public static void success(Object... args) {
-        genericLog(System.out, args, SUCCESS);
+        genericLog(System.out, args, LoggerType.SUCCESS);
     }
 
     /**
@@ -158,7 +165,7 @@ public abstract class Logger {
      * @param args Arguments (messages, options de log...)
      */
     public static void error(Object... args) {
-        genericLog(System.err, args, ERROR);
+        genericLog(System.err, args, LoggerType.ERROR);
     }
 
     /**
@@ -167,7 +174,7 @@ public abstract class Logger {
      * @param args Arguments (messages, options de log...)
      */
     public static void warning(Object... args) {
-        genericLog(System.err, args, WARNING);
+        genericLog(System.err, args, LoggerType.WARNING);
     }
 
     /**
@@ -176,7 +183,7 @@ public abstract class Logger {
      * @param args Arguments (messages, options de log...)
      */
     public static void debug(Object... args) {
-        genericLog(System.out, args, DEBUG);
+        genericLog(System.out, args, LoggerType.DEBUG);
     }
 
     /**
@@ -218,15 +225,38 @@ public abstract class Logger {
      * @param type Type de log
      */
     private static synchronized void writeToFile(@NotNull String msg, @NotNull LoggerType type) {
+        if (printWriter == null) {
+            init();
+
+            warning("Logger initialisé en interne");
+        }
+
         if (printWriter != null) {
             String toPrint = "[";
             toPrint += nbWrite + "-";
             toPrint += getHour() + "-";
             // toPrint += String.format("%7s", type.toString()) + "] ";
-            toPrint += type.toString() + "] ";
+            toPrint += type + "] ";
             toPrint += msg;
 
             printWriter.println(toPrint);
+
+            StackTraceElement[] stackTrace = new Throwable().getStackTrace();
+            StringBuilder builder = new StringBuilder();
+            builder.append("@");
+
+            for (StackTraceElement stackTraceElement : stackTrace) {
+                if (!stackTraceElement.toString().contains("java.desktop")
+                        && !stackTraceElement.toString().contains("java.base")
+                        && !stackTraceElement.toString().contains("Logger.writeToFile")
+                        && !stackTraceElement.toString().contains("Logger.genericLog")) {
+
+                    builder.append(" : ");
+                    builder.append(stackTraceElement);
+                }
+            }
+
+            printWriter.println(builder);
 
             nbWrite ++;
 
@@ -237,9 +267,9 @@ public abstract class Logger {
     /**
      * Pour quitter
      */
-    public static void exit() {
+    public static synchronized void exit() {
         if (printWriter != null) {
-            writeToFile("Fin des logs, fermeture", INFO);
+            writeToFile("Fin des logs, fermeture", LoggerType.INFO);
             printWriter.close();
         }
     }
