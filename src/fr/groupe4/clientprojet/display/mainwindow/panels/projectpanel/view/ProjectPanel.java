@@ -106,7 +106,9 @@ public class ProjectPanel extends DrawPanel {
         for(int i=0;i<tasks.size();i++){
             panelL.add(new JLabel(tasks.get(i).getName()));
             panelC.add(new JLabel(tasks.get(i).getDescription()));
-            panelR.add(new JLabel(tasks.get(i).getDeadline().toString()));
+            if(tasks.get(i).getDeadline()!=null) {
+                panelR.add(new JLabel(tasks.get(i).getDeadline().toString()));
+            }
     }
         return panel;
     }
