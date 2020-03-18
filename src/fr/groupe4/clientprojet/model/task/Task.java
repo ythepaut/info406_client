@@ -80,4 +80,8 @@ public class Task {
             return deadline.atZone(ZoneId.systemDefault()).toEpochSecond();
         }
     }
+
+    public String getName(){return name;}
+
+    public String getDescription(){return description;}
 }

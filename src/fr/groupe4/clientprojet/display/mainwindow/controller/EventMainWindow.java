@@ -31,7 +31,7 @@ public class EventMainWindow extends WindowAdapter {
      */
     @Override
     public void windowClosing(WindowEvent e) {
-        new ExitDialog(source);
+        new ExitDialog(source, "Êtes-vous sûr de vouloir quitter ?");
     }
 
     /**
