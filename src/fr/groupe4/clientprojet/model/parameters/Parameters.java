@@ -1,11 +1,16 @@
 package fr.groupe4.clientprojet.model.parameters;
 
+import fr.groupe4.clientprojet.logger.Logger;
+import fr.groupe4.clientprojet.utils.Location;
+
+import java.io.*;
 import java.util.HashMap;
 
 /**
  * Classe abstraite qui contient les paramètres de l'application
  */
 public abstract class Parameters {
+    private final static String fileName = "/parameters.set";
     /**
      * Liste des paramètres avec leurs valeurs
      * ParametersName -> Object
@@ -23,9 +28,14 @@ public abstract class Parameters {
     public static void init() {
         parameters = new HashMap<>();
 
-        // Temporaire, le temps de créer le fichier
-        parameters.put(ParametersNames.SERVERURL, "https://api.ythepaut.com/g4/actions");
-        parameters.put(ParametersNames.FIRSTRUN, true);
+        try {
+            ObjectInputStream inputStream = new ObjectInputStream(
+                    new FileInputStream(Location.getDataPath() + fileName));
+            parameters = (HashMap<ParametersNames, Object>) inputStream.readObject();
+            inputStream.close();
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -33,7 +43,14 @@ public abstract class Parameters {
      * Permet de sauvegarder tous les paramètres dans le fichier
      */
     public static void exit() {
-
+        try {
+            ObjectOutputStream outputStream = new ObjectOutputStream(
+                    new FileOutputStream(Location.getDataPath() + fileName));
+            outputStream.writeObject(parameters);
+            outputStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
