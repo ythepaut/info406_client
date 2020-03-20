@@ -49,6 +49,10 @@ public enum UserChoice {
                 res = MAIL;
                 break;
 
+            case "settings":
+                res = SETTINGS;
+                break;
+
             default:
         }
 
