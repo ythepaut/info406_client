@@ -5,7 +5,8 @@ package fr.groupe4.clientprojet.display.mainwindow.panels.userpanel.enums;
  */
 public enum UserChoice {
     PASSWORD("password"),
-    MAIL("mail");
+    MAIL("mail"),
+    SETTINGS("settings");
 
     /**
      * Le nom du choix

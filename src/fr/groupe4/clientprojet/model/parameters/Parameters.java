@@ -1,6 +1,5 @@
 package fr.groupe4.clientprojet.model.parameters;
 
-import fr.groupe4.clientprojet.logger.Logger;
 import fr.groupe4.clientprojet.utils.Location;
 
 import java.io.*;
