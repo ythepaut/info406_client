@@ -23,12 +23,22 @@ public abstract class Location {
     }
 
     /**
+     * Renvoie le répertoire data
+     *
+     * @return String
+     */
+    @NotNull
+    public static String getDataPath() {
+        return getPath() + "/data";
+    }
+
+    /**
      * Renvoie le répertoire img
      *
      * @return String
      */
     @NotNull
     public static String getImgDataPath() {
-        return getPath() + "/data/img";
+        return getDataPath() + "/img";
     }
 }
