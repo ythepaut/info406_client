@@ -1,6 +1,7 @@
 package fr.groupe4.clientprojet.display.mainwindow.panels.userpanel.controller;
 
 import fr.groupe4.clientprojet.communication.enums.CommunicationPropertyName;
+import fr.groupe4.clientprojet.display.dialog.parametersdialog.view.ParametersDialog;
 import fr.groupe4.clientprojet.display.mainwindow.panels.userpanel.enums.UserChoice;
 import fr.groupe4.clientprojet.display.mainwindow.panels.userpanel.view.UserPanel;
 
@@ -47,6 +48,10 @@ public class EventUserPanel implements ActionListener, PropertyChangeListener {
                 String mail = source.getEmail();
                 System.out.println(mail);
                 // TODO : Modification du mail
+                break;
+
+            case SETTINGS:
+                new ParametersDialog();
                 break;
 
             default:

@@ -17,6 +17,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.atomic.AtomicReference;
 
+import fr.groupe4.clientprojet.model.parameters.Parameters;
 import org.jetbrains.annotations.Async;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -65,12 +66,6 @@ public final class Communication implements Runnable {
      */
     @NotNull
     private static final HttpClient httpClient = HttpClient.newBuilder().version(HttpClient.Version.HTTP_2).build();
-
-    /**
-     * URL de l'API
-     */
-    @NotNull
-    private static final String baseApiUrl = "https://api.ythepaut.com/g4/actions";
 
     /**
      * Temps avant de timeout
@@ -510,7 +505,7 @@ public final class Communication implements Runnable {
         // Requête API
         HttpRequest request = HttpRequest.newBuilder()
                 .POST(buildFormDataFromMap(requestData))
-                .uri(URI.create(baseApiUrl + typeOfCommunication.getUrl()))
+                .uri(URI.create(Parameters.getServerUrl() + typeOfCommunication.getUrl()))
                 .setHeader("User-Agent", "Java 11 HttpClient Bot")
                 .header("Content-Type", "application/x-www-form-urlencoded")
                 .timeout(TIMEOUT_DELAY)
