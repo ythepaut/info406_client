@@ -2,6 +2,7 @@ package fr.groupe4.clientprojet.display.view.messagepanel.view;
 
 import fr.groupe4.clientprojet.communication.CommunicationBuilder;
 import fr.groupe4.clientprojet.display.view.RoundButton;
+import fr.groupe4.clientprojet.display.view.ScrollBarUI;
 import fr.groupe4.clientprojet.display.view.draw.DrawPanel;
 import fr.groupe4.clientprojet.display.view.messagepanel.controller.EventMessagePanel;
 import fr.groupe4.clientprojet.display.view.messagepanel.enums.MessageButton;
@@ -10,6 +11,7 @@ import fr.groupe4.clientprojet.model.message.MessageList;
 import fr.groupe4.clientprojet.model.message.enums.MessageResource;
 import fr.groupe4.clientprojet.model.resource.human.User;
 import fr.groupe4.clientprojet.utils.Location;
+import javafx.scene.Scene;
 
 import javax.swing.*;
 import javax.swing.border.CompoundBorder;
@@ -110,6 +112,62 @@ public class MessagePanel extends DrawPanel {
             c.insets = new Insets(5, 0, 5, 0);
             c.fill = GridBagConstraints.HORIZONTAL;
 
+            JScrollPane scrollPane = new JScrollPane(messagePanel);
+            scrollPane.setBackground(Color.WHITE);
+            scrollPane.setBorder(null);
+            scrollPane.getVerticalScrollBar().setUI(new ScrollBarUI());
+            scrollPane.getHorizontalScrollBar().setUI(new ScrollBarUI());
+
+            for (Message message: messageList) {
+                JPanel panel = new JPanel(new BorderLayout());
+
+                JLabel content = new JLabel(message.getContent());
+                panel.add(content, BorderLayout.CENTER);
+
+                JPanel infoPanel = new JPanel(new GridLayout(2, 1));
+                if (message.getDate().isAfter(LocalDateTime.now().minusDays(1))) { //Si le message est d'aujourd'hui
+                    infoPanel.add(new JLabel(message.getDate().getHour() + ":" + message.getDate().getMinute()));
+                } else {
+                    infoPanel.add(new JLabel(message.getDate().
+                            format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM, FormatStyle.SHORT))));
+                }
+                infoPanel.setBorder(new CompoundBorder(new EmptyBorder(5, 5, 5, 0),
+                        new CompoundBorder(new MatteBorder(0, 0, 0, 2, Color.BLACK),
+                                new EmptyBorder(0, 0, 0, 5))));
+
+                infoPanel.add(new JLabel(User.getUser().isSender(message) ?
+                        "Moi" :
+                        message.getSrc().getFirstname() + " " + message.getSrc().getLastname()));
+                panel.add(infoPanel, BorderLayout.WEST);
+                content.setBorder(new EmptyBorder(0, 10, 0, 10));
+                c.anchor = GridBagConstraints.WEST;
+
+                Color fond = User.getUser().isSender(message) ?
+                        new Color(200, 200, 200) :
+                        new Color(240, 240, 240);
+                panel.setBackground(fond);
+                infoPanel.setBackground(fond);
+
+                messagePanel.add(panel, c);
+                c.gridy++;
+            }
+            add(scrollPane, BorderLayout.CENTER);
+        } else {
+            messagePanel.setLayout(new GridBagLayout());
+            messagePanel.add(new JLabel("<html><div style=\"text-align:center;\">" +
+                    "<h2><strong>Aucun message</strong></h2>" +
+                    "<p>Envoyez en un premier !</p></div></html>"));
+            add(messagePanel, BorderLayout.CENTER);
+        }
+
+        /*messagePanel.setBackground(Color.WHITE);
+        if (messageList != null && !messageList.isEmpty()) {
+            messagePanel.setLayout(new GridBagLayout());
+            GridBagConstraints c = new GridBagConstraints();
+            c.gridx = c.gridy = 0;
+            c.insets = new Insets(5, 0, 5, 0);
+            c.fill = GridBagConstraints.HORIZONTAL;
+
             int i = 0;
             for (Message message: messageList) {
                 if (i >= debutListe && i < debutListe + nbMessageMax) {
@@ -153,7 +211,7 @@ public class MessagePanel extends DrawPanel {
                     "<h2><strong>Aucun message</strong></h2>" +
                     "<p>Envoyez en un premier !</p></div></html>"));
         }
-        add(messagePanel, BorderLayout.CENTER);
+        add(messagePanel, BorderLayout.CENTER);*/
     }
 
     /**

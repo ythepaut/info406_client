@@ -17,12 +17,13 @@ public class ScrollBarUI extends BasicScrollBarUI {
 
     @Override
     protected void paintThumb(Graphics g, JComponent c, Rectangle thumbBounds) {
+        int arc = (Math.min(thumbBounds.width, thumbBounds.height)) *2;
         g.setColor(new Color(0, 0, 0, 25));
         g.fillRoundRect(thumbBounds.x,
                 thumbBounds.y,
                 thumbBounds.width,
                 thumbBounds.height,
-                thumbBounds.width *2,
-                thumbBounds.width *2);
+                arc,
+                arc);
     }
 }
