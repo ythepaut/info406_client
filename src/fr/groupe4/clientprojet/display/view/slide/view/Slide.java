@@ -97,17 +97,13 @@ public class Slide extends JPanel {
         rightButton.addActionListener(eventSlide);
         add(rightButton, BorderLayout.EAST);
         // Bouton haut
-        JPanel topButtons = new JPanel(new GridBagLayout());
+        JPanel topButtons = new JPanel(new FlowLayout());
         topButtons.setBackground(Color.WHITE);
-        GridBagConstraints c = new GridBagConstraints();
-        c.gridy = c.gridx = 0;
         for (String name: slideName) {
             JButton button = new JButton(name);
             button.setActionCommand(name);
             button.addActionListener(eventSlide);
-            topButtons.add(button, c);
-
-            c.gridx++;
+            topButtons.add(button);
         }
         add(topButtons, BorderLayout.NORTH);
         if (nbSlide > 0 && slide != -1) {
