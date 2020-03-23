@@ -4,6 +4,7 @@ import fr.groupe4.clientprojet.communication.Communication;
 import fr.groupe4.clientprojet.display.mainwindow.panels.centerpanel.view.CenterPanel;
 import fr.groupe4.clientprojet.display.mainwindow.panels.leftpanel.controller.EventLeftPanel;
 import fr.groupe4.clientprojet.display.mainwindow.view.MainWindow;
+import fr.groupe4.clientprojet.display.view.ScrollBarUI;
 import fr.groupe4.clientprojet.model.project.Project;
 import fr.groupe4.clientprojet.model.project.ProjectList;
 import fr.groupe4.clientprojet.display.view.draw.DrawPanel;
@@ -95,7 +96,8 @@ public class LeftPanel extends DrawPanel {
 
         // Boutons du bas (calendrier, profil)
         JPanel bottomPanel = new JPanel(new GridBagLayout());
-        bottomPanel.setBorder(new MatteBorder(3, 0, 0, 0, Color.BLACK));
+        bottomPanel.setBorder(new CompoundBorder(new EmptyBorder(25, 0, 0, 0),
+                new MatteBorder(3, 0, 0, 0, Color.BLACK)));
         bottomPanel.setBackground(Color.WHITE);
 
         c.gridy = 0;
@@ -135,78 +137,34 @@ public class LeftPanel extends DrawPanel {
      * @param c : la contrainte du panel
      */
     private void drawProjectButton(EventLeftPanel eventLeftPanel, Font buttonFont, GridBagConstraints c) {
-        JPanel projectPanel = new JPanel(new BorderLayout());
-        projectPanel.addMouseWheelListener(eventLeftPanel);
-        int nbProjetsMax = 4; // TODO: Valeur à déterminer en fonction de la taille de la fenêtre
+        JPanel projectPanel = new JPanel(new GridLayout(projectList.size(), 1));
+        projectPanel.setBackground(Color.WHITE);
+        JScrollPane scrollPane = new JScrollPane(projectPanel);
+        scrollPane.getVerticalScrollBar().setUI(new ScrollBarUI());
+        scrollPane.setBackground(Color.WHITE);
+        scrollPane.setBorder(null);
+        scrollPane.setHorizontalScrollBar(null);
 
-
-        // Les boutons
-        JPanel buttonPanel = new JPanel(new GridBagLayout());
-        buttonPanel.setBackground(Color.WHITE);
-
-        int i = 0;
         for (Project p: projectList) {
-            if (i >= debutListe && i < nbProjetsMax + debutListe) {
-                c.gridy = i;
-                String name = p.getName();
-                RoundButton button = new RoundButton(name.substring(0,1));
-                button.setActionCommand(name);
-                button.addActionListener(eventLeftPanel);
-                button.setFont(buttonFont);
-                buttonPanel.add(button, c);
-                buttons.add(button);
-            }
-            i++;
+            String name = p.getName();
+            RoundButton button = new RoundButton(name.substring(0, 1));
+            button.setActionCommand(name);
+            button.addActionListener(eventLeftPanel);
+            button.setFont(buttonFont);
+            projectPanel.add(button);
+            buttons.add(button);
         }
 
-        while (i < nbProjetsMax + debutListe) {
-            c.gridy = i;
-            buttonPanel.add(new JLabel(" "), c);
-
-            i++;
-        }
-
-        projectPanel.add(buttonPanel, BorderLayout.CENTER);
-
-
-        // Label haut et bas pour quand il y a des projets non affichés
-        c.gridy = 0;
-        c.insets = new Insets(0, 0, 0, 0);
-        JLabel haut = new JLabel(". . ."), bas = new JLabel(". . .");
-        haut.setFont(new Font("Monospace", Font.BOLD, TAILLE_BOUTONS/2));
-        bas.setFont(new Font("Monospace", Font.BOLD, TAILLE_BOUTONS/2));
-
-        if (debutListe > 0) {
-            haut.setText(". . .");
-        } else {
-            haut.setText(" ");
-        }
-        JPanel hautPanel = new JPanel(new GridBagLayout());
-        hautPanel.setBackground(Color.WHITE);
-        hautPanel.add(haut, c);
-        projectPanel.add(hautPanel, BorderLayout.NORTH);
-
-        if (nbProjet > debutListe + nbProjetsMax) {
-            bas.setText(". . .");
-        } else {
-            bas.setText(" ");
-        }
-        JPanel basPanel = new JPanel(new GridBagLayout());
-        basPanel.setBackground(Color.WHITE);
-        basPanel.add(bas, c);
-        projectPanel.add(basPanel, BorderLayout.SOUTH);
-
-
-        add(projectPanel, BorderLayout.NORTH);
+        add(scrollPane, BorderLayout.CENTER);
     }
 
     /**
      * Défini le nombre de projet
      *
-     * @param nbProjets : le nombre de projet
+     * @param nbProjet : le nombre de projet
      */
-    public void setNbProjets(int nbProjets) {
-        this.nbProjet = nbProjets;
+    public void setNbProjets(int nbProjet) {
+        this.nbProjet = nbProjet;
     }
 
     /**
