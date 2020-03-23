@@ -33,7 +33,11 @@ public abstract class Parameters {
             parameters = (HashMap<ParametersNames, Object>) inputStream.readObject();
             inputStream.close();
         } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
+            System.err.println("Le fichier 'parameters.set' n'existe pas !");
+
+            // Définition des paramètres par défaut
+            parameters.put(ParametersNames.FIRSTRUN, true);
+            parameters.put(ParametersNames.SERVERURL, "https://api.ythepaut.com/g4/actions");
         }
     }
 
@@ -43,12 +47,16 @@ public abstract class Parameters {
      */
     public static void exit() {
         try {
+            if (parameters == null) throw new InitParametersException(); // Si init() n'a pas été appelé
+
             ObjectOutputStream outputStream = new ObjectOutputStream(
                     new FileOutputStream(Location.getDataPath() + fileName));
             outputStream.writeObject(parameters);
             outputStream.close();
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (InitParametersException e) {
+            System.err.println(e.getMessage());
         }
     }
 
@@ -56,18 +64,42 @@ public abstract class Parameters {
     // Getters et Setters
 
     public static String getServerUrl() {
-        return (String) parameters.get(ParametersNames.SERVERURL);
+        String res = "";
+        try {
+            if (parameters == null) throw new InitParametersException();
+            res = (String) parameters.get(ParametersNames.SERVERURL);
+        } catch (InitParametersException e) {
+            System.err.println(e.getMessage());
+        }
+        return res;
     }
 
     public static void setServerUrl(String serverUrl) {
-        parameters.put(ParametersNames.SERVERURL, serverUrl);
+        try {
+            if (parameters == null) throw new InitParametersException();
+            parameters.put(ParametersNames.SERVERURL, serverUrl);
+        } catch (InitParametersException e) {
+            System.err.println(e.getMessage());
+        }
     }
 
     public static boolean isFirstRun() {
-        return (boolean) parameters.get(ParametersNames.FIRSTRUN);
+        boolean res = true;
+        try {
+            if (parameters == null) throw new InitParametersException();
+            res =  (boolean) parameters.get(ParametersNames.FIRSTRUN);
+        } catch (InitParametersException e) {
+            System.err.println(e.getMessage());
+        }
+        return res;
     }
 
     public static void setFirstRun(boolean firstRun) {
-        parameters.put(ParametersNames.FIRSTRUN, firstRun);
+        try {
+            if (parameters == null) throw new InitParametersException();
+            parameters.put(ParametersNames.FIRSTRUN, firstRun);
+        } catch (InitParametersException e) {
+            System.err.println(e.getMessage());
+        }
     }
 }
