@@ -9,7 +9,7 @@ import java.util.HashMap;
  * Classe abstraite qui contient les paramètres de l'application
  */
 public abstract class Parameters {
-    private final static String fileName = "/parameters.set";
+    private static final String fileName = "/parameters.set";
     /**
      * Liste des paramètres avec leurs valeurs
      * ParametersName -> Object

@@ -57,10 +57,14 @@ public class UserPanel extends DrawPanel {
         JPanel descripPanel = new JPanel(new GridLayout(1, 2));
         descripPanel.add(new JLabel(new ImageIcon(Location.getImgDataPath() + "/user.png")));
         JPanel namePanel = new JPanel(new GridLayout(2, 1));
-        namePanel.add(new JLabel("<html><h1 style='font-size:2em;'>" + user.getFirstname() + "<br/>" + user.getLastname() + "</h1></html>"));
-        namePanel.add(new JLabel("<html><p style='text-align:justify;'><em>" + user.getDescription() + "</em></p></html>"));
+        namePanel.add(new JLabel("<html><h1 style='font-size:2em;'>" +
+                user.getFirstname() + "<br/>" +
+                user.getLastname() + "</h1></html>"));
+        namePanel.add(new JLabel("<html><p style='text-align:justify;'><em>" +
+                user.getDescription() + "</em></p></html>"));
         descripPanel.add(namePanel);
-        descripPanel.setBorder(new CompoundBorder(new MatteBorder(0, 0, 0, 2, Color.BLACK), new EmptyBorder(0, 0, 0, 20)));
+        descripPanel.setBorder(new CompoundBorder(new MatteBorder(0, 0, 0, 2, Color.BLACK),
+                new EmptyBorder(0, 0, 0, 20)));
         topPanel.add(descripPanel);
 
         JPanel rightPanel = new JPanel(new GridBagLayout());
@@ -73,7 +77,8 @@ public class UserPanel extends DrawPanel {
         passwordButton.setActionCommand(UserChoice.PASSWORD.getName());
         passwordButton.addActionListener(eventUserPanel);
         passwordPanel.add(passwordButton, BorderLayout.SOUTH);
-        c.gridx = c.gridy = 0;
+        c.gridx = 0;
+        c.gridy = 0;
         rightPanel.add(passwordPanel, c);
 
         JPanel mailPanel = new JPanel(new BorderLayout());

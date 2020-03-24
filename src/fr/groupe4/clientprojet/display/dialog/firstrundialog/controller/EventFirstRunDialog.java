@@ -19,7 +19,7 @@ public class EventFirstRunDialog extends WindowAdapter implements ActionListener
     /**
      * Variables statiques pour les 2 boutons du dialog
      */
-    public final static String OK = "ok", CANCEL = "cancel";
+    public static final String OK = "ok", CANCEL = "cancel";
 
 
     /**

@@ -27,7 +27,7 @@ public enum ConnectionChoice {
      * @return : le nom
      */
     public String getName() {
-        return this.name;
+        return name;
     }
 
     /**

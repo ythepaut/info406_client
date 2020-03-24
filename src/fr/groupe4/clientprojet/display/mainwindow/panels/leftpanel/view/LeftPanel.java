@@ -25,10 +25,6 @@ import java.util.ArrayList;
  */
 public class LeftPanel extends DrawPanel {
     /**
-     * La largeur des boutons
-     */
-    private final int TAILLE_BOUTONS = 25; // TODO: Le final pourra être enlevé quand on ajoutera les paramètres
-    /**
      * La liste des boutons
      */
     private ArrayList<RoundButton> buttons;
@@ -37,11 +33,6 @@ public class LeftPanel extends DrawPanel {
      */
     private CenterPanel centerPanel;
     private MainWindow owner;
-    /**
-     * le nombre de projets
-     * le début de la liste des projets
-     */
-    private int nbProjet, debutListe = 0;
     private boolean first = true;
     /**
      * La liste des projets
@@ -59,7 +50,6 @@ public class LeftPanel extends DrawPanel {
         this.owner = owner;
         Communication comm = Communication.builder().sleepUntilFinished().startNow().getProjectList().build();
         projectList = (ProjectList) comm.getResult();
-        nbProjet = projectList.size();
 
 
         setLayout(new BorderLayout());
@@ -84,13 +74,14 @@ public class LeftPanel extends DrawPanel {
     @Override
     protected void drawContent() {
         EventLeftPanel eventLeftPanel = new EventLeftPanel(this, centerPanel);
+        final int TAILLE_BOUTONS = 25; // TODO: Le final pourra être enlevé quand on ajoutera les paramètres
         Font buttonFont = new Font("Arial", Font.PLAIN, TAILLE_BOUTONS);
         GridBagConstraints c = new GridBagConstraints();
         c.gridx = 0;
         c.insets = new Insets(25, 0, 25, 0);
 
         // Boutons projets
-        drawProjectButton(eventLeftPanel, buttonFont, c);
+        drawProjectButton(eventLeftPanel, buttonFont);
         c.insets = new Insets(25, 0, 25, 0);
 
 
@@ -134,9 +125,8 @@ public class LeftPanel extends DrawPanel {
      *
      * @param eventLeftPanel : le listener du panel
      * @param buttonFont : la police des boutons
-     * @param c : la contrainte du panel
      */
-    private void drawProjectButton(EventLeftPanel eventLeftPanel, Font buttonFont, GridBagConstraints c) {
+    private void drawProjectButton(EventLeftPanel eventLeftPanel, Font buttonFont) {
         JPanel projectPanel = new JPanel(new GridLayout(projectList.size(), 1));
         projectPanel.setBackground(Color.WHITE);
         JScrollPane scrollPane = new JScrollPane(projectPanel);
@@ -156,35 +146,6 @@ public class LeftPanel extends DrawPanel {
         }
 
         add(scrollPane, BorderLayout.CENTER);
-    }
-
-    /**
-     * Défini le nombre de projet
-     *
-     * @param nbProjet : le nombre de projet
-     */
-    public void setNbProjets(int nbProjet) {
-        this.nbProjet = nbProjet;
-    }
-
-    /**
-     * Renvoie le début de la liste des projets
-     *
-     * @return : le début de la liste des projets
-     */
-    public int getDebutListe() {
-        return debutListe;
-    }
-
-    /**
-     * Défini le début de la liste des projets
-     *
-     * @param debutListe : début de la liste
-     */
-    public void setDebutListe(int debutListe) {
-        if (debutListe < nbProjet && debutListe >= 0) {
-            this.debutListe = debutListe;
-        }
     }
 
     public MainWindow getOwner(){

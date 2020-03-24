@@ -51,7 +51,8 @@ public class ProjectPanel extends DrawPanel {
         JPanel titlePanel = new JPanel(new GridBagLayout());
         titlePanel.setBackground(Color.WHITE);
         GridBagConstraints c = new GridBagConstraints();
-        c.gridx = c.gridy = 0;
+        c.gridx = 0;
+        c.gridy = 0;
         c.insets = new Insets(20, 0, 0, 0);
         JLabel title = new JLabel(project.getName());
         title.setFont(new Font("Arial", Font.PLAIN, 30));
@@ -103,13 +104,14 @@ public class ProjectPanel extends DrawPanel {
         panelL.add(new JLabel("TÂCHES"));
         panelC.add(new JLabel("DESCRIPTION"));
         panelR.add(new JLabel("DATE LIMITE"));
-        for(int i=0;i<tasks.size();i++){
-            panelL.add(new JLabel(tasks.get(i).getName()));
-            panelC.add(new JLabel(tasks.get(i).getDescription()));
-            if(tasks.get(i).getDeadline()!=null) {
-                panelR.add(new JLabel(tasks.get(i).getDeadline().toString()));
+        assert tasks != null;
+        for (fr.groupe4.clientprojet.model.task.Task task : tasks) {
+            panelL.add(new JLabel(task.getName()));
+            panelC.add(new JLabel(task.getDescription()));
+            if (task.getDeadline() != null) {
+                panelR.add(new JLabel(task.getDeadline().toString()));
             }
-    }
+        }
         return panel;
     }
 

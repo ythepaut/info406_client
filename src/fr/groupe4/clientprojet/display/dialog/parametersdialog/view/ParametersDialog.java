@@ -7,8 +7,6 @@ import fr.groupe4.clientprojet.model.parameters.Parameters;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 
 /**
  * Le dialog des paramètres
@@ -69,7 +67,8 @@ public class ParametersDialog extends DrawDialog {
     private JPanel generalPanel() {
         JPanel panel = new JPanel(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
-        c.gridx = c.gridy = 0;
+        c.gridx = 0;
+        c.gridy = 0;
 
         JPanel urlPanel = new JPanel(new GridLayout(1, 2));
         urlPanel.add(new JLabel("Url serveur API : "));

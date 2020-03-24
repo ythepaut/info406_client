@@ -11,7 +11,6 @@ import fr.groupe4.clientprojet.model.message.MessageList;
 import fr.groupe4.clientprojet.model.message.enums.MessageResource;
 import fr.groupe4.clientprojet.model.resource.human.User;
 import fr.groupe4.clientprojet.utils.Location;
-import javafx.scene.Scene;
 
 import javax.swing.*;
 import javax.swing.border.CompoundBorder;
@@ -108,7 +107,8 @@ public class MessagePanel extends DrawPanel {
         if (messageList != null && !messageList.isEmpty()) {
             messagePanel.setLayout(new GridBagLayout());
             GridBagConstraints c = new GridBagConstraints();
-            c.gridx = c.gridy = 0;
+            c.gridx = 0;
+            c.gridy = 0;
             c.insets = new Insets(5, 0, 5, 0);
             c.fill = GridBagConstraints.HORIZONTAL;
 
@@ -135,6 +135,7 @@ public class MessagePanel extends DrawPanel {
                         new CompoundBorder(new MatteBorder(0, 0, 0, 2, Color.BLACK),
                                 new EmptyBorder(0, 0, 0, 5))));
 
+                assert User.getUser() != null;
                 infoPanel.add(new JLabel(User.getUser().isSender(message) ?
                         "Moi" :
                         message.getSrc().getFirstname() + " " + message.getSrc().getLastname()));

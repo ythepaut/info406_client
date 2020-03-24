@@ -44,7 +44,8 @@ public class ErrorDialog extends DrawDialog {
     protected void drawContent() {
         setLayout(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
-        c.gridx = c.gridy = 0;
+        c.gridx = 0;
+        c.gridy = 0;
 
         JLabel errorLabel = new JLabel(message);
         errorLabel.setForeground(color);

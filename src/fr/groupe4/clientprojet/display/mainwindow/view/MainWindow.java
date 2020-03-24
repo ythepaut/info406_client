@@ -51,7 +51,8 @@ public class MainWindow extends JFrame {
      */
     private void drawContent() {
         setLayout(new BorderLayout());
-        centerPanel = new CenterPanel(CenterPanel.USER); // <!> Dans LeftPanel, le bouton user est initialisé comme selected <!>
+        centerPanel = new CenterPanel(CenterPanel.USER);
+        // <!> Dans LeftPanel, le bouton user est initialisé comme selected <!>
         leftPanel = new LeftPanel(centerPanel, this);
         add(leftPanel, BorderLayout.WEST);
         add(centerPanel, BorderLayout.CENTER);

@@ -11,7 +11,7 @@ import java.awt.event.*;
 /**
  * Listener du panel de gauche
  */
-public class EventLeftPanel implements ActionListener, MouseWheelListener {
+public class EventLeftPanel implements ActionListener {
     /**
      * Le panel du centre
      */
@@ -40,28 +40,15 @@ public class EventLeftPanel implements ActionListener, MouseWheelListener {
      */
     @Override
     public void actionPerformed(ActionEvent e) {
-        switch(e.getActionCommand()){
-            case NEWPROJECT :
-                    new ProjectCreationDialog(source.getOwner());
-                break ;
-            default:
-        centerPanel.setView(e.getActionCommand());
+        if (NEWPROJECT.equals(e.getActionCommand())) {
+            new ProjectCreationDialog(source.getOwner());
+        } else {
+            centerPanel.setView(e.getActionCommand());
 
-        for (RoundButton button : source.getButtons()) {
-            if (button.getActionCommand().equals(centerPanel.getView())) button.setSelected(true);
-            else button.setSelected(false);
+            for (RoundButton button : source.getButtons()) {
+                if (button.getActionCommand().equals(centerPanel.getView())) button.setSelected(true);
+                else button.setSelected(false);
+            }
         }
-        }
-    }
-
-    /**
-     * Quand la molette de la souris tourne
-     *
-     * @param e : l'event
-     */
-    @Override
-    public void mouseWheelMoved(MouseWheelEvent e) {
-        source.setDebutListe(source.getDebutListe() + e.getWheelRotation());
-        source.redraw();
     }
 }
