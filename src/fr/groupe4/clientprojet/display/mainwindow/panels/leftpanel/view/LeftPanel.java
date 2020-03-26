@@ -134,6 +134,7 @@ public class LeftPanel extends DrawPanel {
         scrollPane.setBackground(Color.WHITE);
         scrollPane.setBorder(null);
         scrollPane.setHorizontalScrollBar(null);
+        scrollPane.getVerticalScrollBar().setUnitIncrement(10);
 
         for (Project p: projectList) {
             String name = p.getName();
