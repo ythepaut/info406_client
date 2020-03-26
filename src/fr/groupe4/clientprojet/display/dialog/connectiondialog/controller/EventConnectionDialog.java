@@ -55,7 +55,7 @@ public class EventConnectionDialog extends WindowAdapter implements ActionListen
                 if (Communication.isConnected()) {
                     source.dispose();
                 } else {
-                    new ErrorDialog(comm.getMessage()); // TODO : adapter le message en fonction de l'erreur
+                    new ErrorDialog(comm.getMessage());
                     source.resetPassword();
                 }
                 break;

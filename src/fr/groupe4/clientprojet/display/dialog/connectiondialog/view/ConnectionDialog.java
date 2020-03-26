@@ -56,14 +56,14 @@ public class ConnectionDialog extends DrawDialog {
 
         JPanel fieldPanel = new JPanel(new GridLayout(2, 1));
         JPanel usernamePanel = new JPanel(new BorderLayout());
-        usernamePanel.setBorder(new EmptyBorder(90, 20, 20, 20));
+        usernamePanel.setBorder(new EmptyBorder(80, 20, 20, 20));
         usernamePanel.add(new JLabel("Username :"), BorderLayout.CENTER);
         username = new JTextField(100);
         username.addKeyListener(keyEventConnectionDialog);
         usernamePanel.add(username, BorderLayout.SOUTH);
         fieldPanel.add(usernamePanel);
         JPanel passwordPanel = new JPanel(new BorderLayout());
-        passwordPanel.setBorder(new EmptyBorder(10, 20, 100, 20));
+        passwordPanel.setBorder(new EmptyBorder(10, 20, 90, 20));
         passwordPanel.add(new JLabel("Password :"), BorderLayout.CENTER);
         password = new JPasswordField(100);
         password.addKeyListener(keyEventConnectionDialog);
@@ -71,20 +71,15 @@ public class ConnectionDialog extends DrawDialog {
         fieldPanel.add(passwordPanel);
         add(fieldPanel, BorderLayout.CENTER);
 
-        JPanel buttonPanel = new JPanel(new GridBagLayout());
-        GridBagConstraints c = new GridBagConstraints();
-        c.gridx = 0;
-        c.gridy = 0;
-        c.insets = new Insets(0, 0, 0, 0);
+        JPanel buttonPanel = new JPanel(new FlowLayout());
         JButton okButton = new JButton("OK");
         okButton.setActionCommand(ConnectionChoice.OK.getName());
         okButton.addActionListener(eventConnectionDialog);
-        buttonPanel.add(okButton, c);
+        buttonPanel.add(okButton);
         JButton cancelButton = new JButton("Annuler");
         cancelButton.setActionCommand(ConnectionChoice.CANCEL.getName());
         cancelButton.addActionListener(eventConnectionDialog);
-        c.gridx = 1;
-        buttonPanel.add(cancelButton, c);
+        buttonPanel.add(cancelButton);
         add(buttonPanel, BorderLayout.SOUTH);
     }
 

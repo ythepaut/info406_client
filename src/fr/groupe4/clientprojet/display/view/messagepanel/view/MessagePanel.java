@@ -2,6 +2,7 @@ package fr.groupe4.clientprojet.display.view.messagepanel.view;
 
 import fr.groupe4.clientprojet.communication.CommunicationBuilder;
 import fr.groupe4.clientprojet.display.view.RoundButton;
+import fr.groupe4.clientprojet.display.view.ScrollBarUI;
 import fr.groupe4.clientprojet.display.view.draw.DrawPanel;
 import fr.groupe4.clientprojet.display.view.messagepanel.controller.EventMessagePanel;
 import fr.groupe4.clientprojet.display.view.messagepanel.enums.MessageButton;
@@ -45,14 +46,7 @@ public class MessagePanel extends DrawPanel {
      * L'instance de CommunicationBuidler pour récuperer la liste des messages
      */
     private CommunicationBuilder cBuilder;
-    /**
-     * Le début de la liste des messages
-     */
-    private int debutListe = -1;
-    /**
-     * Le nombre de messages pouvant être affiché en même temps
-     */
-    private static final int nbMessageMax = 11;
+    private JScrollPane scrollPane;
 
     /**
      * Le constructeur
@@ -63,7 +57,6 @@ public class MessagePanel extends DrawPanel {
         this.cBuilder = cBuilder;
         refresh();
         eventMessagePanel = new EventMessagePanel(this, MessageResource.MESSAGE_RESOURCE_PROJECT);
-        addMouseWheelListener(eventMessagePanel);
 
         drawContent();
     }
@@ -106,54 +99,61 @@ public class MessagePanel extends DrawPanel {
         if (messageList != null && !messageList.isEmpty()) {
             messagePanel.setLayout(new GridBagLayout());
             GridBagConstraints c = new GridBagConstraints();
-            c.gridx = c.gridy = 0;
+            c.gridx = 0;
+            c.gridy = 0;
             c.insets = new Insets(5, 0, 5, 0);
             c.fill = GridBagConstraints.HORIZONTAL;
 
-            int i = 0;
+            scrollPane = new JScrollPane(messagePanel);
+            scrollPane.setBackground(Color.WHITE);
+            scrollPane.setBorder(null);
+            scrollPane.getVerticalScrollBar().setUI(new ScrollBarUI());
+            scrollPane.getHorizontalScrollBar().setUI(new ScrollBarUI());
+            scrollPane.getVerticalScrollBar().setUnitIncrement(10);
+
             for (Message message: messageList) {
-                if (i >= debutListe && i < debutListe + nbMessageMax) {
-                    JPanel panel = new JPanel(new BorderLayout());
+                JPanel panel = new JPanel(new BorderLayout());
 
-                    JLabel content = new JLabel(message.getContent());
-                    panel.add(content, BorderLayout.CENTER);
+                JLabel content = new JLabel(message.getContent());
+                panel.add(content, BorderLayout.CENTER);
 
-                    JPanel infoPanel = new JPanel(new GridLayout(2, 1));
-                    if (message.getDate().isAfter(LocalDateTime.now().minusDays(1))) { //Si le message est d'aujourd'hui
-                        infoPanel.add(new JLabel(message.getDate().getHour() + ":" + message.getDate().getMinute()));
-                    } else {
-                        infoPanel.add(new JLabel(message.getDate().
-                                format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM, FormatStyle.SHORT))));
-                    }
-                    infoPanel.setBorder(new CompoundBorder(new EmptyBorder(5, 5, 5, 0),
-                            new CompoundBorder(new MatteBorder(0, 0, 0, 2, Color.BLACK),
-                                    new EmptyBorder(0, 0, 0, 5))));
-
-                    infoPanel.add(new JLabel(User.getUser().isSender(message) ?
-                            "Moi" :
-                            message.getSrc().getFirstname() + " " + message.getSrc().getLastname()));
-                    panel.add(infoPanel, BorderLayout.WEST);
-                    content.setBorder(new EmptyBorder(0, 10, 0, 10));
-                    c.anchor = GridBagConstraints.WEST;
-
-                    Color fond = User.getUser().isSender(message) ?
-                            new Color(200, 200, 200) :
-                            new Color(240, 240, 240);
-                    panel.setBackground(fond);
-                    infoPanel.setBackground(fond);
-
-                    messagePanel.add(panel, c);
-                    c.gridy++;
+                JPanel infoPanel = new JPanel(new GridLayout(2, 1));
+                if (message.getDate().isAfter(LocalDateTime.now().minusDays(1))) { //Si le message est d'aujourd'hui
+                    infoPanel.add(new JLabel(message.getDate().getHour() + ":" + message.getDate().getMinute()));
+                } else {
+                    infoPanel.add(new JLabel(message.getDate().
+                            format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM, FormatStyle.SHORT))));
                 }
-                i++;
+                infoPanel.setBorder(new CompoundBorder(new EmptyBorder(5, 5, 5, 0),
+                        new CompoundBorder(new MatteBorder(0, 0, 0, 2, Color.BLACK),
+                                new EmptyBorder(0, 0, 0, 5))));
+
+                assert User.getUser() != null;
+                infoPanel.add(new JLabel(User.getUser().isSender(message) ?
+                        "Moi" :
+                        message.getSrc().getFirstname() + " " + message.getSrc().getLastname()));
+                panel.add(infoPanel, BorderLayout.WEST);
+                content.setBorder(new EmptyBorder(0, 10, 0, 10));
+                c.anchor = GridBagConstraints.WEST;
+
+                Color fond = User.getUser().isSender(message) ?
+                        new Color(200, 200, 200) :
+                        new Color(240, 240, 240);
+                panel.setBackground(fond);
+                infoPanel.setBackground(fond);
+
+                messagePanel.add(panel, c);
+                c.gridy++;
             }
+            add(scrollPane, BorderLayout.CENTER);
+            setVerticalScrollBarMax();
         } else {
             messagePanel.setLayout(new GridBagLayout());
             messagePanel.add(new JLabel("<html><div style=\"text-align:center;\">" +
                     "<h2><strong>Aucun message</strong></h2>" +
                     "<p>Envoyez en un premier !</p></div></html>"));
+            add(messagePanel, BorderLayout.CENTER);
         }
-        add(messagePanel, BorderLayout.CENTER);
     }
 
     /**
@@ -190,38 +190,19 @@ public class MessagePanel extends DrawPanel {
         return idProject;
     }
 
-    /**
-     * Modifie le début de la liste
-     *
-     * @param debutListe : Le début de la liste
-     */
-    public void setDebutListe(int debutListe) {
-        this.debutListe = Math.max(0, Math.min(debutListe, messageList.size() - nbMessageMax));
-        redraw();
-    }
-
-    public void setDebutListeMax() {
-        setDebutListe(messageList.size());
-    }
-
-    /**
-     * Renvoie le début de la liste
-     *
-     * @return int
-     */
-    public int getDebutListe() {
-        return debutListe;
+    public void setVerticalScrollBarMax() {
+        if (scrollPane != null) {
+            scrollPane.getVerticalScrollBar().setValue(scrollPane.getVerticalScrollBar().getMaximum());
+        }
     }
 
     /**
      * Rafraichi la liste des messages
-     * Redessine le panel si liste différente
+     * Redessine le panel
      */
     public void refresh() {
         messageList = (MessageList) cBuilder.startNow().sleepUntilFinished().build().getResult();
-        if (debutListe == -1 && messageList != null) {
-            setDebutListeMax();
-        }
         redraw();
+        setVerticalScrollBarMax();
     }
 }

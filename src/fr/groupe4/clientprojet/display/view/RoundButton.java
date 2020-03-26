@@ -57,7 +57,7 @@ public class RoundButton extends JButton {
      * @param b : sélectionné ?
      */
     public void setSelected(boolean b) {
-        this.selected = b;
+        selected = b;
         repaint();
     }
 
@@ -78,7 +78,6 @@ public class RoundButton extends JButton {
         }
         if (image != null) {
             g2.drawImage(image, x, 0, taille, taille, this); // Le 13/28 et 5/28 est trouvé par tâtonnement
-            //g2.drawImage(image, (int)((13.0/28.0)*taille), (int)((5.0/28.0)*taille), 2*(taille/3), 2*(taille/3), this); // Le 13/28 et 5/28 est trouvé par tâtonnement
         } else {
             super.paintComponent(g);
             g2.setColor(Color.BLACK);

@@ -37,7 +37,8 @@ public class LoadCanvas extends Canvas {
         int y = - (width /2);
         g2.rotate(Math.toRadians(angle));
         try {
-            g2.drawImage(ImageIO.read(new File(Location.getPath() + "/data/img/loading.png")), x, y, width, width, this);
+            g2.drawImage(ImageIO.read(new File(Location.getPath() + "/data/img/loading.png")),
+                    x, y, width, width, this);
         } catch (IOException e) {
             e.printStackTrace();
         }

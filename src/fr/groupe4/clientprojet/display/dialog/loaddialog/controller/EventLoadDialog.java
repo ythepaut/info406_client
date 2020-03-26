@@ -1,6 +1,5 @@
 package fr.groupe4.clientprojet.display.dialog.loaddialog.controller;
 
-import fr.groupe4.clientprojet.communication.Communication;
 import fr.groupe4.clientprojet.communication.enums.CommunicationPropertyName;
 import fr.groupe4.clientprojet.display.dialog.loaddialog.view.LoadDialog;
 

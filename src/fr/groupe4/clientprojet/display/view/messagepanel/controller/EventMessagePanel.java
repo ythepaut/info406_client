@@ -10,7 +10,7 @@ import java.awt.event.*;
 /**
  * Le listener de la messagerie
  */
-public class EventMessagePanel extends KeyAdapter implements ActionListener, MouseWheelListener {
+public class EventMessagePanel extends KeyAdapter implements ActionListener {
     /**
      * Le MessagePanel qui appelle les events
      */
@@ -49,11 +49,6 @@ public class EventMessagePanel extends KeyAdapter implements ActionListener, Mou
         }
     }
 
-    @Override
-    public void mouseWheelMoved(MouseWheelEvent e) {
-        source.setDebutListe(source.getDebutListe() + e.getWheelRotation());
-    }
-
     /**
      * Envoie un message
      */
@@ -70,7 +65,6 @@ public class EventMessagePanel extends KeyAdapter implements ActionListener, Mou
                     build();
             source.refresh();
         }
-        source.setDebutListeMax();
         source.resetMessage();
     }
 }

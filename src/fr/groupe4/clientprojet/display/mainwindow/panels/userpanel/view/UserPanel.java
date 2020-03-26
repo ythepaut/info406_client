@@ -3,6 +3,7 @@ package fr.groupe4.clientprojet.display.mainwindow.panels.userpanel.view;
 import fr.groupe4.clientprojet.communication.Communication;
 import fr.groupe4.clientprojet.display.mainwindow.panels.userpanel.controller.EventUserPanel;
 import fr.groupe4.clientprojet.display.mainwindow.panels.userpanel.enums.UserChoice;
+import fr.groupe4.clientprojet.display.view.RoundButton;
 import fr.groupe4.clientprojet.display.view.draw.DrawPanel;
 import fr.groupe4.clientprojet.model.resource.human.User;
 import fr.groupe4.clientprojet.utils.Location;
@@ -12,6 +13,7 @@ import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.MatteBorder;
 import java.awt.*;
+import java.io.File;
 
 /**
  * Le panel pour l'utilisateur
@@ -55,12 +57,15 @@ public class UserPanel extends DrawPanel {
         JPanel descripPanel = new JPanel(new GridLayout(1, 2));
         descripPanel.add(new JLabel(new ImageIcon(Location.getImgDataPath() + "/user.png")));
         JPanel namePanel = new JPanel(new GridLayout(2, 1));
-        namePanel.add(new JLabel("<html><h1 style='font-size:2em;'>" + user.getFirstname() + "<br/>" + user.getLastname() + "</h1></html>"));
-        namePanel.add(new JLabel("<html><p style='text-align:justify;'><em>" + user.getDescription() + "</em></p></html>"));
+        namePanel.add(new JLabel("<html><h1 style='font-size:2em;'>" +
+                user.getFirstname() + "<br/>" +
+                user.getLastname() + "</h1></html>"));
+        namePanel.add(new JLabel("<html><p style='text-align:justify;'><em>" +
+                user.getDescription() + "</em></p></html>"));
         descripPanel.add(namePanel);
-        descripPanel.setBorder(new CompoundBorder(new MatteBorder(0, 0, 0, 2, Color.BLACK), new EmptyBorder(0, 0, 0, 20)));
+        descripPanel.setBorder(new CompoundBorder(new MatteBorder(0, 0, 0, 2, Color.BLACK),
+                new EmptyBorder(0, 0, 0, 20)));
         topPanel.add(descripPanel);
-
 
         JPanel rightPanel = new JPanel(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
@@ -72,7 +77,8 @@ public class UserPanel extends DrawPanel {
         passwordButton.setActionCommand(UserChoice.PASSWORD.getName());
         passwordButton.addActionListener(eventUserPanel);
         passwordPanel.add(passwordButton, BorderLayout.SOUTH);
-        c.gridx = c.gridy = 0;
+        c.gridx = 0;
+        c.gridy = 0;
         rightPanel.add(passwordPanel, c);
 
         JPanel mailPanel = new JPanel(new BorderLayout());
@@ -83,8 +89,20 @@ public class UserPanel extends DrawPanel {
         mailButton.setActionCommand(UserChoice.MAIL.getName());
         mailButton.addActionListener(eventUserPanel);
         mailPanel.add(mailButton, BorderLayout.SOUTH);
-        c.gridy = 1;
+        c.gridy++;
         rightPanel.add(mailPanel, c);
+
+        JPanel settingsPanel = new JPanel(new GridLayout(1, 1));
+        settingsPanel.setBorder(new EmptyBorder(0, 50, 0, 0));
+        RoundButton settingsButton = new RoundButton(new File(Location.getImgDataPath() + "/settings.png"));
+        settingsButton.setActionCommand(UserChoice.SETTINGS.getName());
+        settingsButton.addActionListener(eventUserPanel);
+        settingsPanel.add(settingsButton);
+
+        c.gridy = 0;
+        c.gridx = 1;
+        c.gridheight = 2;
+        rightPanel.add(settingsPanel, c);
         topPanel.add(rightPanel);
 
         add(topPanel);

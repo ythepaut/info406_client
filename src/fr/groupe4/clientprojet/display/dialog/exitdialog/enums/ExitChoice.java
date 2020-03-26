@@ -27,7 +27,7 @@ public enum ExitChoice {
      * @return : le nom du choix
      */
     public String getName() {
-        return this.name;
+        return name;
     }
 
     /**

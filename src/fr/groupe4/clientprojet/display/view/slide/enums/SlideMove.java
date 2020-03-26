@@ -27,30 +27,6 @@ public enum SlideMove {
      * @return : le nom
      */
     public String getName() {
-        return this.name;
-    }
-
-    /**
-     * Renvoie l'enum correspondant au nom
-     *
-     * @param name : le nom
-     * @return : l'enum
-     */
-    public static SlideMove getEnum(String name) {
-        SlideMove res = null;
-
-        switch (name) {
-            case "left":
-                res = LEFT;
-                break;
-
-            case "right":
-                res = RIGHT;
-                break;
-
-            default:
-        }
-
-        return res;
+        return name;
     }
 }

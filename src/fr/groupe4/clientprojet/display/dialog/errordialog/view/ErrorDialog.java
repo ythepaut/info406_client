@@ -9,53 +9,53 @@ import java.awt.*;
 
 public class ErrorDialog extends DrawDialog {
     private String message;
+    private Color color;
+
     private EventErrorDialog eventErrorDialog;
     private KeyEventErrorDialog keyEventErrorDialog;
 
-    private Color color;
-
-    public ErrorDialog(String message) {
-        this(message, "ERREUR");
-    }
-
-    public ErrorDialog(String message, String title) {
-        this(message, title, Color.RED);
-    }
 
     public ErrorDialog(String message, String title, Color color) {
         this.message = message;
+        setTitle(title);
         this.color = color;
 
         setModal(true);
-        eventErrorDialog = new EventErrorDialog(this);
-        keyEventErrorDialog = new KeyEventErrorDialog(this);
         setSize(510, 80);
+        setResizable(false);
+        eventErrorDialog = new EventErrorDialog(this);
+        addWindowListener(eventErrorDialog);
+        keyEventErrorDialog = new KeyEventErrorDialog(this);
+        addKeyListener(keyEventErrorDialog);
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
         setLocation(dim.width/2 - getWidth()/2, dim.height/2 - getHeight()/2);
         setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-        setResizable(false);
-        addWindowListener(eventErrorDialog);
-        addKeyListener(keyEventErrorDialog);
-        setTitle(title);
 
         drawContent();
 
         setVisible(true);
     }
 
+    public ErrorDialog(String message) {
+        this(message, "ERREUR", Color.RED);
+    }
+
     @Override
     protected void drawContent() {
         setLayout(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
-        c.gridx = c.gridy = 0;
+        c.gridx = 0;
+        c.gridy = 0;
+
         JLabel errorLabel = new JLabel(message);
         errorLabel.setForeground(color);
         errorLabel.setFont(new Font(Font.MONOSPACED, Font.BOLD, 16));
         add(errorLabel, c);
+
         JButton closeButton = new JButton("Fermer");
         closeButton.addActionListener(eventErrorDialog);
         closeButton.addKeyListener(keyEventErrorDialog);
-        c.gridy = 1;
+        c.gridy++;
         add(closeButton, c);
     }
 }
