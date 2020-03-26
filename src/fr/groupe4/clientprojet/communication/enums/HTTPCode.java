@@ -6,16 +6,17 @@ import fr.groupe4.clientprojet.logger.enums.LoggerOption;
 /**
  * Codes réponse HTML
  */
-public enum HTMLCode {
-    HTML_CUSTOM_DEFAULT_ERROR(-1),
-    HTML_CUSTOM_TIMEOUT(-2),
-    HTML_CUSTOM_CANCEL(-3),
-    HTML_OK(200),
-    HTML_BAD_REQUEST(400),
-    HTML_UNAUTHORIZED(401),
-    HTML_FORBIDDEN(403),
-    HTML_NOT_FOUND(404),
-    HTML_TIMEOUT(408);
+public enum HTTPCode {
+    HTTP_CUSTOM_DEFAULT_ERROR(-1),
+    HTTP_CUSTOM_TIMEOUT(-2),
+    HTTP_CUSTOM_CANCEL(-3),
+    HTTP_OK(200),
+    HTTP_BAD_REQUEST(400),
+    HTTP_UNAUTHORIZED(401),
+    HTTP_FORBIDDEN(403),
+    HTTP_NOT_FOUND(404),
+    HTTP_TIMEOUT(408),
+    HTTP_TOO_MANY_REQUESTS(429);
 
     /**
      * Équivalent entier
@@ -27,7 +28,7 @@ public enum HTMLCode {
      *
      * @param code Code associé
      */
-    HTMLCode(int code) {
+    HTTPCode(int code) {
         this.code = code;
     }
 
@@ -46,12 +47,12 @@ public enum HTMLCode {
      * @param code Code
      * @return Énum
      */
-    public static HTMLCode fromInt(int code) throws IllegalArgumentException {
-        HTMLCode[] vars = HTMLCode.values();
+    public static HTTPCode fromInt(int code) throws IllegalArgumentException {
+        HTTPCode[] vars = HTTPCode.values();
 
-        HTMLCode result = null;
+        HTTPCode result = null;
 
-        for (HTMLCode var : vars) {
+        for (HTTPCode var : vars) {
             if (var.code == code) {
                 result = var;
             }

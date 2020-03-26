@@ -49,19 +49,19 @@ public class EventProjectCreation implements ActionListener {
 
             new LoadDialog(c);
 
-            switch (c.getHtmlCode()) {
-                case HTML_FORBIDDEN:
+            switch (c.getHTTPCode()) {
+                case HTTP_FORBIDDEN:
                     // Pas les permissions de créer un projet
                     new ErrorDialog("Vous n'avez pas les permissions nécessaires");
                     break;
 
-                case HTML_OK:
+                case HTTP_OK:
                     // Projet créé
                     new ErrorDialog("Projet créé", "SUCCESS", new Color(0, 127, 0));
                     source.dispose();
                     break;
 
-                case HTML_BAD_REQUEST:
+                case HTTP_BAD_REQUEST:
                     new ErrorDialog("Un projet avec ce nom existe déjà");
                     break;
 
