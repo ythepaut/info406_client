@@ -78,11 +78,10 @@ public class LeftPanel extends DrawPanel {
         Font buttonFont = new Font("Arial", Font.PLAIN, TAILLE_BOUTONS);
         GridBagConstraints c = new GridBagConstraints();
         c.gridx = 0;
-        c.insets = new Insets(25, 0, 25, 0);
+        c.insets = new Insets(15, 0, 15, 0);
 
         // Boutons projets
         drawProjectButton(eventLeftPanel, buttonFont);
-        c.insets = new Insets(25, 0, 25, 0);
 
 
         // Boutons du bas (calendrier, profil)
@@ -127,7 +126,12 @@ public class LeftPanel extends DrawPanel {
      * @param buttonFont : la police des boutons
      */
     private void drawProjectButton(EventLeftPanel eventLeftPanel, Font buttonFont) {
-        JPanel projectPanel = new JPanel(new GridLayout(projectList.size(), 1));
+        //JPanel projectPanel = new JPanel(new GridLayout(projectList.size(), 1));
+        JPanel projectPanel = new JPanel(new GridBagLayout());
+        GridBagConstraints c = new GridBagConstraints();
+        c.gridx = 0;
+        c.gridy = 0;
+        c.insets = new Insets(5, 0, 5, 0);
         projectPanel.setBackground(Color.WHITE);
         JScrollPane scrollPane = new JScrollPane(projectPanel);
         scrollPane.getVerticalScrollBar().setUI(new ScrollBarUI());
@@ -142,7 +146,8 @@ public class LeftPanel extends DrawPanel {
             button.setActionCommand(name);
             button.addActionListener(eventLeftPanel);
             button.setFont(buttonFont);
-            projectPanel.add(button);
+            projectPanel.add(button, c);
+            c.gridy++;
             buttons.add(button);
         }
 
