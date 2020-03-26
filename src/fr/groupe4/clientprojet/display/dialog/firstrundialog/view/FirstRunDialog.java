@@ -2,6 +2,7 @@ package fr.groupe4.clientprojet.display.dialog.firstrundialog.view;
 
 import fr.groupe4.clientprojet.display.dialog.firstrundialog.controller.EventFirstRunDialog;
 import fr.groupe4.clientprojet.display.view.draw.DrawDialog;
+import fr.groupe4.clientprojet.model.parameters.Parameters;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -35,7 +36,7 @@ public class FirstRunDialog extends DrawDialog {
         JPanel fieldPanel = new JPanel(new BorderLayout());
         fieldPanel.setBorder(new EmptyBorder(130, 20, 150, 20));
         fieldPanel.add(new JLabel("Saisissez l'url du serveur :"));
-        urlField = new JTextField();
+        urlField = new JTextField(Parameters.getServerUrl());
         fieldPanel.add(urlField, BorderLayout.SOUTH);
 
         add(fieldPanel, BorderLayout.CENTER);
