@@ -90,6 +90,7 @@ public class LeftPanel extends DrawPanel {
                 new MatteBorder(3, 0, 0, 0, Color.BLACK)));
         bottomPanel.setBackground(Color.WHITE);
 
+
         c.gridy = 0;
         RoundButton button = new RoundButton(new File(Location.getImgDataPath() + "/plus.png"));
         buttons.add(button);

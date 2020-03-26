@@ -133,8 +133,6 @@ public class ProjectCreationDialog extends DrawDialog {
         };
 
         JDatePickerImpl datePicker = new JDatePickerImpl(datePanel,form);
-        // strdate = datePicker.getJFormattedTextField().getText();
-        // localDate = LocalDate.parse(strdate, formatter);
         c.gridy++;
         add(datePicker,c);
 

@@ -78,6 +78,19 @@ public class ProjectPanel extends DrawPanel {
         JPanel panel = new JPanel(new BorderLayout());
         panel.add(new JLabel("HOME"), BorderLayout.NORTH);
         panel.add(new JLabel(project.getDescription()), BorderLayout.CENTER);
+
+        //Ajout d'un panel d'ajout de ressources
+        JPanel ajoutRessource = new JPanel();
+        ajoutRessource.setBorder(BorderFactory.createEmptyBorder(10,10,20,10));
+        ajoutRessource.setLayout(new FlowLayout());
+        JButton bouttonAddRessourcesMateriel = new JButton("Ajouter une ressources matériels au projet");
+        JButton bouttonAddRessourcesHumaine = new JButton ("Ajouter un membre au projet");
+        ajoutRessource.add(bouttonAddRessourcesHumaine);
+        ajoutRessource.add(bouttonAddRessourcesMateriel);
+        panel.add(ajoutRessource,BorderLayout.SOUTH);
+
+
+
         // TODO : Construire panel accueil
         return panel;
     }
