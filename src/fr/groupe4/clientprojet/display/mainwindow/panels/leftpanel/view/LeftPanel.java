@@ -126,7 +126,6 @@ public class LeftPanel extends DrawPanel {
      * @param buttonFont : la police des boutons
      */
     private void drawProjectButton(EventLeftPanel eventLeftPanel, Font buttonFont) {
-        //JPanel projectPanel = new JPanel(new GridLayout(projectList.size(), 1));
         JPanel projectPanel = new JPanel(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
         c.gridx = 0;
@@ -139,6 +138,7 @@ public class LeftPanel extends DrawPanel {
         scrollPane.setBorder(null);
         scrollPane.setHorizontalScrollBar(null);
         scrollPane.getVerticalScrollBar().setUnitIncrement(10);
+        scrollPane.getVerticalScrollBar().setPreferredSize(new Dimension(0, 0));
 
         for (Project p: projectList) {
             String name = p.getName();
