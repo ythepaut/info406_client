@@ -48,7 +48,7 @@ public class ProjectCreationDialog extends DrawDialog {
      * @param owner
      */
     public ProjectCreationDialog(JFrame owner) {
-        setTitle("Fenetre de création de Projet");
+        setTitle("Fenêtre de création de Projet");
         this.owner = owner;
         setModal(true);
 
