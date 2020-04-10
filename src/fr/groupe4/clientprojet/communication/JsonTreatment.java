@@ -2,12 +2,11 @@ package fr.groupe4.clientprojet.communication;
 
 import fr.groupe4.clientprojet.model.task.Task;
 import fr.groupe4.clientprojet.model.task.TaskList;
-import org.jetbrains.annotations.NotNull;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import fr.groupe4.clientprojet.communication.enums.CommunicationStatus;
-import fr.groupe4.clientprojet.communication.enums.HTMLCode;
+import fr.groupe4.clientprojet.communication.enums.HTTPCode;
 import fr.groupe4.clientprojet.logger.Logger;
 import fr.groupe4.clientprojet.model.message.Message;
 import fr.groupe4.clientprojet.model.message.MessageList;
@@ -121,14 +120,14 @@ final class JsonTreatment {
      * @param jsonObject Contenu à traiter
      */
     private static void updateConnection(Communication comm, Object jsonObject) {
-        if (comm.htmlCode == HTMLCode.HTML_OK) {
+        if (comm.HTTPCode == HTTPCode.HTTP_OK) {
             JSONObject jsonContent = (JSONObject) jsonObject;
 
             JSONObject jsonTokenContent = (JSONObject) jsonContent.get("requests-token");
 
             Communication.setRequestToken(singleton, (String) jsonTokenContent.get("value"));
         }
-        else if (comm.htmlCode == HTMLCode.HTML_FORBIDDEN) {
+        else if (comm.HTTPCode == HTTPCode.HTTP_FORBIDDEN) {
             Logger.error("Update interdite !?");
         }
         else {
@@ -196,7 +195,7 @@ final class JsonTreatment {
      * @param jsonObject Contenu à traiter
      */
     private static void getUserInfos(Communication comm, Object jsonObject) {
-        if (comm.htmlCode == HTMLCode.HTML_OK) {
+        if (comm.HTTPCode == HTTPCode.HTTP_OK) {
             JSONObject jsonContent = (JSONObject) jsonObject;
             JSONObject jsonDataContent = (JSONObject) jsonContent.get("data");
             JSONObject jsonControlContent = (JSONObject) jsonDataContent.get("control");

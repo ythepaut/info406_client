@@ -108,8 +108,10 @@ public class MessagePanel extends DrawPanel {
             scrollPane.setBackground(Color.WHITE);
             scrollPane.setBorder(null);
             scrollPane.getVerticalScrollBar().setUI(new ScrollBarUI());
-            scrollPane.getHorizontalScrollBar().setUI(new ScrollBarUI());
             scrollPane.getVerticalScrollBar().setUnitIncrement(10);
+            scrollPane.getVerticalScrollBar().setPreferredSize(new Dimension(10, 0));
+            scrollPane.getHorizontalScrollBar().setUI(new ScrollBarUI());
+            scrollPane.getHorizontalScrollBar().setPreferredSize(new Dimension(0, 0));
 
             for (Message message: messageList) {
                 JPanel panel = new JPanel(new BorderLayout());

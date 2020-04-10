@@ -1,13 +1,14 @@
-package fr.groupe4.clientprojet.display.dialog.projectcreationdialog.controller;
+package fr.groupe4.clientprojet.display.dialog.taskcreationdialog.controller;
 
 import fr.groupe4.clientprojet.communication.Communication;
 import fr.groupe4.clientprojet.display.dialog.errordialog.view.ErrorDialog;
 import fr.groupe4.clientprojet.display.dialog.loaddialog.view.LoadDialog;
 import fr.groupe4.clientprojet.display.dialog.projectcreationdialog.view.ProjectCreationDialog;
+import fr.groupe4.clientprojet.display.dialog.taskcreationdialog.view.TaskCreationDialog;
 import fr.groupe4.clientprojet.logger.Logger;
 import fr.groupe4.clientprojet.model.project.enums.ProjectStatus;
-
-import org.jdatepicker.impl.*;
+import fr.groupe4.clientprojet.model.task.enums.TaskStatus;
+import org.jdatepicker.impl.UtilDateModel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -17,23 +18,25 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
 
-public class EventProjectCreation implements ActionListener {
-    private ProjectCreationDialog source;
+public class EventTaskCreation implements ActionListener {
+    private TaskCreationDialog parent;
     private UtilDateModel dateModel;
-    private JTextField nomTextField;
+    private JTextField nameTextField;
     private JTextArea descriptionTextArea;
+    private long projectId;
 
-    public EventProjectCreation(ProjectCreationDialog source, UtilDateModel dateModel, JTextField nomTextField, JTextArea descriptionTextArea) {
-        this.source = source;
+    public EventTaskCreation(TaskCreationDialog parent, UtilDateModel dateModel, JTextField nameTextField, JTextArea descriptionTextArea, long projectId) {
+        this.parent = parent;
         this.dateModel = dateModel;
-        this.nomTextField = nomTextField;
+        this.nameTextField = nameTextField;
         this.descriptionTextArea = descriptionTextArea;
+        this.projectId = projectId;
     }
 
     @Override
-    public void actionPerformed(ActionEvent actionEvent) {
+    public void actionPerformed(ActionEvent e) {
         Date date = dateModel.getValue();
-        String nom = nomTextField.getText();
+        String nom = nameTextField.getText();
         String description = descriptionTextArea.getText();
 
         LocalDate deadline = null;
@@ -44,7 +47,7 @@ public class EventProjectCreation implements ActionListener {
 
         if (!nom.isBlank() && nom.length() >= 3 && nom.length() < 255) {
             Communication c = Communication.builder()
-                    .createProject(nom, description, deadline, ProjectStatus.ONGOING)
+                    .createTask(nom, description, TaskStatus.ONGOING, deadline, projectId)
                     .build();
 
             new LoadDialog(c);
@@ -57,12 +60,12 @@ public class EventProjectCreation implements ActionListener {
 
                 case HTTP_OK:
                     // Projet créé
-                    new ErrorDialog("Projet créé", "SUCCESS", new Color(0, 127, 0));
-                    source.dispose();
+                    new ErrorDialog("Tâche créée", "SUCCESS", new Color(0, 127, 0));
+                    parent.dispose();
                     break;
 
                 case HTTP_BAD_REQUEST:
-                    new ErrorDialog("Un projet avec ce nom existe déjà");
+                    new ErrorDialog("Une tâche avec ce nom existe déjà");
                     break;
 
                 default:
@@ -72,7 +75,7 @@ public class EventProjectCreation implements ActionListener {
         }
         else {
             // Si le nom n'est pas conforme
-            new ErrorDialog("Nom de projet invalide");
+            new ErrorDialog("Nom de tâche invalide");
         }
     }
 }
