@@ -1,6 +1,8 @@
 package fr.groupe4.clientprojet.display.mainwindow.panels.projectpanel.view;
 
 import fr.groupe4.clientprojet.communication.Communication;
+import fr.groupe4.clientprojet.display.mainwindow.panels.leftpanel.controller.EventLeftPanel;
+import fr.groupe4.clientprojet.display.mainwindow.panels.projectpanel.controller.EventProjectPanel;
 import fr.groupe4.clientprojet.display.mainwindow.panels.projectpanel.controller.NewTaskListener;
 import fr.groupe4.clientprojet.display.mainwindow.panels.projectpanel.controller.RightClicMenuProjectListener;
 import fr.groupe4.clientprojet.display.view.draw.DrawPanel;
@@ -12,6 +14,9 @@ import fr.groupe4.clientprojet.model.task.TaskList;
 
 import javax.swing.*;
 import java.awt.*;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.time.LocalDateTime;
 
 /**
@@ -86,6 +91,7 @@ public class ProjectPanel extends DrawPanel {
      * @return : le jpanel
      */
     private JPanel homePanel() {
+        EventProjectPanel eventProjectPanel = new EventProjectPanel(this);
         JPanel panel = new JPanel(new BorderLayout());
         panel.add(new JLabel("HOME"), BorderLayout.NORTH);
         panel.add(new JLabel(project.getDescription()), BorderLayout.CENTER);
@@ -101,6 +107,15 @@ public class ProjectPanel extends DrawPanel {
         panel.add(ajoutRessource,BorderLayout.SOUTH);
 
         importantComponent = panel;
+
+        //Création du controller de ressources humaines
+        bouttonAddRessourcesHumaine.setActionCommand(EventProjectPanel.NEWUSERS);
+        bouttonAddRessourcesHumaine.addActionListener(eventProjectPanel);
+
+        //Création du controller de ressources matériels
+        bouttonAddRessourcesMateriel.setActionCommand(EventProjectPanel.NEWMAT);
+        bouttonAddRessourcesMateriel.addActionListener(eventProjectPanel);
+
 
         // TODO : Construire panel accueil
         return panel;
