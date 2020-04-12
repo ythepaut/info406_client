@@ -25,8 +25,6 @@ public class MainWindow extends JFrame {
      * @param title : titre de la fenêtre
      */
     public MainWindow(String title) {
-        EventMainWindow eventMainWindow = new EventMainWindow(this);
-
         // Définition de la fenêtre
         setTitle(title);
         try {
@@ -38,8 +36,7 @@ public class MainWindow extends JFrame {
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
         setLocation(dim.width/2 - getWidth()/2, dim.height/2 - getHeight()/2);
         setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-
-        addWindowListener(eventMainWindow);
+        addWindowListener(new EventMainWindow(this));
 
         drawContent();
 
