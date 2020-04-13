@@ -1,17 +1,14 @@
 package fr.groupe4.clientprojet.model.resource.human;
 
+import fr.groupe4.clientprojet.model.resource.Resource;
+import fr.groupe4.clientprojet.model.resource.ResourceType;
 import fr.groupe4.clientprojet.model.resource.human.enums.HumanRole;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * Ressource humaine
  */
-public class HumanResource {
-    /**
-     * Id de la ressource
-     */
-    private long resourceId;
-
+public class HumanResource extends Resource {
     /**
      * Prénom
      */
@@ -53,7 +50,8 @@ public class HumanResource {
      * @param description Description
      */
     public HumanResource(long resourceId, @NotNull String firstname, @NotNull String lastname, @NotNull String job, @NotNull String role, @NotNull String description) {
-        this.resourceId = resourceId;
+        super(ResourceType.HUMAN_RESOURCE, resourceId);
+
         this.firstname = firstname;
         this.lastname = lastname;
         this.job = job;
@@ -62,21 +60,10 @@ public class HumanResource {
     }
 
     /**
-     * Constructeur, permet de copier une ressource humaine
-     *
-     * @param resource Ressource à copier
+     * Permet de copier une ressource humaine
      */
-    public HumanResource(HumanResource resource) {
-        resourceId = resource.resourceId;
-        firstname = resource.firstname;
-        lastname = resource.lastname;
-        job = resource.job;
-        role = resource.role;
-        description = resource.description;
-    }
-
-    public long getResourceId() {
-        return resourceId;
+    public HumanResource(HumanResource toCopy) {
+        this(toCopy.getResourceId(), toCopy.firstname, toCopy.lastname, toCopy.job, toCopy.role.toString(), toCopy.description);
     }
 
     public String getFirstname() {
