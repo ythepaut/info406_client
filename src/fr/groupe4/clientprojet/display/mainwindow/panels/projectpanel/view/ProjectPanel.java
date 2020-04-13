@@ -100,8 +100,8 @@ public class ProjectPanel extends DrawPanel {
         JPanel ajoutRessource = new JPanel();
         ajoutRessource.setBorder(BorderFactory.createEmptyBorder(10,10,20,10));
         ajoutRessource.setLayout(new FlowLayout());
-        JButton bouttonAddRessourcesMateriel = new JButton("Ajouter une ressources matériels au projet");
-        JButton bouttonAddRessourcesHumaine = new JButton ("Ajouter un membre au projet");
+        JButton bouttonAddRessourcesMateriel = new JButton("Gérer les ressources matériels du projet");
+        JButton bouttonAddRessourcesHumaine = new JButton ("Gérer les utilisateurs du projet");
         ajoutRessource.add(bouttonAddRessourcesHumaine);
         ajoutRessource.add(bouttonAddRessourcesMateriel);
         panel.add(ajoutRessource,BorderLayout.SOUTH);
