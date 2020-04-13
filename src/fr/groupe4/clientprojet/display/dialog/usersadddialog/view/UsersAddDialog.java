@@ -1,12 +1,18 @@
 package fr.groupe4.clientprojet.display.dialog.usersadddialog.view;
 
+import fr.groupe4.clientprojet.communication.Communication;
 import fr.groupe4.clientprojet.display.dialog.usersadddialog.controller.EventChoixUser;
+import fr.groupe4.clientprojet.display.dialog.usersadddialog.controller.EventExitGestionUsers;
+import fr.groupe4.clientprojet.display.dialog.usersadddialog.controller.EventGestionUsersConfirm;
 import fr.groupe4.clientprojet.display.mainwindow.panels.projectpanel.view.ProjectPanel;
 import fr.groupe4.clientprojet.display.view.draw.DrawDialog;
 import fr.groupe4.clientprojet.model.resource.human.HumanResource;
+import fr.groupe4.clientprojet.model.resource.human.HumanResourceList;
 
 import javax.swing.*;
+import javax.swing.border.MatteBorder;
 import java.awt.*;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 public class UsersAddDialog extends DrawDialog {
@@ -46,9 +52,8 @@ public class UsersAddDialog extends DrawDialog {
         setSize(350, 400);
         setResizable(false);
 
-        //Enlever les deux // pour faire une belle fenêtre sans la croix (bordure noire autour)
-     //   setUndecorated(true);
-     //   rootPane.setBorder(new MatteBorder(2, 2, 2, 2, Color.BLACK));
+        setUndecorated(true);
+        rootPane.setBorder(new MatteBorder(2, 2, 2, 2, Color.BLACK));
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
         setLocation(dim.width / 2 - getWidth() / 2, dim.height / 2 - getHeight() / 2);
 
@@ -62,13 +67,9 @@ public class UsersAddDialog extends DrawDialog {
         c.gridheight = 1;
         c.insets = new Insets(5,5,5,5);
 
-
-        ArrayList<HumanResource> tousLesUtilisateurs = new ArrayList<>();
-        tousLesUtilisateurs.add(new HumanResource(1, "prénom1", "nom1", "Job1", "RESOURCE_MANAGER", "description1"));
-        tousLesUtilisateurs.add(new HumanResource(2, "prénom2", "nom2", "Job2", "COLLABORATOR", "description2"));
-        tousLesUtilisateurs.add(new HumanResource(3, "prénom3", "nom3", "Job3", "PROJECT_LEADER", "description3"));
-        int taillehumanressource = tousLesUtilisateurs.size();
-
+        //Récupération de la liste des utilisateurs
+        Communication com = Communication.builder().getHumanResourceList().startNow().sleepUntilFinished().build();
+        HumanResourceList listeusers = (HumanResourceList) com.getResult();
 
         /**
          * Création du menu d'ajout d'utilisateurs
@@ -76,14 +77,15 @@ public class UsersAddDialog extends DrawDialog {
         JMenuBar barmenuajout = new JMenuBar();
         JMenu menuajout = new JMenu("Ajouter un ou plusieurs utilisateurs");
         barmenuajout.add(menuajout);
-
-        ArrayList<Boolean> userchoisis = new ArrayList<>(taillehumanressource);
+        int taillehumanressource = listeusers.size();
+        Boolean userchoisis[] = new Boolean[taillehumanressource];
         for (i = 0; i<taillehumanressource; i++){
-            HumanResource usercourant = tousLesUtilisateurs.get(i);
+            HumanResource usercourant = listeusers.get(i);
             String prenomuser = usercourant.getFirstname();
             String nomuser = usercourant.getLastname();
             JCheckBoxMenuItem user = new JCheckBoxMenuItem(prenomuser + " " + nomuser);
-            user.addItemListener(new EventChoixUser(this, usercourant, userchoisis));
+            userchoisis[i] = false;
+            user.addItemListener(new EventChoixUser(this, usercourant, userchoisis, i));
             menuajout.add(user);
         }
         add(barmenuajout,c);
@@ -114,11 +116,10 @@ public class UsersAddDialog extends DrawDialog {
         c.gridy++;
         JButton ajouterusers = new JButton("Ajouter les utilisateurs");
         add(ajouterusers,c);
-        //Donnez userschoisis en paramétre : Tableau de booléan qui dit quels users sont selectionnés
-     //   ajouterusers.addActionListener(new ());
+        ajouterusers.addActionListener(new EventGestionUsersConfirm(this, userchoisis));
         c.gridx++;
         JButton cancelButton = new JButton("Annuler l'ajout");
         add(cancelButton,c);
-     //   cancelButton.addActionListener(new ());
+        cancelButton.addActionListener(new EventExitGestionUsers(this));
     }
 }

@@ -9,26 +9,40 @@ import java.util.ArrayList;
 
 public class EventChoixUser implements ItemListener {
 
+    /**
+     * Attributs necessaire au controller
+     */
     UsersAddDialog source;
     HumanResource usercourant;
-    ArrayList<Boolean> userchoisis;
+    Boolean[] userchoisis;
+    long iduser;
+    int idarraylist;
 
-    public EventChoixUser(UsersAddDialog source, HumanResource usercourant, ArrayList<Boolean> userchoisis) {
+    /**
+     * Constructeur
+     * @param source
+     * @param usercourant
+     * @param userchoisis
+     */
+    public EventChoixUser(UsersAddDialog source, HumanResource usercourant, Boolean[] userchoisis, int idarraylist) {
         this.source = source;
         this.usercourant = usercourant;
         this.userchoisis = userchoisis;
+        this.idarraylist = idarraylist;
     }
 
 
     @Override
     public void itemStateChanged(ItemEvent itemEvent) {
-        itemEvent.getItemSelectable();
+
         if (itemEvent.getStateChange () == ItemEvent.SELECTED){
             System.out.println(usercourant.getFirstname() + " " +
                     usercourant.getLastname() + " selectionné !");
+            userchoisis[idarraylist] = true;
         } else {
             System.out.println(usercourant.getFirstname() + " " +
                     usercourant.getLastname() + " déselectionné !");
+            userchoisis[idarraylist] = false;
         }
     }
 }
