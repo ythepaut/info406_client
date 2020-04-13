@@ -60,6 +60,8 @@ final class JsonTreatment {
             case LIST_PROJECTS:
                 listProjects(comm, jsonObject);
                 break;
+            case ADD_RESOURCE_TO_PROJECT:
+                break;
 
             case GET_USER_INFOS:
                 getUserInfos(comm, jsonObject);
