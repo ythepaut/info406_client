@@ -32,7 +32,7 @@ public class EventProjectPanel implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (NEWUSERS.equals(e.getActionCommand())) {
-            new UsersAddDialog(source);
+          new UsersAddDialog(source);
         } else {
             new MatAddDialog(source);
         }

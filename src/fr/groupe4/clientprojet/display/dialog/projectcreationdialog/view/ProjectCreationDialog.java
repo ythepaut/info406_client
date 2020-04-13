@@ -1,6 +1,5 @@
 package fr.groupe4.clientprojet.display.dialog.projectcreationdialog.view;
 
-import fr.groupe4.clientprojet.display.dialog.exitdialog.controller.EventExitDialog;
 import fr.groupe4.clientprojet.display.dialog.projectcreationdialog.controller.EventExitCreationDialog;
 import fr.groupe4.clientprojet.display.dialog.projectcreationdialog.controller.EventProjectCreation;
 import fr.groupe4.clientprojet.display.view.draw.DrawDialog;

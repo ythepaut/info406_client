@@ -26,6 +26,6 @@ public class EventExitCreationDialog implements ActionListener {
         owner.dispose();
         //new ExitDialog(owner);
     }
-    
-    
+
+
 }
