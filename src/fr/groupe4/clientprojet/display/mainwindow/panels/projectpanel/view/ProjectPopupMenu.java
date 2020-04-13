@@ -4,11 +4,19 @@ import fr.groupe4.clientprojet.display.mainwindow.panels.projectpanel.controller
 
 import javax.swing.*;
 
+/**
+ * Menu contextuel de clic droit
+ */
 public class ProjectPopupMenu extends JPopupMenu {
-    public ProjectPopupMenu(JPanel p, JComponent importantComponent) {
+    /**
+     * Constructeur
+     *
+     * @param p Panel parent
+     */
+    public ProjectPopupMenu(JPanel p) {
         JMenuItem printPage = new JMenuItem("Impression");
 
-        printPage.addActionListener(new PrintProjectListener(importantComponent));
+        printPage.addActionListener(new PrintProjectListener(p));
 
         add(printPage);
     }
