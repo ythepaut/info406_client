@@ -19,7 +19,7 @@ public enum CommunicationType {
     CREATE_HUMAN_RESOURCE, // TODO
     GET_USER_INFOS("/auth/verify"),
     GET_HUMAN_RESOURCE("/resource/h/get"),
-    LIST_HUMAN_RESOURCE("/resource/h/list"), // TODO
+    LIST_HUMAN_RESOURCE("/resource/h/list"),
 
     CREATE_MATERIAL_RESOURCE, // TODO
     GET_MATERIAL_RESOURCE, // TODO

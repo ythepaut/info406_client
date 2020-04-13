@@ -4,6 +4,7 @@ import fr.groupe4.clientprojet.communication.Communication;
 import fr.groupe4.clientprojet.display.mainwindow.panels.leftpanel.controller.EventLeftPanel;
 import fr.groupe4.clientprojet.display.mainwindow.panels.projectpanel.controller.EventProjectPanel;
 import fr.groupe4.clientprojet.display.mainwindow.panels.projectpanel.controller.NewTaskListener;
+import fr.groupe4.clientprojet.display.mainwindow.panels.projectpanel.controller.RightClicMenuProjectListener;
 import fr.groupe4.clientprojet.display.view.draw.DrawPanel;
 import fr.groupe4.clientprojet.display.view.messagepanel.view.MessagePanel;
 import fr.groupe4.clientprojet.display.view.slide.view.Slide;
@@ -27,6 +28,8 @@ public class ProjectPanel extends DrawPanel {
      */
     private Project project;
 
+    private JComponent importantComponent;
+
     /**
      * Le constructeur
      *
@@ -44,7 +47,13 @@ public class ProjectPanel extends DrawPanel {
             }
         }
 
+        addMouseListener(new RightClicMenuProjectListener(this));
+
         drawContent();
+    }
+
+    public JComponent getImportantComponent() {
+        return importantComponent;
     }
 
     /**
@@ -96,6 +105,8 @@ public class ProjectPanel extends DrawPanel {
         ajoutRessource.add(bouttonAddRessourcesHumaine);
         ajoutRessource.add(bouttonAddRessourcesMateriel);
         panel.add(ajoutRessource,BorderLayout.SOUTH);
+
+        importantComponent = panel;
 
         //Création du controller de ressources humaines
         bouttonAddRessourcesHumaine.setActionCommand(EventProjectPanel.NEWUSERS);
@@ -162,6 +173,8 @@ public class ProjectPanel extends DrawPanel {
         superPanel.add(panel, BorderLayout.CENTER);
         superPanel.add(b, BorderLayout.SOUTH);
 
+        importantComponent = panel;
+
         return superPanel;
     }
 
@@ -173,6 +186,7 @@ public class ProjectPanel extends DrawPanel {
     private JPanel messagePanel() {
         MessagePanel m = new MessagePanel(Communication.builder().getProjectMessageList(0, project.getId()));
         m.setIdProject(project.getId());
+        importantComponent = m;
         return m;
     }
 }
