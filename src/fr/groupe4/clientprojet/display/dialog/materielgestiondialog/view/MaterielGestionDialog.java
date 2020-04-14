@@ -1,13 +1,12 @@
-package fr.groupe4.clientprojet.display.dialog.matadddialog.view;
+package fr.groupe4.clientprojet.display.dialog.materielgestiondialog.view;
 
 import fr.groupe4.clientprojet.display.mainwindow.panels.projectpanel.view.ProjectPanel;
 import fr.groupe4.clientprojet.display.view.draw.DrawDialog;
 
 import javax.swing.*;
-import javax.swing.border.MatteBorder;
 import java.awt.*;
 
-public class MatAddDialog extends DrawDialog {
+public class MaterielGestionDialog extends DrawDialog {
 
 
     /**
@@ -21,7 +20,7 @@ public class MatAddDialog extends DrawDialog {
      * Constructeur
      * @param owner
      */
-    public MatAddDialog(ProjectPanel owner) {
+    public MaterielGestionDialog(ProjectPanel owner) {
         c = new GridBagConstraints();
 
         setTitle("Fenetre de création de Projet");
@@ -48,9 +47,7 @@ public class MatAddDialog extends DrawDialog {
 
 
 
-        /**
-         * Déclaration du layout
-         */
+        //Déclaration du layout
         this.setLayout(new GridBagLayout());
         c.gridx = 0;
         c.gridy = 0;

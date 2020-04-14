@@ -1,6 +1,7 @@
 package fr.groupe4.clientprojet.model.resource.human;
 
 import fr.groupe4.clientprojet.model.message.Message;
+import fr.groupe4.clientprojet.model.resource.human.enums.HumanRole;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -10,6 +11,10 @@ import org.jetbrains.annotations.Nullable;
 public class User extends HumanResource {
     @Nullable
     private static User user = null;
+
+    public static User getUser() {
+        return user;
+    }
 
     /**
      * Adresse IP
@@ -82,8 +87,8 @@ public class User extends HumanResource {
         return email;
     }
 
-    public static User getUser() {
-        return user;
+    public boolean canCreateProject() {
+        return user.getRole() == HumanRole.RESOURCE_MANAGER;
     }
 
     public boolean isSender(@NotNull Message message) {

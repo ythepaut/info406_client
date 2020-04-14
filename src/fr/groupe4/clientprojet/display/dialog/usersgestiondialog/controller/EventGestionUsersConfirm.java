@@ -1,11 +1,12 @@
-package fr.groupe4.clientprojet.display.dialog.usersadddialog.controller;
+package fr.groupe4.clientprojet.display.dialog.usersgestiondialog.controller;
 
 import fr.groupe4.clientprojet.communication.Communication;
-import fr.groupe4.clientprojet.display.dialog.usersadddialog.view.UsersAddDialog;
+import fr.groupe4.clientprojet.display.dialog.errordialog.view.ErrorDialog;
 import fr.groupe4.clientprojet.model.resource.human.HumanResource;
 import fr.groupe4.clientprojet.model.resource.human.HumanResourceList;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -56,7 +57,7 @@ public class EventGestionUsersConfirm implements ActionListener {
 
             users.remove(i);
         }
-
+        new ErrorDialog("Utilisateurs bien ajoutés !", "SUCCESS", new Color(0, 127, 0));
         parent.dispose();
     }
 }

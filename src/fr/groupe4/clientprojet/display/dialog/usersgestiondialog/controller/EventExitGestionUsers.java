@@ -1,6 +1,6 @@
-package fr.groupe4.clientprojet.display.dialog.usersadddialog.controller;
+package fr.groupe4.clientprojet.display.dialog.usersgestiondialog.controller;
 
-import fr.groupe4.clientprojet.display.dialog.usersadddialog.view.UsersAddDialog;
+import fr.groupe4.clientprojet.display.dialog.usersgestiondialog.view.UsersGestionDialog;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -8,9 +8,9 @@ import java.awt.event.ActionListener;
 public class EventExitGestionUsers implements ActionListener {
 
     //Attributs
-    UsersAddDialog source;
+    UsersGestionDialog source;
 
-    public EventExitGestionUsers(UsersAddDialog source) {
+    public EventExitGestionUsers(UsersGestionDialog source) {
         this.source = source;
     }
 
