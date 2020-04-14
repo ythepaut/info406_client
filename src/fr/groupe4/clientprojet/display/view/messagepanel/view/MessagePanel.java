@@ -33,7 +33,7 @@ public class MessagePanel extends DrawPanel {
     /**
      * L'entrée texte d'envoie de message
      */
-    private JTextField messageField;
+    private JTextArea messageField;
     /**
      * L'id du projet
      */
@@ -41,11 +41,11 @@ public class MessagePanel extends DrawPanel {
     /**
      * Le listener du panel
      */
-    private EventMessagePanel eventMessagePanel;
+    private final EventMessagePanel eventMessagePanel;
     /**
      * L'instance de CommunicationBuidler pour récuperer la liste des messages
      */
-    private CommunicationBuilder cBuilder;
+    private final CommunicationBuilder cBuilder;
     private JScrollPane scrollPane;
 
     /**
@@ -71,21 +71,24 @@ public class MessagePanel extends DrawPanel {
         setBackground(Color.WHITE);
 
         // Panel du bas
-        JPanel bottomPanel = new JPanel(new BorderLayout());
+        JPanel bottomPanel = new JPanel(new GridLayout(1, 3));
         bottomPanel.setBackground(Color.WHITE);
         bottomPanel.setBorder(new EmptyBorder(10, 50, 10, 50));
-        messageField = new JTextField(120);
-        messageField.grabFocus();
-        messageField.addKeyListener(eventMessagePanel);
-        bottomPanel.add(messageField, BorderLayout.CENTER);
-        RoundButton sentButton = new RoundButton(new File(Location.getImgDataPath() + "/sent.png"));
-        sentButton.setActionCommand(MessageButton.SEND.toString());
-        sentButton.addActionListener(eventMessagePanel);
-        bottomPanel.add(sentButton, BorderLayout.EAST);
         RoundButton refreshButton = new RoundButton(new File(Location.getImgDataPath() + "/refresh.png"));
+        refreshButton.setMaximumSize(new Dimension(20, 20));
         refreshButton.setActionCommand(MessageButton.REFRESH.toString());
         refreshButton.addActionListener(eventMessagePanel);
-        bottomPanel.add(refreshButton, BorderLayout.WEST);
+        bottomPanel.add(refreshButton);
+        messageField = new JTextArea(1, 120);
+        messageField.setBorder(new MatteBorder(1, 1, 1, 1, Color.BLACK));
+        messageField.grabFocus();
+        bottomPanel.add(messageField);
+        RoundButton sentButton = new RoundButton(new File(Location.getImgDataPath() + "/sent.png"));
+        sentButton.setMaximumSize(new Dimension(20, 20));
+        sentButton.setMaximumSize(new Dimension(30, 30));
+        sentButton.setActionCommand(MessageButton.SEND.toString());
+        sentButton.addActionListener(eventMessagePanel);
+        bottomPanel.add(sentButton);
 
         add(bottomPanel, BorderLayout.SOUTH);
 
@@ -120,7 +123,7 @@ public class MessagePanel extends DrawPanel {
                 panel.add(content, BorderLayout.CENTER);
 
                 JPanel infoPanel = new JPanel(new GridLayout(2, 1));
-                if (message.getDate().isAfter(LocalDateTime.now().minusDays(1))) { //Si le message est d'aujourd'hui
+                if (message.getDate().isAfter(LocalDateTime.now().minusDays(1))) { // Si le message est d'aujourd'hui
                     infoPanel.add(new JLabel(message.getDate().getHour() + ":" + message.getDate().getMinute()));
                 } else {
                     infoPanel.add(new JLabel(message.getDate().
