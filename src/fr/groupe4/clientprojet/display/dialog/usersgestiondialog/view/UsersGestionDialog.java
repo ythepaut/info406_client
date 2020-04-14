@@ -1,9 +1,9 @@
-package fr.groupe4.clientprojet.display.dialog.usersadddialog.view;
+package fr.groupe4.clientprojet.display.dialog.usersgestiondialog.view;
 
 import fr.groupe4.clientprojet.communication.Communication;
-import fr.groupe4.clientprojet.display.dialog.usersadddialog.controller.EventChoixUser;
-import fr.groupe4.clientprojet.display.dialog.usersadddialog.controller.EventExitGestionUsers;
-import fr.groupe4.clientprojet.display.dialog.usersadddialog.controller.EventGestionUsersConfirm;
+import fr.groupe4.clientprojet.display.dialog.usersgestiondialog.controller.EventChoixUser;
+import fr.groupe4.clientprojet.display.dialog.usersgestiondialog.controller.EventExitGestionUsers;
+import fr.groupe4.clientprojet.display.dialog.usersgestiondialog.controller.EventGestionUsersConfirm;
 import fr.groupe4.clientprojet.display.mainwindow.panels.projectpanel.view.ProjectPanel;
 import fr.groupe4.clientprojet.display.view.draw.DrawDialog;
 import fr.groupe4.clientprojet.model.resource.human.HumanResource;
@@ -12,10 +12,8 @@ import fr.groupe4.clientprojet.model.resource.human.HumanResourceList;
 import javax.swing.*;
 import javax.swing.border.MatteBorder;
 import java.awt.*;
-import java.awt.event.ActionListener;
-import java.util.ArrayList;
 
-public class UsersAddDialog extends DrawDialog {
+public class UsersGestionDialog extends DrawDialog {
 
     /**
      * Declaration des variables necessaires
@@ -36,7 +34,7 @@ public class UsersAddDialog extends DrawDialog {
      * Constructeur
      * @param owner
      */
-    public UsersAddDialog(ProjectPanel owner, long projectId) {
+    public UsersGestionDialog(ProjectPanel owner, long projectId) {
         this.projectId = projectId;
 
         c = new GridBagConstraints();

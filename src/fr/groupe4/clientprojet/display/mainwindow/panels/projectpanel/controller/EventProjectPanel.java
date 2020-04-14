@@ -1,7 +1,7 @@
 package fr.groupe4.clientprojet.display.mainwindow.panels.projectpanel.controller;
 
-import fr.groupe4.clientprojet.display.dialog.matadddialog.view.MatAddDialog;
-import fr.groupe4.clientprojet.display.dialog.usersadddialog.view.UsersAddDialog;
+import fr.groupe4.clientprojet.display.dialog.materielgestiondialog.view.MaterielGestionDialog;
+import fr.groupe4.clientprojet.display.dialog.usersgestiondialog.view.UsersGestionDialog;
 import fr.groupe4.clientprojet.display.mainwindow.panels.projectpanel.view.ProjectPanel;
 
 import java.awt.event.ActionEvent;
@@ -34,9 +34,9 @@ public class EventProjectPanel implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (NEWUSERS.equals(e.getActionCommand())) {
-          new UsersAddDialog(source, projectId);
+          new UsersGestionDialog(source, projectId);
         } else {
-            new MatAddDialog(source);
+            new MaterielGestionDialog(source);
         }
     }
 }
