@@ -47,9 +47,7 @@ public class MaterielGestionDialog extends DrawDialog {
 
 
 
-        /**
-         * Déclaration du layout
-         */
+        //Déclaration du layout
         this.setLayout(new GridBagLayout());
         c.gridx = 0;
         c.gridy = 0;

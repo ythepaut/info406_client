@@ -15,10 +15,9 @@ import java.awt.*;
 
 public class UsersGestionDialog extends DrawDialog {
 
-    /**
-     * Declaration des variables necessaires
-     */
-    private GridBagConstraints c;
+
+     //Declaration des variables necessaires
+     private GridBagConstraints c;
 
     /**
      * La frame qui appelle ce dialog
@@ -62,9 +61,8 @@ public class UsersGestionDialog extends DrawDialog {
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
         setLocation(dim.width / 2 - getWidth() / 2, dim.height / 2 - getHeight() / 2);
 
-        /**
-         * Déclaration du layout
-         */
+
+        //Déclaration du layout
         this.setLayout(new GridBagLayout());
         c.gridx = 0;
         c.gridy = 0;
@@ -76,9 +74,8 @@ public class UsersGestionDialog extends DrawDialog {
         Communication com = Communication.builder().getHumanResourceList().startNow().sleepUntilFinished().build();
         HumanResourceList listeusers = (HumanResourceList) com.getResult();
 
-        /**
-         * Création du menu d'ajout d'utilisateurs
-         */
+
+         //Création du menu d'ajout d'utilisateurs
         JMenuBar barmenuajout = new JMenuBar();
         JMenu menuajout = new JMenu("Ajouter un ou plusieurs utilisateurs");
         barmenuajout.add(menuajout);
@@ -94,9 +91,7 @@ public class UsersGestionDialog extends DrawDialog {
         }
         add(barmenuajout,c);
 
-        /**
-         * Création du menu de suppression d'utilisateurs
-         */
+        //Création du menu de suppression d'utilisateur
         c.gridy++;
         JMenuBar barmenusupp = new JMenuBar();
         JMenu menusupp = new JMenu("Supprimer un ou plusieurs utilisateurs");
@@ -112,9 +107,8 @@ public class UsersGestionDialog extends DrawDialog {
         add(barmenusupp,c);
 
 
-        /**
-         * Création des boutons de confirmation/annulation
-         */
+
+        //Création des boutons de confirmation/annulation
         c.insets = new Insets(50,5,15,5);
         c.gridwidth = 1;
         c.gridy++;

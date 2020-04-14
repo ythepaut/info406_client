@@ -70,9 +70,7 @@ public class ProjectCreationDialog extends DrawDialog {
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
         setLocation(dim.width/2 - getWidth()/2, dim.height/2 - getHeight()/2);
 
-        /**
-         * Déclaration du layout
-         */
+        //Déclaration du layout
         this.setLayout(new GridBagLayout());
         c.gridx = 0;
         c.gridy = 0;
@@ -81,9 +79,7 @@ public class ProjectCreationDialog extends DrawDialog {
         c.insets = new Insets(5,0,5,0);
 
 
-        /**
-         * Entrée du nom et description de projet
-         */
+        //Entrée du nom et description de projet
         JLabel labelnom = new JLabel("Entrez le nom du projet : ");
         add(labelnom,c);
         JTextField nomprojet = new JTextField(15);
@@ -100,9 +96,7 @@ public class ProjectCreationDialog extends DrawDialog {
         add(description,c);
         String strdescription = description.getText();
 
-        /**
-         * Entrée de la date limite du projet
-         */
+        //Entrée de la date limite du projet
         c.gridy++;
         JLabel datefinlabel = new JLabel("Entrez la date limite du projet : ");
         add(datefinlabel,c);
@@ -135,9 +129,7 @@ public class ProjectCreationDialog extends DrawDialog {
         c.gridy++;
         add(datePicker,c);
 
-        /**
-         * Création des boutons de confirmation/annulation
-         */
+        //Création des boutons de confirmation/annulation
         c.gridwidth = 1;
         c.gridy++;
         JButton creeprojet = new JButton("Création Projet");
