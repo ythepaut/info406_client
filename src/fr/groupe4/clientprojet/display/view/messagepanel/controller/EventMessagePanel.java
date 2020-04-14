@@ -10,12 +10,15 @@ import java.awt.event.*;
 /**
  * Le listener de la messagerie
  */
-public class EventMessagePanel extends KeyAdapter implements ActionListener {
+public class EventMessagePanel implements ActionListener {
     /**
      * Le MessagePanel qui appelle les events
      */
-    private MessagePanel source;
-    private MessageResource dest;
+    private final MessagePanel source;
+    /**
+     * Le destinataire des messages
+     */
+    private final MessageResource dest;
 
     /**
      * Le constructeur
@@ -42,24 +45,31 @@ public class EventMessagePanel extends KeyAdapter implements ActionListener {
         }
     }
 
-    @Override
-    public void keyPressed(KeyEvent e) {
-        if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-            sendMessage();
-        }
-    }
-
     /**
      * Envoie un message
      */
     private void sendMessage() {
         String message = source.getMessage();
+        System.out.print(message + " -> ");
         while (!message.isEmpty() && message.charAt(0) == ' ') {
             message = message.substring(1);
         }
         if (!message.isEmpty()) {
+            message = "<html>" + message + "</html>";
+
+            StringBuilder res = new StringBuilder();
+            for (int i = 0; i < message.length(); i++) {
+                if (message.charAt(i) == '\n') {
+                    res.append("<br/>");
+                } else {
+                    res.append(message.charAt(i));
+                }
+            }
+
+            System.out.println(res);
+
             Communication.builder().
-                    sendMessage(message, dest, source.getIdProject()).
+                    sendMessage(res.toString(), dest, source.getIdProject()).
                     sleepUntilFinished().
                     startNow().
                     build();
