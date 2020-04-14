@@ -1,5 +1,7 @@
 package fr.groupe4.clientprojet.model.parameters;
 
+import fr.groupe4.clientprojet.logger.Logger;
+import fr.groupe4.clientprojet.model.parameters.themes.ThemeName;
 import fr.groupe4.clientprojet.utils.Location;
 
 import java.io.*;
@@ -33,11 +35,12 @@ public abstract class Parameters {
             parameters = (HashMap<ParametersNames, Object>) inputStream.readObject();
             inputStream.close();
         } catch (IOException | ClassNotFoundException e) {
-            System.err.println("Le fichier 'parameters.set' n'existe pas !");
+            Logger.error("Le fichier 'parameters.set' n'existe pas !");
 
             // Définition des paramètres par défaut
             parameters.put(ParametersNames.FIRSTRUN, true);
             parameters.put(ParametersNames.SERVERURL, "https://api.ythepaut.com/g4/actions");
+            parameters.put(ParametersNames.THEME, ThemeName.SOMBRE);
         }
     }
 
@@ -53,10 +56,8 @@ public abstract class Parameters {
                     new FileOutputStream(Location.getDataPath() + fileName));
             outputStream.writeObject(parameters);
             outputStream.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (InitParametersException e) {
-            System.err.println(e.getMessage());
+        } catch (IOException | InitParametersException e) {
+            Logger.error(e.getMessage());
         }
     }
 
@@ -69,7 +70,7 @@ public abstract class Parameters {
             if (parameters == null) throw new InitParametersException();
             res = (String) parameters.get(ParametersNames.SERVERURL);
         } catch (InitParametersException e) {
-            System.err.println(e.getMessage());
+            Logger.error(e.getMessage());
         }
         return res;
     }
@@ -79,7 +80,7 @@ public abstract class Parameters {
             if (parameters == null) throw new InitParametersException();
             parameters.put(ParametersNames.SERVERURL, serverUrl);
         } catch (InitParametersException e) {
-            System.err.println(e.getMessage());
+            Logger.error(e.getMessage());
         }
     }
 
@@ -89,7 +90,7 @@ public abstract class Parameters {
             if (parameters == null) throw new InitParametersException();
             res =  (boolean) parameters.get(ParametersNames.FIRSTRUN);
         } catch (InitParametersException e) {
-            System.err.println(e.getMessage());
+            Logger.error(e.getMessage());
         }
         return res;
     }
@@ -99,7 +100,27 @@ public abstract class Parameters {
             if (parameters == null) throw new InitParametersException();
             parameters.put(ParametersNames.FIRSTRUN, firstRun);
         } catch (InitParametersException e) {
-            System.err.println(e.getMessage());
+            Logger.error(e.getMessage());
+        }
+    }
+
+    public static ThemeName getThemeName() {
+        ThemeName res = null;
+        try {
+            if (parameters == null) throw new InitParametersException();
+            res = (ThemeName) parameters.get(ParametersNames.THEME);
+        } catch (InitParametersException e) {
+            Logger.error(e.getMessage());
+        }
+        return res;
+    }
+
+    public static void setThemeName(ThemeName name) {
+        try {
+            if (parameters == null) throw new InitParametersException();
+            parameters.put(ParametersNames.THEME, name);
+        } catch (InitParametersException e) {
+            Logger.error(e.getMessage());
         }
     }
 }

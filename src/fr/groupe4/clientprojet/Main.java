@@ -27,8 +27,8 @@ public class Main {
 
     public static void exit() {
         Communication.exit();
-        Logger.exit();
         Parameters.exit();
+        Logger.exit();
     }
 
 }

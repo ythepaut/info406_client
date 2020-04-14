@@ -2,6 +2,7 @@ package fr.groupe4.clientprojet.display.dialog.parametersdialog.controller;
 
 import fr.groupe4.clientprojet.display.dialog.parametersdialog.view.ParametersDialog;
 import fr.groupe4.clientprojet.model.parameters.Parameters;
+import fr.groupe4.clientprojet.model.parameters.themes.ThemeName;
 
 import java.awt.event.*;
 
@@ -54,5 +55,6 @@ public class EventParametersDialog extends WindowAdapter implements ActionListen
 
     private void applyParameters() {
         Parameters.setServerUrl(source.getServerUrl());
+        Parameters.setThemeName(source.getTheme());
     }
 }

@@ -1,5 +1,8 @@
 package fr.groupe4.clientprojet.display.view;
 
+import fr.groupe4.clientprojet.model.parameters.Parameters;
+import fr.groupe4.clientprojet.model.parameters.themes.Theme;
+
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicScrollBarUI;
 import java.awt.*;
@@ -8,7 +11,7 @@ public class ScrollBarUI extends BasicScrollBarUI {
 
     @Override
     protected void paintTrack(Graphics g, JComponent c, Rectangle trackBounds) {
-        g.setColor(new Color(0, 0, 0, 0));
+        g.setColor(Theme.FOND.getColor(Parameters.getThemeName()));
         g.fillRect(trackBounds.x,
                 trackBounds.y,
                 trackBounds.width,
@@ -18,7 +21,7 @@ public class ScrollBarUI extends BasicScrollBarUI {
     @Override
     protected void paintThumb(Graphics g, JComponent c, Rectangle thumbBounds) {
         int arc = (Math.min(thumbBounds.width, thumbBounds.height)) *2;
-        g.setColor(new Color(99, 99, 99));
+        g.setColor(Theme.FOND_FIELD.getColor(Parameters.getThemeName()));
         g.fillRoundRect(thumbBounds.x,
                 thumbBounds.y,
                 thumbBounds.width,

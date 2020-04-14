@@ -3,6 +3,8 @@ package fr.groupe4.clientprojet.display.view.slide.view;
 import fr.groupe4.clientprojet.display.view.RoundButton;
 import fr.groupe4.clientprojet.display.view.slide.controller.EventSlide;
 import fr.groupe4.clientprojet.display.view.slide.enums.SlideMove;
+import fr.groupe4.clientprojet.model.parameters.Parameters;
+import fr.groupe4.clientprojet.model.parameters.themes.Theme;
 
 import javax.swing.*;
 import java.awt.*;
@@ -84,23 +86,27 @@ public class Slide extends JPanel {
      */
     private void drawContent() {
         setLayout(new BorderLayout());
-        setBackground(Color.WHITE);
+        setBackground(Theme.FOND.getColor(Parameters.getThemeName()));
 
         // Bouton gauche
         RoundButton leftButton = new RoundButton("<");
+        leftButton.setForeground(Theme.POLICE_NORMAL.getColor(Parameters.getThemeName()));
         leftButton.setActionCommand(SlideMove.LEFT.getName());
         leftButton.addActionListener(eventSlide);
         add(leftButton, BorderLayout.WEST);
         // Bouton droite
         RoundButton rightButton = new RoundButton(">");
+        rightButton.setForeground(Theme.POLICE_NORMAL.getColor(Parameters.getThemeName()));
         rightButton.setActionCommand(SlideMove.RIGHT.getName());
         rightButton.addActionListener(eventSlide);
         add(rightButton, BorderLayout.EAST);
         // Bouton haut
         JPanel topButtons = new JPanel(new FlowLayout());
-        topButtons.setBackground(Color.WHITE);
+        topButtons.setBackground(Theme.FOND.getColor(Parameters.getThemeName()));
         for (String name: slideName) {
             JButton button = new JButton(name);
+            button.setBackground(Theme.FOND_BUTTON.getColor(Parameters.getThemeName()));
+            button.setForeground(Theme.POLICE_NORMAL.getColor(Parameters.getThemeName()));
             button.setActionCommand(name);
             button.addActionListener(eventSlide);
             topButtons.add(button);

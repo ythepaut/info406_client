@@ -1,5 +1,8 @@
 package fr.groupe4.clientprojet.display.view;
 
+import fr.groupe4.clientprojet.model.parameters.Parameters;
+import fr.groupe4.clientprojet.model.parameters.themes.Theme;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
@@ -77,10 +80,10 @@ public class RoundButton extends JButton {
             g2.fillOval(x, 0, taille, taille);
         }
         if (image != null) {
-            g2.drawImage(image, x, 0, taille, taille, this); // Le 13/28 et 5/28 est trouvé par tâtonnement
+            g2.drawImage(image, x, 0, taille, taille, this);
         } else {
             super.paintComponent(g);
-            g2.setColor(Color.BLACK);
+            g2.setColor(Theme.BORDER.getColor(Parameters.getThemeName()));
             g2.setStroke(new BasicStroke(1.6f));
             g2.drawOval(x, 0, taille, taille);
             g2.dispose();

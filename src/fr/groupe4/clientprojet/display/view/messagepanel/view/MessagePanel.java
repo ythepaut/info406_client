@@ -9,6 +9,8 @@ import fr.groupe4.clientprojet.display.view.messagepanel.enums.MessageButton;
 import fr.groupe4.clientprojet.model.message.Message;
 import fr.groupe4.clientprojet.model.message.MessageList;
 import fr.groupe4.clientprojet.model.message.enums.MessageResource;
+import fr.groupe4.clientprojet.model.parameters.Parameters;
+import fr.groupe4.clientprojet.model.parameters.themes.Theme;
 import fr.groupe4.clientprojet.model.resource.human.User;
 import fr.groupe4.clientprojet.utils.Location;
 
@@ -68,22 +70,27 @@ public class MessagePanel extends DrawPanel {
     protected void drawContent() {
         setLayout(new BorderLayout());
         setBorder(new EmptyBorder(5, 5, 5, 5));
-        setBackground(Color.WHITE);
+        setBackground(Theme.FOND.getColor(Parameters.getThemeName()));
 
         // Panel du bas
         JPanel bottomPanel = new JPanel(new GridLayout(1, 3));
-        bottomPanel.setBackground(Color.WHITE);
+        bottomPanel.setBackground(Theme.FOND.getColor(Parameters.getThemeName()));
         bottomPanel.setBorder(new EmptyBorder(10, 50, 10, 50));
         RoundButton refreshButton = new RoundButton(new File(Location.getImgDataPath() + "/refresh.png"));
+        refreshButton.setForeground(Theme.POLICE_NORMAL.getColor(Parameters.getThemeName()));
         refreshButton.setMaximumSize(new Dimension(20, 20));
         refreshButton.setActionCommand(MessageButton.REFRESH.toString());
         refreshButton.addActionListener(eventMessagePanel);
         bottomPanel.add(refreshButton);
         messageField = new JTextArea(1, 120);
+        messageField.setBorder(null);
+        messageField.setBackground(Theme.FOND_FIELD.getColor(Parameters.getThemeName()));
+        messageField.setForeground(Theme.POLICE_NORMAL.getColor(Parameters.getThemeName()));
         messageField.setBorder(new MatteBorder(1, 1, 1, 1, Color.BLACK));
         messageField.grabFocus();
         bottomPanel.add(messageField);
         RoundButton sentButton = new RoundButton(new File(Location.getImgDataPath() + "/sent.png"));
+        sentButton.setForeground(Theme.POLICE_NORMAL.getColor(Parameters.getThemeName()));
         sentButton.setMaximumSize(new Dimension(20, 20));
         sentButton.setMaximumSize(new Dimension(30, 30));
         sentButton.setActionCommand(MessageButton.SEND.toString());
@@ -98,7 +105,7 @@ public class MessagePanel extends DrawPanel {
 
     private void drawMessageList() {
         JPanel messagePanel = new JPanel();
-        messagePanel.setBackground(Color.WHITE);
+        messagePanel.setBackground(Theme.FOND.getColor(Parameters.getThemeName()));
         if (messageList != null && !messageList.isEmpty()) {
             messagePanel.setLayout(new GridBagLayout());
             GridBagConstraints c = new GridBagConstraints();
@@ -108,7 +115,7 @@ public class MessagePanel extends DrawPanel {
             c.fill = GridBagConstraints.HORIZONTAL;
 
             scrollPane = new JScrollPane(messagePanel);
-            scrollPane.setBackground(Color.WHITE);
+            scrollPane.setBackground(Theme.FOND.getColor(Parameters.getThemeName()));
             scrollPane.setBorder(null);
             scrollPane.getVerticalScrollBar().setUI(new ScrollBarUI());
             scrollPane.getVerticalScrollBar().setUnitIncrement(10);
@@ -120,17 +127,23 @@ public class MessagePanel extends DrawPanel {
                 JPanel panel = new JPanel(new BorderLayout());
 
                 JLabel content = new JLabel(message.getContent());
+                content.setForeground(Theme.POLICE_NORMAL.getColor(Parameters.getThemeName()));
                 panel.add(content, BorderLayout.CENTER);
 
                 JPanel infoPanel = new JPanel(new GridLayout(2, 1));
+                infoPanel.setBackground(Theme.FOND.getColor(Parameters.getThemeName()));
                 if (message.getDate().isAfter(LocalDateTime.now().minusDays(1))) { // Si le message est d'aujourd'hui
-                    infoPanel.add(new JLabel(message.getDate().getHour() + ":" + message.getDate().getMinute()));
+                    JLabel label = new JLabel(message.getDate().getHour() + ":" + message.getDate().getMinute());
+                    label.setForeground(Theme.POLICE_NORMAL.getColor(Parameters.getThemeName()));
+                    infoPanel.add(label);
                 } else {
-                    infoPanel.add(new JLabel(message.getDate().
-                            format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM, FormatStyle.SHORT))));
+                    JLabel label = new JLabel(message.getDate().
+                            format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM, FormatStyle.SHORT)));
+                    label.setForeground(Theme.POLICE_NORMAL.getColor(Parameters.getThemeName()));
+                    infoPanel.add(label);
                 }
                 infoPanel.setBorder(new CompoundBorder(new EmptyBorder(5, 5, 5, 0),
-                        new CompoundBorder(new MatteBorder(0, 0, 0, 2, Color.BLACK),
+                        new CompoundBorder(new MatteBorder(0, 0, 0, 2, Theme.BORDER.getColor(Parameters.getThemeName())),
                                 new EmptyBorder(0, 0, 0, 5))));
 
                 assert User.getUser() != null;
@@ -142,8 +155,8 @@ public class MessagePanel extends DrawPanel {
                 c.anchor = GridBagConstraints.WEST;
 
                 Color fond = User.getUser().isSender(message) ?
-                        new Color(200, 200, 200) :
-                        new Color(240, 240, 240);
+                        Theme.MESSAGE_SENT.getColor(Parameters.getThemeName()) :
+                        Theme.MESSAGE_RECEIVED.getColor(Parameters.getThemeName());
                 panel.setBackground(fond);
                 infoPanel.setBackground(fond);
 

@@ -4,6 +4,8 @@ import fr.groupe4.clientprojet.display.dialog.connectiondialog.controller.EventC
 import fr.groupe4.clientprojet.display.dialog.connectiondialog.controller.KeyEventConnectionDialog;
 import fr.groupe4.clientprojet.display.dialog.connectiondialog.enums.ConnectionChoice;
 import fr.groupe4.clientprojet.display.view.draw.DrawDialog;
+import fr.groupe4.clientprojet.model.parameters.Parameters;
+import fr.groupe4.clientprojet.model.parameters.themes.Theme;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -50,33 +52,51 @@ public class ConnectionDialog extends DrawDialog {
      */
     @Override
     protected void drawContent() {
-        setBackground(Color.WHITE);
+        setBackground(Theme.FOND.getColor(Parameters.getThemeName()));
         setLayout(new BorderLayout());
         KeyEventConnectionDialog keyEventConnectionDialog = new KeyEventConnectionDialog(this);
 
         JPanel fieldPanel = new JPanel(new GridLayout(2, 1));
+        fieldPanel.setBackground(Theme.FOND.getColor(Parameters.getThemeName()));
         JPanel usernamePanel = new JPanel(new BorderLayout());
+        usernamePanel.setBackground(Theme.FOND.getColor(Parameters.getThemeName()));
         usernamePanel.setBorder(new EmptyBorder(80, 20, 20, 20));
-        usernamePanel.add(new JLabel("Username :"), BorderLayout.CENTER);
+        JLabel label = new JLabel("Username :");
+        label.setForeground(Theme.POLICE_NORMAL.getColor(Parameters.getThemeName()));
+        usernamePanel.add(label, BorderLayout.CENTER);
         username = new JTextField(100);
+        username.setBorder(null);
+        username.setBackground(Theme.FOND_FIELD.getColor(Parameters.getThemeName()));
+        username.setForeground(Theme.POLICE_NORMAL.getColor(Parameters.getThemeName()));
         username.addKeyListener(keyEventConnectionDialog);
         usernamePanel.add(username, BorderLayout.SOUTH);
         fieldPanel.add(usernamePanel);
         JPanel passwordPanel = new JPanel(new BorderLayout());
+        passwordPanel.setBackground(Theme.FOND.getColor(Parameters.getThemeName()));
         passwordPanel.setBorder(new EmptyBorder(10, 20, 90, 20));
-        passwordPanel.add(new JLabel("Password :"), BorderLayout.CENTER);
+        label = new JLabel("Password :");
+        label.setForeground(Theme.POLICE_NORMAL.getColor(Parameters.getThemeName()));
+        passwordPanel.add(label, BorderLayout.CENTER);
         password = new JPasswordField(100);
+        password.setBorder(null);
+        password.setBackground(Theme.FOND_FIELD.getColor(Parameters.getThemeName()));
+        password.setForeground(Theme.POLICE_NORMAL.getColor(Parameters.getThemeName()));
         password.addKeyListener(keyEventConnectionDialog);
         passwordPanel.add(password, BorderLayout.SOUTH);
         fieldPanel.add(passwordPanel);
         add(fieldPanel, BorderLayout.CENTER);
 
         JPanel buttonPanel = new JPanel(new FlowLayout());
+        buttonPanel.setBackground(Theme.FOND.getColor(Parameters.getThemeName()));
         JButton okButton = new JButton("OK");
+        okButton.setBackground(Theme.FOND_BUTTON.getColor(Parameters.getThemeName()));
+        okButton.setForeground(Theme.POLICE_NORMAL.getColor(Parameters.getThemeName()));
         okButton.setActionCommand(ConnectionChoice.OK.getName());
         okButton.addActionListener(eventConnectionDialog);
         buttonPanel.add(okButton);
         JButton cancelButton = new JButton("Annuler");
+        cancelButton.setBackground(Theme.FOND_BUTTON.getColor(Parameters.getThemeName()));
+        cancelButton.setForeground(Theme.POLICE_NORMAL.getColor(Parameters.getThemeName()));
         cancelButton.setActionCommand(ConnectionChoice.CANCEL.getName());
         cancelButton.addActionListener(eventConnectionDialog);
         buttonPanel.add(cancelButton);
