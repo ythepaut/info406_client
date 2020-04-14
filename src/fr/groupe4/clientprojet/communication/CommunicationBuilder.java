@@ -246,7 +246,6 @@ public final class CommunicationBuilder {
                                                      long resourceId,
                                                      @Nullable Temporal start,
                                                      @Nullable Temporal end) {
-        long t1 = temporalToSeconds(start, true);
         long t2 = temporalToSeconds(end, true);
 
         if (t2 == 0) {
@@ -259,7 +258,12 @@ public final class CommunicationBuilder {
         requestData.put("project", projectId);
         requestData.put("type", type.toString());
         requestData.put("id", resourceId);
-        requestData.put("start", t1);
+
+        if (start != null) {
+            long t1 = temporalToSeconds(start, false);
+            requestData.put("start", t1);
+        }
+
         requestData.put("end", t2);
         return this;
     }

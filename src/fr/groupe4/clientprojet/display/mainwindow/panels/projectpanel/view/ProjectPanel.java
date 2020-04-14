@@ -85,7 +85,7 @@ public class ProjectPanel extends DrawPanel {
      * @return : le jpanel
      */
     private JPanel homePanel() {
-        EventProjectPanel eventProjectPanel = new EventProjectPanel(this);
+        EventProjectPanel eventProjectPanel = new EventProjectPanel(this, project.getId());
         JPanel panel = new JPanel(new BorderLayout());
         panel.add(new JLabel("HOME"), BorderLayout.NORTH);
         panel.add(new JLabel(project.getDescription()), BorderLayout.CENTER);

@@ -12,11 +12,10 @@ public class EventChoixUser implements ItemListener {
     /**
      * Attributs necessaire au controller
      */
-    UsersAddDialog source;
-    HumanResource usercourant;
-    Boolean[] userchoisis;
-    long iduser;
-    int idarraylist;
+    private UsersAddDialog source;
+    private HumanResource usercourant;
+    private boolean[] userchoisis;
+    private int idarraylist;
 
     /**
      * Constructeur
@@ -24,7 +23,7 @@ public class EventChoixUser implements ItemListener {
      * @param usercourant
      * @param userchoisis
      */
-    public EventChoixUser(UsersAddDialog source, HumanResource usercourant, Boolean[] userchoisis, int idarraylist) {
+    public EventChoixUser(UsersAddDialog source, HumanResource usercourant, boolean[] userchoisis, int idarraylist) {
         this.source = source;
         this.usercourant = usercourant;
         this.userchoisis = userchoisis;

@@ -11,28 +11,30 @@ import java.awt.event.ActionListener;
  * Listener du panel de Projet
  */
 public class EventProjectPanel implements ActionListener {
+    public static final String NEWUSERS = "newusers";
+    public static final String NEWMAT = "newmat";
 
     /**
      * Le panel qui fait les appels
      */
     private ProjectPanel source;
-    public static final String NEWUSERS = "newusers";
-    public static final String NEWMAT = "newmat";
+    private long projectId;
 
     /**
      * Le constructeur
      *
      * @param source : le panel qui fait les appels
      */
-    public EventProjectPanel(ProjectPanel source){
+    public EventProjectPanel(ProjectPanel source, long projectId){
         this.source = source;
+        this.projectId = projectId;
     }
 
 
     @Override
     public void actionPerformed(ActionEvent e) {
         if (NEWUSERS.equals(e.getActionCommand())) {
-          new UsersAddDialog(source);
+          new UsersAddDialog(source, projectId);
         } else {
             new MatAddDialog(source);
         }

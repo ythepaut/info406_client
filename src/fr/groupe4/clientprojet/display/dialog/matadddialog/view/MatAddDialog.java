@@ -15,13 +15,15 @@ public class MatAddDialog extends DrawDialog {
      */
     private ProjectPanel owner;
 
-    GridBagConstraints c = new GridBagConstraints();
+    private GridBagConstraints c;
 
     /**
      * Constructeur
      * @param owner
      */
     public MatAddDialog(ProjectPanel owner) {
+        c = new GridBagConstraints();
+
         setTitle("Fenetre de création de Projet");
         this.owner = owner;
         setModal(true);

@@ -20,20 +20,27 @@ public class UsersAddDialog extends DrawDialog {
     /**
      * Declaration des variables necessaires
      */
-    GridBagConstraints c = new GridBagConstraints();
-    int i;
+    private GridBagConstraints c;
 
     /**
      * La frame qui appelle ce dialog
      */
     private ProjectPanel owner;
 
+    /**
+     * Id du projet
+     */
+    private long projectId;
 
     /**
      * Constructeur
      * @param owner
      */
-    public UsersAddDialog(ProjectPanel owner) {
+    public UsersAddDialog(ProjectPanel owner, long projectId) {
+        this.projectId = projectId;
+
+        c = new GridBagConstraints();
+
         setTitle("Fenêtre de gestions d'utilisateurs au projet");
         this.owner = owner;
         setModal(true);
@@ -77,9 +84,8 @@ public class UsersAddDialog extends DrawDialog {
         JMenuBar barmenuajout = new JMenuBar();
         JMenu menuajout = new JMenu("Ajouter un ou plusieurs utilisateurs");
         barmenuajout.add(menuajout);
-        int taillehumanressource = listeusers.size();
-        Boolean userchoisis[] = new Boolean[taillehumanressource];
-        for (i = 0; i<taillehumanressource; i++){
+        boolean userchoisis[] = new boolean[listeusers.size()];
+        for (int i = 0; i<listeusers.size(); i++){
             HumanResource usercourant = listeusers.get(i);
             String prenomuser = usercourant.getFirstname();
             String nomuser = usercourant.getLastname();
@@ -116,7 +122,7 @@ public class UsersAddDialog extends DrawDialog {
         c.gridy++;
         JButton ajouterusers = new JButton("Ajouter les utilisateurs");
         add(ajouterusers,c);
-        ajouterusers.addActionListener(new EventGestionUsersConfirm(this, userchoisis));
+        ajouterusers.addActionListener(new EventGestionUsersConfirm(this, projectId, listeusers, userchoisis));
         c.gridx++;
         JButton cancelButton = new JButton("Annuler l'ajout");
         add(cancelButton,c);
