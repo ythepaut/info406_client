@@ -56,7 +56,7 @@ public class UsersAddDialog extends DrawDialog {
     @Override
     protected void drawContent() {
 
-        setSize(350, 400);
+        setSize(300, 200);
         setResizable(false);
 
         setUndecorated(true);
@@ -72,7 +72,7 @@ public class UsersAddDialog extends DrawDialog {
         c.gridy = 0;
         c.gridwidth = 2;
         c.gridheight = 1;
-        c.insets = new Insets(5,5,5,5);
+        c.insets = new Insets(10,5,10,5);
 
         //Récupération de la liste des utilisateurs
         Communication com = Communication.builder().getHumanResourceList().startNow().sleepUntilFinished().build();
@@ -96,7 +96,6 @@ public class UsersAddDialog extends DrawDialog {
         }
         add(barmenuajout,c);
 
-
         /**
          * Création du menu de suppression d'utilisateurs
          */
@@ -104,13 +103,13 @@ public class UsersAddDialog extends DrawDialog {
         JMenuBar barmenusupp = new JMenuBar();
         JMenu menusupp = new JMenu("Supprimer un ou plusieurs utilisateurs");
         barmenusupp.add(menusupp);
-        JCheckBoxMenuItem user5 = new JCheckBoxMenuItem("user5");
+        JCheckBoxMenuItem user5 = new JCheckBoxMenuItem("user1");
         menusupp.add(user5);
-        JCheckBoxMenuItem user6 = new JCheckBoxMenuItem("user6");
+        JCheckBoxMenuItem user6 = new JCheckBoxMenuItem("user2");
         menusupp.add(user6);
-        JCheckBoxMenuItem user7 = new JCheckBoxMenuItem("user7");
+        JCheckBoxMenuItem user7 = new JCheckBoxMenuItem("user3");
         menusupp.add(user7);
-        JCheckBoxMenuItem user8 = new JCheckBoxMenuItem("user8");
+        JCheckBoxMenuItem user8 = new JCheckBoxMenuItem("user4");
         menusupp.add(user8);
         add(barmenusupp,c);
 
@@ -118,6 +117,7 @@ public class UsersAddDialog extends DrawDialog {
         /**
          * Création des boutons de confirmation/annulation
          */
+        c.insets = new Insets(50,5,15,5);
         c.gridwidth = 1;
         c.gridy++;
         JButton ajouterusers = new JButton("Ajouter les utilisateurs");

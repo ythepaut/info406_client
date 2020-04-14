@@ -35,12 +35,8 @@ public class EventChoixUser implements ItemListener {
     public void itemStateChanged(ItemEvent itemEvent) {
 
         if (itemEvent.getStateChange () == ItemEvent.SELECTED){
-            System.out.println(usercourant.getFirstname() + " " +
-                    usercourant.getLastname() + " selectionné !");
             userchoisis[idarraylist] = true;
         } else {
-            System.out.println(usercourant.getFirstname() + " " +
-                    usercourant.getLastname() + " déselectionné !");
             userchoisis[idarraylist] = false;
         }
     }
