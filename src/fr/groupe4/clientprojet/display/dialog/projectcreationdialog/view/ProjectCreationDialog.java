@@ -68,33 +68,15 @@ public class ProjectCreationDialog extends DrawDialog {
      */
     @Override
     protected void drawContent() {
-<<<<<<< HEAD
         //Déclaration du layout
         setLayout(new GridBagLayout());
-=======
-
-        setSize(300, 550);
-        setResizable(false);
-        setUndecorated(true);
-        rootPane.setBorder(new MatteBorder(2, 2, 2, 2, Color.BLACK));
-        Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-        setLocation(dim.width/2 - getWidth()/2, dim.height/2 - getHeight()/2);
-
-        //Déclaration du layout
-        this.setLayout(new GridBagLayout());
->>>>>>> c4fffa66898601c64f39f7c2f9079e3e3a2b5af5
         c.gridx = 0;
         c.gridy = 0;
         c.gridwidth = 2;
         c.gridheight = 1;
         c.insets = new Insets(5,0,5,0);
 
-<<<<<<< HEAD
         // Entrée du nom et description de projet
-=======
-
-        //Entrée du nom et description de projet
->>>>>>> c4fffa66898601c64f39f7c2f9079e3e3a2b5af5
         JLabel labelnom = new JLabel("Entrez le nom du projet : ");
         add(labelnom,c);
         JTextField nomprojet = new JTextField(15);
@@ -111,12 +93,8 @@ public class ProjectCreationDialog extends DrawDialog {
         add(description,c);
         String strdescription = description.getText();
 
-<<<<<<< HEAD
 
         // Entrée de la date limite du projet
-=======
-        //Entrée de la date limite du projet
->>>>>>> c4fffa66898601c64f39f7c2f9079e3e3a2b5af5
         c.gridy++;
         JLabel datefinlabel = new JLabel("Entrez la date limite du projet : ");
         add(datefinlabel,c);
@@ -149,12 +127,8 @@ public class ProjectCreationDialog extends DrawDialog {
         c.gridy++;
         add(datePicker,c);
 
-<<<<<<< HEAD
 
         // Création des boutons de confirmation/annulation
-=======
-        //Création des boutons de confirmation/annulation
->>>>>>> c4fffa66898601c64f39f7c2f9079e3e3a2b5af5
         c.gridwidth = 1;
         c.gridy++;
         JButton creeprojet = new JButton("Création Projet");
