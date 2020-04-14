@@ -61,6 +61,7 @@ final class JsonTreatment {
                 listProjects(comm, jsonObject);
                 break;
             case ADD_RESOURCE_TO_PROJECT:
+                addResourceToProject(comm, jsonObject);
                 break;
 
             case GET_USER_INFOS:
@@ -192,6 +193,18 @@ final class JsonTreatment {
         comm.communicationResult = projectsArray;
     }
 
+    /**
+     * Ajoute une ressource à un projet
+     *
+     * @param comm Communication à traiter
+     * @param jsonObject Contenu à traiter
+     */
+    private static void addResourceToProject(Communication comm, Object jsonObject) {
+        if (comm.getHTTPCode() != HTTPCode.HTTP_OK) {
+            Logger.warning("L'ajout de ressource humaine a échoué");
+        }
+    }
+
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     /**
@@ -282,6 +295,7 @@ final class JsonTreatment {
             comm.communicationResult = resourceList;
         }
     }
+
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     /**

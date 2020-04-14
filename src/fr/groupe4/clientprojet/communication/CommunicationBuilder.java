@@ -256,7 +256,7 @@ public final class CommunicationBuilder {
         typeOfCommunication = CommunicationType.ADD_RESOURCE_TO_PROJECT;
         requestData.put("token", Communication.getRequestToken(this));
         requestData.put("project", projectId);
-        requestData.put("type", type.toString());
+        requestData.put("type", type.getNameForAPI());
         requestData.put("id", resourceId);
 
         if (start != null) {

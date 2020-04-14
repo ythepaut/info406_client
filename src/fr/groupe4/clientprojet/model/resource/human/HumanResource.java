@@ -82,8 +82,8 @@ public class HumanResource extends Resource {
         return description;
     }
 
-    public String getRole() {
-        return role.toString();
+    public HumanRole getRole() {
+        return role;
     }
 
     public String toString() {
