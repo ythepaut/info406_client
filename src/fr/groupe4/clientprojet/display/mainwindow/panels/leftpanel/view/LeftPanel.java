@@ -8,6 +8,7 @@ import fr.groupe4.clientprojet.display.view.ScrollBarUI;
 import fr.groupe4.clientprojet.model.project.Project;
 import fr.groupe4.clientprojet.model.project.ProjectList;
 import fr.groupe4.clientprojet.display.view.draw.DrawPanel;
+import fr.groupe4.clientprojet.model.resource.human.User;
 import fr.groupe4.clientprojet.utils.Location;
 import fr.groupe4.clientprojet.display.view.RoundButton;
 
@@ -90,14 +91,15 @@ public class LeftPanel extends DrawPanel {
                 new MatteBorder(3, 0, 0, 0, Color.BLACK)));
         bottomPanel.setBackground(Color.WHITE);
 
-
-        c.gridy = 0;
         RoundButton button = new RoundButton(new File(Location.getImgDataPath() + "/plus.png"));
-        buttons.add(button);
-        button.setActionCommand(EventLeftPanel.NEWPROJECT);
-        button.addActionListener(eventLeftPanel);
-        button.setFont(buttonFont);
-        bottomPanel.add(button, c);
+        if(User.getUser().canCreateProject()) {
+            c.gridy = 0;
+            buttons.add(button);
+            button.setActionCommand(EventLeftPanel.NEWPROJECT);
+            button.addActionListener(eventLeftPanel);
+            button.setFont(buttonFont);
+            bottomPanel.add(button, c);
+        }
         c.gridy = 1;
         button = new RoundButton(new File(Location.getImgDataPath() + "/calendar.png"));
         buttons.add(button);
