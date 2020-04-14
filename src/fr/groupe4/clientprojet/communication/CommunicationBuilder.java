@@ -6,6 +6,9 @@ import java.time.ZoneId;
 import java.time.temporal.Temporal;
 import java.util.HashMap;
 
+import fr.groupe4.clientprojet.logger.Logger;
+import fr.groupe4.clientprojet.model.resource.Resource;
+import fr.groupe4.clientprojet.model.resource.ResourceType;
 import fr.groupe4.clientprojet.model.task.enums.TaskStatus;
 import org.jetbrains.annotations.NotNull;
 
@@ -151,7 +154,8 @@ public final class CommunicationBuilder {
      *
      * @return Builder non terminé avec URL
      */
-    public CommunicationBuilder connect(@NotNull String username, @NotNull String password) {
+    public CommunicationBuilder connect(@NotNull String username,
+                                        @NotNull String password) {
         typeOfCommunication = CommunicationType.LOGIN;
         requestData.put("username", username);
         requestData.put("passwd", password);
@@ -224,6 +228,65 @@ public final class CommunicationBuilder {
         return this;
     }
 
+    /**
+     * Ajoute une ressource à un projet
+     *
+     * @param projectId Id du projet
+     * @param type Type de la ressource
+     * @param resourceId Id de la ressource
+     * @param start Date de début, maintenant si null
+     * @param end Date de fin, pas de fin si null
+     *
+     * @see #getUserTimeSlotList Exemple de Temporal
+     *
+     * @return Builder non terminé avec URL
+     */
+    public CommunicationBuilder addResourceToProject(long projectId,
+                                                     @NotNull ResourceType type,
+                                                     long resourceId,
+                                                     @Nullable Temporal start,
+                                                     @Nullable Temporal end) {
+        long t2 = temporalToSeconds(end, true);
+
+        if (t2 == 0) {
+            Logger.warning("Date de fin null, sera sûrement changé plus tard");
+            t2 = Long.MAX_VALUE;
+        }
+
+        typeOfCommunication = CommunicationType.ADD_RESOURCE_TO_PROJECT;
+        requestData.put("token", Communication.getRequestToken(this));
+        requestData.put("project", projectId);
+        requestData.put("type", type.toString());
+        requestData.put("id", resourceId);
+
+        if (start != null) {
+            long t1 = temporalToSeconds(start, false);
+            requestData.put("start", t1);
+        }
+
+        requestData.put("end", t2);
+        return this;
+    }
+
+    /**
+     * Ajoute une ressource humaine à un projet
+     *
+     * @param projectId Id du projet
+     * @param humanId Id de la ressource
+     * @param start Date de début, maintenant si null
+     * @param end Date de fin, pas de fin si null
+     *
+     * @see #getUserTimeSlotList Exemple de Temporal
+     *
+     * @return Builder non terminé avec URL
+     */
+    public CommunicationBuilder addHumanResourceToProject(long projectId,
+                                                          long humanId,
+                                                          @Nullable Temporal start,
+                                                          @Nullable Temporal end) {
+        return addResourceToProject(projectId, ResourceType.HUMAN_RESOURCE, humanId, start, end);
+    }
+
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     /**
@@ -266,7 +329,7 @@ public final class CommunicationBuilder {
 
     /**
      * Crée une tâche <br>
-     * Cf. getTaskList pour exemple détaillé de l'utilisation de Temporal
+     * Cf. getUserTimeSlotList pour exemple détaillé de l'utilisation de Temporal
      *
      * @param name Nom de la tâche
      * @param description Description de la tâche

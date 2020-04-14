@@ -16,16 +16,11 @@ public class EventExitCreationDialog implements ActionListener {
         this.owner = source;
     }
 
-    public static void exit() {
-
-    }
-
 
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
         owner.dispose();
-        //new ExitDialog(owner);
     }
-    
-    
+
+
 }

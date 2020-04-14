@@ -1,5 +1,6 @@
 package fr.groupe4.clientprojet.communication;
 
+import fr.groupe4.clientprojet.model.resource.human.HumanResourceList;
 import fr.groupe4.clientprojet.model.task.Task;
 import fr.groupe4.clientprojet.model.task.TaskList;
 import org.json.simple.JSONArray;
@@ -59,12 +60,17 @@ final class JsonTreatment {
             case LIST_PROJECTS:
                 listProjects(comm, jsonObject);
                 break;
+            case ADD_RESOURCE_TO_PROJECT:
+                break;
 
             case GET_USER_INFOS:
                 getUserInfos(comm, jsonObject);
                 break;
             case GET_HUMAN_RESOURCE:
                 getHumanResource(comm, jsonObject);
+                break;
+            case LIST_HUMAN_RESOURCE:
+                listHumanResource(comm, jsonObject);
                 break;
 
             case CREATE_TASK:
@@ -229,7 +235,7 @@ final class JsonTreatment {
      * @param jsonObject Contenu à traiter
      */
     private static void getHumanResource(Communication comm, Object jsonObject) {
-        if (comm.status.equals(CommunicationStatus.STATUS_SUCCESS)) {
+        if (comm.status == CommunicationStatus.STATUS_SUCCESS) {
             JSONObject jsonContent = (JSONObject) jsonObject;
 
             comm.communicationResult = new HumanResource(
@@ -242,6 +248,40 @@ final class JsonTreatment {
         }
     }
 
+    /**
+     * Récupère la liste des ressources humaines
+     *
+     * @param comm Communication à traiter
+     * @param jsonObject Contenu à traiter
+     */
+    private static void listHumanResource(Communication comm, Object jsonObject) {
+        if (comm.status == CommunicationStatus.STATUS_SUCCESS) {
+            JSONObject jsonContent = (JSONObject) jsonObject;
+            JSONArray jsonArray = (JSONArray) jsonContent.get("h_ressources");
+
+            HumanResourceList resourceList = new HumanResourceList();
+
+            for (Object humanObject : jsonArray) {
+                JSONObject jsonHumanSet = (JSONObject) humanObject;
+                Object[] keySet = jsonHumanSet.keySet().toArray();
+                String key = String.valueOf(keySet[0]);
+
+                JSONObject jsonHuman = (JSONObject) jsonHumanSet.get(key);
+
+                HumanResource human = new HumanResource(
+                        (long) jsonHuman.get("id"),
+                        (String) jsonHuman.get("firstname"),
+                        (String) jsonHuman.get("lastname"),
+                        (String) jsonHuman.get("job"),
+                        (String) jsonHuman.get("role"),
+                        (String) jsonHuman.get("description"));
+
+                resourceList.add(human);
+            }
+
+            comm.communicationResult = resourceList;
+        }
+    }
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     /**

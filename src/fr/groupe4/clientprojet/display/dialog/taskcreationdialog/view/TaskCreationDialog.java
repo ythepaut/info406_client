@@ -1,74 +1,67 @@
-package fr.groupe4.clientprojet.display.dialog.projectcreationdialog.view;
+package fr.groupe4.clientprojet.display.dialog.taskcreationdialog.view;
 
-import fr.groupe4.clientprojet.display.dialog.projectcreationdialog.controller.EventExitCreationDialog;
-import fr.groupe4.clientprojet.display.dialog.projectcreationdialog.controller.EventProjectCreation;
+import fr.groupe4.clientprojet.display.dialog.taskcreationdialog.controller.EventExitCreationDialog;
+import fr.groupe4.clientprojet.display.dialog.taskcreationdialog.controller.EventTaskCreation;
 import fr.groupe4.clientprojet.display.view.draw.DrawDialog;
-import fr.groupe4.clientprojet.logger.Logger;
-import org.jdatepicker.DateModel;
-import org.jdatepicker.impl.*;
+import org.jdatepicker.impl.JDatePanelImpl;
+import org.jdatepicker.impl.JDatePickerImpl;
+import org.jdatepicker.impl.UtilDateModel;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.MatteBorder;
 import java.awt.*;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.Temporal;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.Properties;
 
 /**
- * Fenetre de création de projet
+ * Dialog de création de tâche
  */
-public class ProjectCreationDialog extends DrawDialog {
-
-    //Les attributs du projet
-    public String strnomprojet;
-    public String strdescription;
-    public String strdate;
-    public Temporal localDate;
-
-    //Ce qu'il faut pour bien configurer la date
-    private String datePattern = "d/MM/yyyy";
-    private SimpleDateFormat dateFormatter = new SimpleDateFormat(datePattern);
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/MM/yyyy");
-
-    GridBagConstraints c = new GridBagConstraints();
+public class TaskCreationDialog extends DrawDialog {
     /**
-     * La frame qui appelle ce dialog
+     * Parent
      */
-    private JFrame owner;
+    @Nullable
+    private JFrame parent;
+
+    /**
+     * Id du projet
+     */
+    private long projectId;
 
     /**
      * Constructeur
-     * @param owner
+     *
+     * @param parent Parent
+     * @param projectId Id du projet
      */
-    public ProjectCreationDialog(JFrame owner) {
-        setTitle("Fenêtre de création de Projet");
-        this.owner = owner;
+    public TaskCreationDialog(@Nullable JFrame parent, long projectId) {
+        this.parent = parent;
+        this.projectId = projectId;
+
+        setTitle("Fenêtre de création de tâche");
         setModal(true);
 
         drawContent();
         setVisible(true);
     }
 
-
-
     /**
-     * Dessine le contenu du dialog de création
+     * Affichage
      */
     @Override
     protected void drawContent() {
-
         setSize(300, 550);
         setResizable(false);
         setUndecorated(true);
         rootPane.setBorder(new MatteBorder(2, 2, 2, 2, Color.BLACK));
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
         setLocation(dim.width/2 - getWidth()/2, dim.height/2 - getHeight()/2);
+
+        GridBagConstraints c = new GridBagConstraints();
 
         /**
          * Déclaration du layout
@@ -84,7 +77,7 @@ public class ProjectCreationDialog extends DrawDialog {
         /**
          * Entrée du nom et description de projet
          */
-        JLabel labelnom = new JLabel("Entrez le nom du projet : ");
+        JLabel labelnom = new JLabel("Entrez le nom de la tâche : ");
         add(labelnom,c);
         JTextField nomprojet = new JTextField(15);
         c.gridy++;
@@ -92,7 +85,7 @@ public class ProjectCreationDialog extends DrawDialog {
         String strnomprojet = nomprojet.getText();
 
         c.gridy++;
-        JLabel labeldescription = new JLabel("Entrez la description du projet : ");
+        JLabel labeldescription = new JLabel("Entrez la description de la tâche : ");
         add(labeldescription,c);
         c.gridy++;
         JTextArea description = new JTextArea(18, 22);
@@ -104,7 +97,7 @@ public class ProjectCreationDialog extends DrawDialog {
          * Entrée de la date limite du projet
          */
         c.gridy++;
-        JLabel datefinlabel = new JLabel("Entrez la date limite du projet : ");
+        JLabel datefinlabel = new JLabel("Entrez la date limite de la tâche : ");
         add(datefinlabel,c);
 
         UtilDateModel model = new UtilDateModel();
@@ -113,6 +106,11 @@ public class ProjectCreationDialog extends DrawDialog {
         p.put("text.month", "Month");
         p.put("text.year", "Year");
         JDatePanelImpl datePanel = new JDatePanelImpl(model, p);
+
+        String datePattern = "d/MM/yyyy";
+        SimpleDateFormat dateFormatter = new SimpleDateFormat(datePattern);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/MM/yyyy");
+
 
         //Création d'un JFormattedTextField.AbstractFormatter
         JFormattedTextField.AbstractFormatter form = new JFormattedTextField.AbstractFormatter() {
@@ -140,13 +138,12 @@ public class ProjectCreationDialog extends DrawDialog {
          */
         c.gridwidth = 1;
         c.gridy++;
-        JButton creeprojet = new JButton("Création Projet");
-        creeprojet.addActionListener(new EventProjectCreation(this, model, nomprojet, description));
+        JButton creeprojet = new JButton("Création Tâche");
+        creeprojet.addActionListener(new EventTaskCreation(this, model, nomprojet, description, projectId));
         add(creeprojet,c);
         c.gridx++;
         JButton cancelButton = new JButton("Annuler");
         cancelButton.addActionListener(new EventExitCreationDialog(this));
         add(cancelButton,c);
-
     }
 }

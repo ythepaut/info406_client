@@ -1,6 +1,10 @@
 package fr.groupe4.clientprojet.display.mainwindow.panels.projectpanel.view;
 
 import fr.groupe4.clientprojet.communication.Communication;
+import fr.groupe4.clientprojet.display.mainwindow.panels.leftpanel.controller.EventLeftPanel;
+import fr.groupe4.clientprojet.display.mainwindow.panels.projectpanel.controller.EventProjectPanel;
+import fr.groupe4.clientprojet.display.mainwindow.panels.projectpanel.controller.NewTaskListener;
+import fr.groupe4.clientprojet.display.mainwindow.panels.projectpanel.controller.RightClicMenuProjectListener;
 import fr.groupe4.clientprojet.display.view.draw.DrawPanel;
 import fr.groupe4.clientprojet.display.view.messagepanel.view.MessagePanel;
 import fr.groupe4.clientprojet.display.view.slide.view.Slide;
@@ -10,6 +14,10 @@ import fr.groupe4.clientprojet.model.task.TaskList;
 
 import javax.swing.*;
 import java.awt.*;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.time.LocalDateTime;
 
 /**
  * Le panel des projets
@@ -36,6 +44,8 @@ public class ProjectPanel extends DrawPanel {
                 project = p;
             }
         }
+
+        addMouseListener(new RightClicMenuProjectListener(this));
 
         drawContent();
     }
@@ -75,6 +85,7 @@ public class ProjectPanel extends DrawPanel {
      * @return : le jpanel
      */
     private JPanel homePanel() {
+        EventProjectPanel eventProjectPanel = new EventProjectPanel(this, project.getId());
         JPanel panel = new JPanel(new BorderLayout());
         panel.add(new JLabel("HOME"), BorderLayout.NORTH);
         panel.add(new JLabel(project.getDescription()), BorderLayout.CENTER);
@@ -83,13 +94,19 @@ public class ProjectPanel extends DrawPanel {
         JPanel ajoutRessource = new JPanel();
         ajoutRessource.setBorder(BorderFactory.createEmptyBorder(10,10,20,10));
         ajoutRessource.setLayout(new FlowLayout());
-        JButton bouttonAddRessourcesMateriel = new JButton("Ajouter une ressources matériels au projet");
-        JButton bouttonAddRessourcesHumaine = new JButton ("Ajouter un membre au projet");
+        JButton bouttonAddRessourcesMateriel = new JButton("Gérer les ressources matériels du projet");
+        JButton bouttonAddRessourcesHumaine = new JButton ("Gérer les utilisateurs du projet");
         ajoutRessource.add(bouttonAddRessourcesHumaine);
         ajoutRessource.add(bouttonAddRessourcesMateriel);
         panel.add(ajoutRessource,BorderLayout.SOUTH);
 
+        //Création du controller de ressources humaines
+        bouttonAddRessourcesHumaine.setActionCommand(EventProjectPanel.NEWUSERS);
+        bouttonAddRessourcesHumaine.addActionListener(eventProjectPanel);
 
+        //Création du controller de ressources matériels
+        bouttonAddRessourcesMateriel.setActionCommand(EventProjectPanel.NEWMAT);
+        bouttonAddRessourcesMateriel.addActionListener(eventProjectPanel);
 
         // TODO : Construire panel accueil
         return panel;
@@ -120,12 +137,34 @@ public class ProjectPanel extends DrawPanel {
         assert tasks != null;
         for (fr.groupe4.clientprojet.model.task.Task task : tasks) {
             panelL.add(new JLabel(task.getName()));
-            panelC.add(new JLabel(task.getDescription()));
-            if (task.getDeadline() != null) {
-                panelR.add(new JLabel(task.getDeadline().toString()));
+
+            String description = task.getDescription();
+
+            if (description.isBlank()) {
+                description = " ";
             }
+
+            panelC.add(new JLabel(description));
+
+            LocalDateTime deadline = task.getDeadline();
+            String deadlineString = " ";
+
+            if (deadline != null) {
+                deadlineString = deadline.toString();
+            }
+
+            panelR.add(new JLabel(deadlineString));
         }
-        return panel;
+
+        JButton b = new JButton("Nouvelle tâche");
+        b.addActionListener(new NewTaskListener(project.getId()));
+        panel.add(b);
+
+        JPanel superPanel = new JPanel(new BorderLayout());
+        superPanel.add(panel, BorderLayout.CENTER);
+        superPanel.add(b, BorderLayout.SOUTH);
+
+        return superPanel;
     }
 
     /**
