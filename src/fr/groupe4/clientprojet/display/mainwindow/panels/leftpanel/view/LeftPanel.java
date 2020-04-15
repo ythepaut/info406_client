@@ -5,6 +5,8 @@ import fr.groupe4.clientprojet.display.mainwindow.panels.centerpanel.view.Center
 import fr.groupe4.clientprojet.display.mainwindow.panels.leftpanel.controller.EventLeftPanel;
 import fr.groupe4.clientprojet.display.mainwindow.view.MainWindow;
 import fr.groupe4.clientprojet.display.view.ScrollBarUI;
+import fr.groupe4.clientprojet.model.parameters.Parameters;
+import fr.groupe4.clientprojet.model.parameters.themes.Theme;
 import fr.groupe4.clientprojet.model.project.Project;
 import fr.groupe4.clientprojet.model.project.ProjectList;
 import fr.groupe4.clientprojet.display.view.draw.DrawPanel;
@@ -74,6 +76,7 @@ public class LeftPanel extends DrawPanel {
      */
     @Override
     protected void drawContent() {
+        setBackground(Theme.FOND.getColor(Parameters.getThemeName()));
         EventLeftPanel eventLeftPanel = new EventLeftPanel(this, centerPanel);
         final int TAILLE_BOUTONS = 25; // TODO: Le final pourra être enlevé quand on ajoutera les paramètres
         Font buttonFont = new Font("Arial", Font.PLAIN, TAILLE_BOUTONS);
@@ -87,11 +90,12 @@ public class LeftPanel extends DrawPanel {
 
         // Boutons du bas (calendrier, profil)
         JPanel bottomPanel = new JPanel(new GridBagLayout());
+        bottomPanel.setBackground(Theme.FOND.getColor(Parameters.getThemeName()));
         bottomPanel.setBorder(new CompoundBorder(new EmptyBorder(25, 0, 0, 0),
-                new MatteBorder(3, 0, 0, 0, Color.BLACK)));
-        bottomPanel.setBackground(Color.WHITE);
+                new MatteBorder(3, 0, 0, 0, Theme.BORDER.getColor(Parameters.getThemeName()))));
 
         RoundButton button = new RoundButton(new File(Location.getImgDataPath() + "/plus.png"));
+        button.setForeground(Theme.POLICE_NORMAL.getColor(Parameters.getThemeName()));
         if(User.getUser().canCreateProject()) {
             c.gridy = 0;
             buttons.add(button);
@@ -102,6 +106,7 @@ public class LeftPanel extends DrawPanel {
         }
         c.gridy = 1;
         button = new RoundButton(new File(Location.getImgDataPath() + "/calendar.png"));
+        button.setForeground(Theme.POLICE_NORMAL.getColor(Parameters.getThemeName()));
         buttons.add(button);
         button.setActionCommand(CenterPanel.CALENDAR);
         button.addActionListener(eventLeftPanel);
@@ -109,6 +114,7 @@ public class LeftPanel extends DrawPanel {
         bottomPanel.add(button, c);
         c.gridy = 2;
         button = new RoundButton(new File(Location.getImgDataPath() + "/user.png"));
+        button.setForeground(Theme.POLICE_NORMAL.getColor(Parameters.getThemeName()));
         buttons.add(button);
         button.setActionCommand(CenterPanel.USER);
         if (first) {
@@ -130,12 +136,13 @@ public class LeftPanel extends DrawPanel {
      */
     private void drawProjectButton(EventLeftPanel eventLeftPanel, Font buttonFont) {
         JPanel projectPanel = new JPanel(new GridBagLayout());
+        projectPanel.setBackground(Theme.FOND.getColor(Parameters.getThemeName()));
         GridBagConstraints c = new GridBagConstraints();
         c.gridx = 0;
         c.gridy = 0;
         c.insets = new Insets(5, 0, 5, 0);
-        projectPanel.setBackground(Color.WHITE);
         JScrollPane scrollPane = new JScrollPane(projectPanel);
+        scrollPane.setBackground(Theme.FOND.getColor(Parameters.getThemeName()));
         scrollPane.getVerticalScrollBar().setUI(new ScrollBarUI());
         scrollPane.setBackground(Color.WHITE);
         scrollPane.setBorder(null);
@@ -146,6 +153,7 @@ public class LeftPanel extends DrawPanel {
         for (Project p: projectList) {
             String name = p.getName();
             RoundButton button = new RoundButton(name.substring(0, 1));
+            button.setForeground(Theme.POLICE_NORMAL.getColor(Parameters.getThemeName()));
             button.setActionCommand(name);
             button.addActionListener(eventLeftPanel);
             button.setFont(buttonFont);

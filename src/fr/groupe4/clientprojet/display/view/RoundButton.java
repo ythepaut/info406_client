@@ -76,7 +76,7 @@ public class RoundButton extends JButton {
         int taille = Math.min(getWidth(), getHeight()); // La taille du cercle
         int x = (Math.max(getWidth(), getHeight()) - taille) /2; // La position en x, en y c'est toujours 0
         if (selected) {
-            g2.setColor(new Color(84, 180, 255));
+            g2.setColor(Theme.BUTTON_SELECTED.getColor(Parameters.getThemeName()));
             g2.fillOval(x, 0, taille, taille);
         }
         if (image != null) {

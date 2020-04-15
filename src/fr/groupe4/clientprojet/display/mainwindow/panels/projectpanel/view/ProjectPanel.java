@@ -8,6 +8,8 @@ import fr.groupe4.clientprojet.display.mainwindow.panels.projectpanel.controller
 import fr.groupe4.clientprojet.display.view.draw.DrawPanel;
 import fr.groupe4.clientprojet.display.view.messagepanel.view.MessagePanel;
 import fr.groupe4.clientprojet.display.view.slide.view.Slide;
+import fr.groupe4.clientprojet.model.parameters.Parameters;
+import fr.groupe4.clientprojet.model.parameters.themes.Theme;
 import fr.groupe4.clientprojet.model.project.Project;
 import fr.groupe4.clientprojet.model.project.ProjectList;
 import fr.groupe4.clientprojet.model.task.TaskList;
@@ -56,15 +58,17 @@ public class ProjectPanel extends DrawPanel {
     @Override
     protected void drawContent() {
         setLayout(new BorderLayout());
+        setBackground(Theme.FOND.getColor(Parameters.getThemeName()));
 
         // Titre
         JPanel titlePanel = new JPanel(new GridBagLayout());
-        titlePanel.setBackground(Color.WHITE);
+        titlePanel.setBackground(Theme.FOND.getColor(Parameters.getThemeName()));
         GridBagConstraints c = new GridBagConstraints();
         c.gridx = 0;
         c.gridy = 0;
         c.insets = new Insets(20, 0, 0, 0);
         JLabel title = new JLabel(project.getName());
+        title.setForeground(Theme.POLICE_NORMAL.getColor(Parameters.getThemeName()));
         title.setFont(new Font("Arial", Font.PLAIN, 30));
         titlePanel.add(title, c);
 

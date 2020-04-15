@@ -34,6 +34,10 @@ public enum Theme {
             Color.LIGHT_GRAY,
             Color.DARK_GRAY
     ), // Les boutons
+    BUTTON_SELECTED(
+            new Color(84, 180, 255),
+            new Color(42, 90, 128)
+    ), // RoundButton sélectionné
     MESSAGE_SENT(
             new Color(200, 200, 200),
             new Color(55, 55, 55)

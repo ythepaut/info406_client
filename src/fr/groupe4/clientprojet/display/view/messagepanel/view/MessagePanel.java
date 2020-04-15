@@ -147,9 +147,11 @@ public class MessagePanel extends DrawPanel {
                                 new EmptyBorder(0, 0, 0, 5))));
 
                 assert User.getUser() != null;
-                infoPanel.add(new JLabel(User.getUser().isSender(message) ?
+                JLabel label = new JLabel(User.getUser().isSender(message) ?
                         "Moi" :
-                        message.getSrc().getFirstname() + " " + message.getSrc().getLastname()));
+                        message.getSrc().getFirstname() + " " + message.getSrc().getLastname());
+                label.setForeground(Theme.POLICE_NORMAL.getColor(Parameters.getThemeName()));
+                infoPanel.add(label);
                 panel.add(infoPanel, BorderLayout.WEST);
                 content.setBorder(new EmptyBorder(0, 10, 0, 10));
                 c.anchor = GridBagConstraints.WEST;
