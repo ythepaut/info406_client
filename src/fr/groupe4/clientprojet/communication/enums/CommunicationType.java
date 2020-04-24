@@ -1,6 +1,6 @@
 package fr.groupe4.clientprojet.communication.enums;
 
-import fr.groupe4.clientprojet.communication.Communication;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Types de communication
@@ -42,26 +42,60 @@ public enum CommunicationType {
     SEND_MESSAGE("/message/create"),
     LIST_MESSAGES("/message/list");
 
-    private boolean checkConnection;
-    private String url;
+    /**
+     * Doit vérifier la connexion ou non
+     */
+    private final boolean checkConnection;
 
+    /**
+     * URL associé
+     */
+    @NotNull
+    private final String url;
+
+    /**
+     * Constructeur
+     */
     CommunicationType() {
         this("");
     }
 
-    CommunicationType(String url) {
+    /**
+     * Constructeur
+     *
+     * @param url URL
+     */
+    CommunicationType(@NotNull String url) {
         this(url, true);
     }
 
-    CommunicationType(String url, boolean checkConnection) {
+    /**
+     * Constructeur
+     *
+     * @param url URL
+     *
+     * @param checkConnection Vérifie la connexion
+     */
+    CommunicationType(@NotNull String url, boolean checkConnection) {
         this.url = url;
         this.checkConnection = checkConnection;
     }
 
+    /**
+     * Récupère l'URL
+     *
+     * @return URL
+     */
+    @NotNull
     public String getUrl() {
         return url;
     }
 
+    /**
+     * Doit vérifier la connexion ?
+     *
+     * @return Vérif ?
+     */
     public boolean checkConnection() {
         return checkConnection;
     }

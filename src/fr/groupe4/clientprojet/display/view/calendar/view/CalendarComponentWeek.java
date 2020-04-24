@@ -2,6 +2,8 @@ package fr.groupe4.clientprojet.display.view.calendar.view;
 
 import fr.groupe4.clientprojet.logger.Logger;
 import fr.groupe4.clientprojet.model.calendar.CalendarProject;
+import fr.groupe4.clientprojet.model.parameters.Parameters;
+import fr.groupe4.clientprojet.model.parameters.themes.Theme;
 import fr.groupe4.clientprojet.model.timeslot.TimeSlot;
 import fr.groupe4.clientprojet.model.timeslot.TimeSlotList;
 
@@ -85,9 +87,9 @@ class CalendarComponentWeek extends GenericCalendarComponent {
             dayTitlePanel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
             dayTitlePanel.add(daysTitle[i]);
             daysTitle[i].setOpaque(true);
-            daysTitle[i].setBackground(Color.WHITE);
+            daysTitle[i].setBackground(Theme.FOND.getColor(Parameters.getThemeName()));
 
-            daysPanel[i].setBackground(Color.WHITE);
+            daysPanel[i].setBackground(Theme.FOND.getColor(Parameters.getThemeName()));
             daysPanel[i].setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1));
 
             Font f = daysTitle[i].getFont();
@@ -212,7 +214,7 @@ class CalendarComponentWeek extends GenericCalendarComponent {
             for (int i = 0; i < present.length; i++) {
                 if (!present[i]) {
                     empty = new JPanel();
-                    empty.setBackground(Color.WHITE);
+                    empty.setBackground(Theme.FOND.getColor(Parameters.getThemeName()));
                     constraints[day].gridx = 0;
                     constraints[day].gridy = i;
 

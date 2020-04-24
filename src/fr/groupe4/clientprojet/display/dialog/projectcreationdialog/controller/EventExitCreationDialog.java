@@ -10,7 +10,7 @@ import java.awt.event.ActionListener;
 
 public class EventExitCreationDialog implements ActionListener {
 
-    private static ProjectCreationDialog owner;
+    private final ProjectCreationDialog owner;
 
     public EventExitCreationDialog(ProjectCreationDialog source) {
         this.owner = source;

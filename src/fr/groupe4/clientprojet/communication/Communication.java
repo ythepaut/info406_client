@@ -336,7 +336,7 @@ public final class Communication implements Runnable {
      * Code HTML de la requête, comme un code 200 (OK) ou 404 (Not Found)
      */
     @NotNull
-    HTTPCode HTTPCode;
+    HTTPCode httpCode;
 
     /**
      * Message associé à la requête
@@ -360,7 +360,7 @@ public final class Communication implements Runnable {
         status = CommunicationStatus.STATUS_DEFAULT;
         code = APICode.NOT_FINISHED;
         requestAllowed = true;
-        HTTPCode = HTTPCode.HTTP_CUSTOM_DEFAULT_ERROR;
+        httpCode = HTTPCode.HTTP_CUSTOM_DEFAULT_ERROR;
         message = "";
         timeBetweenRequests = Duration.ofSeconds(10);
 
@@ -424,7 +424,7 @@ public final class Communication implements Runnable {
      */
     @NotNull
     public HTTPCode getHTTPCode() {
-        return HTTPCode;
+        return httpCode;
     }
 
     /**
@@ -452,7 +452,7 @@ public final class Communication implements Runnable {
      * @return Succès
      */
     public boolean isSuccessful() {
-        return HTTPCode == HTTPCode.HTTP_OK;
+        return httpCode == HTTPCode.HTTP_OK;
     }
 
     /**
@@ -475,7 +475,7 @@ public final class Communication implements Runnable {
      */
     @Override @NotNull
     public String toString() {
-        return HTTPCode
+        return httpCode
                 + " | " + status
                 + " | " + code
                 + " | " + typeOfCommunication
@@ -537,16 +537,16 @@ public final class Communication implements Runnable {
             Logger.error("Erreur inconnue :", e, toString());
         }
         catch (ExecutionException e) {
-            HTTPCode = HTTPCode.HTTP_CUSTOM_TIMEOUT;
+            httpCode = HTTPCode.HTTP_CUSTOM_TIMEOUT;
             Logger.error("Requête time out :", e, toString());
         }
         catch (CancellationException e) {
-            HTTPCode = HTTPCode.HTTP_CUSTOM_CANCEL;
+            httpCode = HTTPCode.HTTP_CUSTOM_CANCEL;
             Logger.error("Requête annulée :", e, toString());
         }
 
         if (response != null) {
-            HTTPCode = HTTPCode.fromInt(response.statusCode());
+            httpCode = HTTPCode.fromInt(response.statusCode());
 
             JSONParser parser = new JSONParser();
             Object parsedResponse = null;
@@ -570,7 +570,7 @@ public final class Communication implements Runnable {
 
                 Object jsonObject = jsonMain.get("content");
 
-                if (HTTPCode != HTTPCode.HTTP_OK) {
+                if (httpCode != HTTPCode.HTTP_OK) {
                     Logger.debug("Code NOK :", toString(), LoggerOption.LOG_FILE_ONLY);
                 }
 

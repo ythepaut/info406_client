@@ -7,16 +7,15 @@ import java.time.temporal.Temporal;
 import java.util.HashMap;
 
 import fr.groupe4.clientprojet.logger.Logger;
-import fr.groupe4.clientprojet.model.resource.Resource;
 import fr.groupe4.clientprojet.model.resource.ResourceType;
 import fr.groupe4.clientprojet.model.task.enums.TaskStatus;
-import org.jetbrains.annotations.NotNull;
-
 import fr.groupe4.clientprojet.model.resource.human.User;
 import fr.groupe4.clientprojet.communication.enums.CommunicationType;
 import fr.groupe4.clientprojet.model.message.enums.MessageResource;
 import fr.groupe4.clientprojet.model.project.enums.ProjectStatus;
+
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Builder de la communication <br>
@@ -38,7 +37,7 @@ public final class CommunicationBuilder {
      *
      * @return Temps en secondes
      */
-    private static long temporalToSeconds(Temporal time, boolean allowNull) throws IllegalArgumentException {
+    private static long temporalToSeconds(@Nullable Temporal time, boolean allowNull) throws IllegalArgumentException {
         long sec;
 
         if (time == null) {

@@ -1,5 +1,7 @@
 package fr.groupe4.clientprojet.logger.enums;
 
+import org.jetbrains.annotations.NotNull;
+
 /**
  * Couleurs ANSI pour le log
  */
@@ -24,12 +26,28 @@ public enum LoggerColor {
     ANSI_CYAN_BACKGROUND("\u001B[46m"),
     ANSI_WHITE_BACKGROUND("\u001B[47m");
 
-    private String code;
+    /**
+     * Code couleur
+     */
+    @NotNull
+    private final String code;
 
-    LoggerColor(String code) {
+    /**
+     * Constructeur
+     *
+     * @param code Code couleur
+     */
+    LoggerColor(@NotNull String code) {
         this.code = code;
     }
 
+    /**
+     * Vers String
+     *
+     * @return String
+     */
+    @NotNull
+    @Override
     public String toString() {
         return code;
     }

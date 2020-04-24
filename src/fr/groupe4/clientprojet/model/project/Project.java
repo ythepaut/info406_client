@@ -1,41 +1,56 @@
 package fr.groupe4.clientprojet.model.project;
 
+import fr.groupe4.clientprojet.logger.Logger;
 import fr.groupe4.clientprojet.model.project.enums.ProjectStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.time.*;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 
+/**
+ * Projet
+ */
 public class Project {
     /**
      * ID du projet
      */
-    private long id;
+    private final long id;
 
     /**
      * Nom du projet
      */
     @NotNull
-    private String name;
+    private final String name;
 
     /**
      * Description du projet
      */
     @NotNull
-    private String description;
+    private final String description;
 
     /**
      * Date limite
      */
     @Nullable
-    private LocalDateTime deadline;
+    private final LocalDateTime deadline;
 
     /**
      * Status du projet
      */
     @NotNull
-    private ProjectStatus status;
+    private final ProjectStatus status;
 
+    /**
+     * Constructeur
+     *
+     * @param id ID BDD
+     * @param name Nom
+     * @param description Description
+     * @param deadline Deadline, nombre de secondes depuis le 01/01/1970 UTC
+     * @param status Statu
+     */
     public Project(long id, @NotNull String name, @NotNull String description, long deadline, @NotNull String status) {
         this.id = id;
         this.name = name;
@@ -51,33 +66,66 @@ public class Project {
         this.status = ProjectStatus.fromString(status);
     }
 
+    /**
+     * Vers chaine
+     *
+     * @return Chaine
+     */
     @Override
     @NotNull
     public String toString() {
         return id + " - " + name + " - " + description + " - " + getDeadline() + " - " + status;
     }
 
+    /**
+     * Récupère l'id
+     *
+     * @return ID
+     */
     public long getId() {
         return id;
     }
 
+    /**
+     * Récupère le nom
+     *
+     * @return Nom
+     */
     @NotNull
     public String getName() {
         return name;
     }
 
+    /**
+     * Récupère la description
+     *
+     * @return Description
+     */
     @NotNull
     public String getDescription() {
         return description;
     }
 
+    /**
+     * Récupère la deadline
+     *
+     * @return Deadline
+     */
     @Nullable
     public LocalDateTime getDeadline() {
         return deadline;
     }
 
+    /**
+     * Récupère la deadline sous forme de secondes depuis le 01/01/1970 UTC
+     *
+     * @return Deadline en secondes
+     *
+     * @throws IllegalStateException S'il n'y a pas de deadline
+     */
     public long getDeadlineAsSeconds() throws IllegalStateException {
         if (deadline == null) {
+            Logger.error("Deadline null, essai de conversion vers secondes");
             throw new IllegalStateException("Méthode impossible à exécuter lorsque la deadline est null");
         }
         else {
@@ -85,6 +133,11 @@ public class Project {
         }
     }
 
+    /**
+     * Récupère le status
+     *
+     * @return Status
+     */
     @NotNull
     public ProjectStatus getStatus() {
         return status;

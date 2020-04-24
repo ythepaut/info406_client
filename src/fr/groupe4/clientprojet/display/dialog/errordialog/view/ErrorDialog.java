@@ -5,19 +5,57 @@ import fr.groupe4.clientprojet.display.dialog.errordialog.controller.KeyEventErr
 import fr.groupe4.clientprojet.display.view.draw.DrawDialog;
 import fr.groupe4.clientprojet.model.parameters.Parameters;
 import fr.groupe4.clientprojet.model.parameters.themes.Theme;
+import org.jetbrains.annotations.NotNull;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JPanel;
+import javax.swing.JLabel;
+import javax.swing.JButton;
+import javax.swing.WindowConstants;
 
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Toolkit;
+import java.awt.BorderLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Font;
+
+/**
+ * Dialog d'erreur
+ */
 public class ErrorDialog extends DrawDialog {
-    private String message;
-    private Color color;
+    /**
+     * Message affiché
+     */
+    @NotNull
+    private final String message;
 
-    private EventErrorDialog eventErrorDialog;
-    private KeyEventErrorDialog keyEventErrorDialog;
+    /**
+     * Couleur du texte
+     */
+    @NotNull
+    private final Color color;
 
+    /**
+     * Event de fenêtre
+     */
+    @NotNull
+    private final EventErrorDialog eventErrorDialog;
 
-    public ErrorDialog(String message, String title, Color color) {
+    /**
+     * Event de touches
+     */
+    @NotNull
+    private final KeyEventErrorDialog keyEventErrorDialog;
+
+    /**
+     * Constructeur custom
+     *
+     * @param message Message
+     * @param title Titre
+     * @param color Couleur
+     */
+    public ErrorDialog(@NotNull String message, @NotNull String title, @NotNull Color color) {
         this.message = message;
         setTitle(title);
         this.color = color;
@@ -38,10 +76,18 @@ public class ErrorDialog extends DrawDialog {
         setVisible(true);
     }
 
+    /**
+     * Constructeur basique
+     *
+     * @param message Message
+     */
     public ErrorDialog(String message) {
         this(message, "ERREUR", Theme.POLICE_ERROR.getColor(Parameters.getThemeName()));
     }
 
+    /**
+     * Affichage
+     */
     @Override
     protected void drawContent() {
         setBackground(Theme.FOND.getColor(Parameters.getThemeName()));

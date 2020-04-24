@@ -4,15 +4,35 @@ import fr.groupe4.clientprojet.display.dialog.firstrundialog.controller.EventFir
 import fr.groupe4.clientprojet.display.view.draw.DrawDialog;
 import fr.groupe4.clientprojet.model.parameters.Parameters;
 import fr.groupe4.clientprojet.model.parameters.themes.Theme;
+import org.jetbrains.annotations.NotNull;
 
-import javax.swing.*;
+import javax.swing.JTextField;
+import javax.swing.JPanel;
+import javax.swing.JLabel;
+import javax.swing.JButton;
 import javax.swing.border.EmptyBorder;
-import java.awt.*;
+
+import java.awt.Dimension;
+import java.awt.Toolkit;
+import java.awt.BorderLayout;
+import java.awt.GridLayout;
 
 public class FirstRunDialog extends DrawDialog {
+    /**
+     * Field de l'URL
+     */
+    @NotNull
     private JTextField urlField;
-    private EventFirstRunDialog eventFirstRunDialog;
 
+    /**
+     * Event de first run
+     */
+    @NotNull
+    private final EventFirstRunDialog eventFirstRunDialog;
+
+    /**
+     * Constructeur
+     */
     public FirstRunDialog() {
         setTitle("Premier lancement");
         setSize(300, 400);
@@ -68,6 +88,12 @@ public class FirstRunDialog extends DrawDialog {
         add(buttonPanel, BorderLayout.SOUTH);
     }
 
+    /**
+     * Récupère l'URL
+     *
+     * @return URL
+     */
+    @NotNull
     public String getUrl() {
         return urlField.getText();
     }

@@ -4,11 +4,18 @@ import fr.groupe4.clientprojet.display.dialog.exitdialog.controller.EventExitDia
 import fr.groupe4.clientprojet.display.dialog.exitdialog.controller.KeyEventExitDialog;
 import fr.groupe4.clientprojet.display.dialog.exitdialog.enums.ExitChoice;
 import fr.groupe4.clientprojet.display.view.draw.DrawDialog;
+import fr.groupe4.clientprojet.logger.Logger;
 import fr.groupe4.clientprojet.model.parameters.Parameters;
 import fr.groupe4.clientprojet.model.parameters.themes.Theme;
+import org.jetbrains.annotations.NotNull;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JButton;
+import javax.swing.JPanel;
+import javax.swing.JFrame;
+
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Toolkit;
 
 /**
  * Fenêtre de confirmation pour la sortie du logiciel
@@ -17,20 +24,25 @@ public class ExitDialog extends DrawDialog {
     /**
      * La frame qui appelle ce dialog
      */
-    private Window owner;
+    @NotNull
+    private final JFrame owner;
+
     /**
      * Le listener du dialog
      */
-    private EventExitDialog eventExitDialog;
+    @NotNull
+    private final EventExitDialog eventExitDialog;
 
     /**
      * Le constructeur
      *
-     * @param owner : la frame à laquelle appartient le dialog
+     * @param owner Frame à laquelle appartient le dialog
+     * @param avertissement Titre
      */
-    public ExitDialog(Window owner, String avertissement) {
-        setTitle(avertissement);
+    public ExitDialog(@NotNull JFrame owner, @NotNull String avertissement) {
         this.owner = owner;
+        setTitle(avertissement);
+
         setSize(300, 70);
         setResizable(false);
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
@@ -48,6 +60,7 @@ public class ExitDialog extends DrawDialog {
      */
     @Override
     protected void drawContent() {
+
         JPanel panel = new JPanel(new FlowLayout());
         panel.setBackground(Theme.FOND.getColor(Parameters.getThemeName()));
 
@@ -67,15 +80,17 @@ public class ExitDialog extends DrawDialog {
         panel.add(cancelButton);
 
         add(panel);
+
+
     }
 
     /**
      * Renvoie la frame qui a appelé ce dialog
      *
-     * @return : la frame qui a appelé ce dialog
+     * @return Frame qui a appelé ce dialog
      */
     @Override
-    public Window getOwner() {
+    public JFrame getOwner() {
         return owner;
     }
 }

@@ -2,6 +2,7 @@ package fr.groupe4.clientprojet.communication.enums;
 
 import fr.groupe4.clientprojet.logger.Logger;
 import fr.groupe4.clientprojet.logger.enums.LoggerOption;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Codes réponse HTML
@@ -21,7 +22,7 @@ public enum HTTPCode {
     /**
      * Équivalent entier
      */
-    private int code;
+    private final int code;
 
     /**
      * Constructeur
@@ -46,7 +47,9 @@ public enum HTTPCode {
      *
      * @param code Code
      * @return Énum
+     * @throws IllegalArgumentException Si l'enum n'est pas trouvée
      */
+    @NotNull
     public static HTTPCode fromInt(int code) throws IllegalArgumentException {
         HTTPCode[] vars = HTTPCode.values();
 
@@ -67,6 +70,12 @@ public enum HTTPCode {
         return result;
     }
 
+    /**
+     * Vers string
+     *
+     * @return String
+     */
+    @NotNull
     @Override
     public String toString() {
         return name() + "(" + code + ")";

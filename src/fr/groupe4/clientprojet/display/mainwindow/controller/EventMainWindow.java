@@ -2,6 +2,7 @@ package fr.groupe4.clientprojet.display.mainwindow.controller;
 
 import fr.groupe4.clientprojet.display.dialog.exitdialog.view.ExitDialog;
 import fr.groupe4.clientprojet.display.mainwindow.view.MainWindow;
+import org.jetbrains.annotations.NotNull;
 
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -13,6 +14,7 @@ public class EventMainWindow extends WindowAdapter {
     /**
      * La frame dont viennent les appels
      */
+    @NotNull
     private MainWindow source;
 
     /**
@@ -20,7 +22,7 @@ public class EventMainWindow extends WindowAdapter {
      *
      * @param source : la frame dont viennent les appels
      */
-    public EventMainWindow(MainWindow source) {
+    public EventMainWindow(@NotNull MainWindow source) {
         this.source = source;
     }
 

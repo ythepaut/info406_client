@@ -44,9 +44,17 @@ public class CalendarProject {
      * Type de calendrier
      */
     @NotNull
-    private CalendarType type;
+    private final CalendarType type;
 
-    public CalendarProject(@NotNull CalendarType type) throws IllegalArgumentException {
+    /**
+     * Constructeur
+     *
+     * @param type Type de calendrier
+     *
+     * @throws IllegalArgumentException Type de calendrier inconnu
+     * @throws UnsupportedOperationException Pour les affichages pas encore faits
+     */
+    public CalendarProject(@NotNull CalendarType type) throws IllegalArgumentException, UnsupportedOperationException {
         this.type = type;
 
         now = LocalDate.now();
@@ -57,12 +65,13 @@ public class CalendarProject {
     /**
      * Ajuste les variables from et to
      *
-     * @throws IllegalArgumentException Type de calendrier inconnu ou pas encore fait
+     * @throws IllegalArgumentException Type de calendrier inconnu
+     * @throws UnsupportedOperationException Pour les affichages pas encore faits
      */
-    private void changeFromTo() throws IllegalArgumentException {
+    private void changeFromTo() throws IllegalArgumentException, UnsupportedOperationException {
         switch (type) {
             case DAY:
-                throw new IllegalArgumentException("Pas encore fait : jour");
+                throw new UnsupportedOperationException("Pas encore fait : jour");
 
             case WEEK:
                 from = now.with(DayOfWeek.MONDAY);
@@ -70,10 +79,10 @@ public class CalendarProject {
                 break;
 
             case MONTH:
-                throw new IllegalArgumentException("Pas encore fait : mois");
+                throw new UnsupportedOperationException("Pas encore fait : mois");
 
             case YEAR:
-                throw new IllegalArgumentException("Pas encore fait : année");
+                throw new UnsupportedOperationException("Pas encore fait : année");
 
             default:
                 throw new IllegalArgumentException("Type de calendrier inconnu");

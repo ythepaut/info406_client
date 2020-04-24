@@ -3,7 +3,9 @@ package fr.groupe4.clientprojet.display.dialog.loaddialog.view;
 import fr.groupe4.clientprojet.utils.Location;
 
 import javax.imageio.ImageIO;
-import java.awt.*;
+import java.awt.Canvas;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.io.File;
 import java.io.IOException;
 
@@ -26,7 +28,7 @@ public class LoadCanvas extends Canvas {
     /**
      * Dessine l'image de chargement
      *
-     * @param g : Graphics
+     * @param g Graphics
      */
     @Override
     public void paint(Graphics g) {
