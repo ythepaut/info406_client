@@ -1,8 +1,9 @@
 package fr.groupe4.clientprojet.display.dialog.errordialog.view;
 
-import fr.groupe4.clientprojet.display.dialog.errordialog.controller.EventErrorDialog;
+import fr.groupe4.clientprojet.display.dialog.controller.GenericExitEvent;
 import fr.groupe4.clientprojet.display.dialog.errordialog.controller.KeyEventErrorDialog;
 import fr.groupe4.clientprojet.display.view.draw.DrawDialog;
+import fr.groupe4.clientprojet.logger.Logger;
 import fr.groupe4.clientprojet.model.parameters.Parameters;
 import fr.groupe4.clientprojet.model.parameters.themes.Theme;
 import org.jetbrains.annotations.NotNull;
@@ -25,6 +26,11 @@ import java.awt.Font;
  */
 public class ErrorDialog extends DrawDialog {
     /**
+     * Couleur pour les messages d'erreur ok
+     */
+    public static final Color COLOR_OK = new Color(0, 127, 0);
+
+    /**
      * Message affiché
      */
     @NotNull
@@ -40,7 +46,7 @@ public class ErrorDialog extends DrawDialog {
      * Event de fenêtre
      */
     @NotNull
-    private final EventErrorDialog eventErrorDialog;
+    private final GenericExitEvent eventErrorDialog;
 
     /**
      * Event de touches
@@ -56,6 +62,13 @@ public class ErrorDialog extends DrawDialog {
      * @param color Couleur
      */
     public ErrorDialog(@NotNull String message, @NotNull String title, @NotNull Color color) {
+        if (color == COLOR_OK) {
+            Logger.success("SUCCESS DIALOG:", title, message);
+        }
+        else {
+            Logger.warning("ERROR DIALOG:", title, message);
+        }
+
         this.message = message;
         setTitle(title);
         this.color = color;
@@ -63,7 +76,7 @@ public class ErrorDialog extends DrawDialog {
         setModal(true);
         setSize(510, 80);
         setResizable(false);
-        eventErrorDialog = new EventErrorDialog(this);
+        eventErrorDialog = new GenericExitEvent(this);
         addWindowListener(eventErrorDialog);
         keyEventErrorDialog = new KeyEventErrorDialog(this);
         addKeyListener(keyEventErrorDialog);

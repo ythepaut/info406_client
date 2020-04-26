@@ -22,7 +22,7 @@ public class UsersGestionDialog extends DrawDialog {
     /**
      * La frame qui appelle ce dialog
      */
-    private ProjectPanel owner;
+    private JPanel owner;
 
     /**
      * Id du projet
@@ -33,7 +33,7 @@ public class UsersGestionDialog extends DrawDialog {
      * Constructeur
      * @param owner
      */
-    public UsersGestionDialog(ProjectPanel owner, long projectId) {
+    public UsersGestionDialog(JPanel owner, long projectId) {
         this.projectId = projectId;
 
         c = new GridBagConstraints();

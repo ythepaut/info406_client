@@ -1,5 +1,6 @@
 package fr.groupe4.clientprojet.display.dialog.projectcreationdialog.controller;
 
+import com.github.lgooddatepicker.components.DatePicker;
 import fr.groupe4.clientprojet.communication.Communication;
 import fr.groupe4.clientprojet.display.dialog.errordialog.view.ErrorDialog;
 import fr.groupe4.clientprojet.display.dialog.loaddialog.view.LoadDialog;
@@ -7,23 +8,19 @@ import fr.groupe4.clientprojet.display.dialog.projectcreationdialog.view.Project
 import fr.groupe4.clientprojet.logger.Logger;
 import fr.groupe4.clientprojet.model.project.enums.ProjectStatus;
 
-import org.jdatepicker.impl.*;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.Date;
 
 public class EventProjectCreation implements ActionListener {
     private ProjectCreationDialog source;
-    private UtilDateModel dateModel;
+    private DatePicker dateModel;
     private JTextField nomTextField;
     private JTextArea descriptionTextArea;
 
-    public EventProjectCreation(ProjectCreationDialog source, UtilDateModel dateModel, JTextField nomTextField, JTextArea descriptionTextArea) {
+    public EventProjectCreation(ProjectCreationDialog source, DatePicker dateModel, JTextField nomTextField, JTextArea descriptionTextArea) {
         this.source = source;
         this.dateModel = dateModel;
         this.nomTextField = nomTextField;
@@ -32,19 +29,15 @@ public class EventProjectCreation implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
-        Date date = dateModel.getValue();
+        LocalDate date = dateModel.getDate();
         String nom = nomTextField.getText();
         String description = descriptionTextArea.getText();
 
         LocalDate deadline = null;
 
-        if (date != null) {
-            deadline = LocalDate.ofInstant(date.toInstant(), ZoneId.systemDefault());
-        }
-
         if (!nom.isBlank() && nom.length() >= 3 && nom.length() < 255) {
             Communication c = Communication.builder()
-                    .createProject(nom, description, deadline, ProjectStatus.ONGOING)
+                    .createProject(nom, description, date, ProjectStatus.ONGOING)
                     .build();
 
             new LoadDialog(c);

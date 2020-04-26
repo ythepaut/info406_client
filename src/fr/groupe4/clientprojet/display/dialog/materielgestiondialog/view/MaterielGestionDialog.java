@@ -12,7 +12,7 @@ public class MaterielGestionDialog extends DrawDialog {
     /**
      * La frame qui appelle ce dialog
      */
-    private ProjectPanel owner;
+    private JPanel owner;
 
     private GridBagConstraints c;
 
@@ -20,7 +20,7 @@ public class MaterielGestionDialog extends DrawDialog {
      * Constructeur
      * @param owner
      */
-    public MaterielGestionDialog(ProjectPanel owner) {
+    public MaterielGestionDialog(JPanel owner) {
         c = new GridBagConstraints();
 
         setTitle("Fenetre de création de Projet");

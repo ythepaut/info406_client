@@ -4,6 +4,7 @@ import fr.groupe4.clientprojet.display.dialog.materielgestiondialog.view.Materie
 import fr.groupe4.clientprojet.display.dialog.usersgestiondialog.view.UsersGestionDialog;
 import fr.groupe4.clientprojet.display.mainwindow.panels.projectpanel.view.ProjectPanel;
 
+import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -17,7 +18,7 @@ public class EventProjectPanel implements ActionListener {
     /**
      * Le panel qui fait les appels
      */
-    private ProjectPanel source;
+    private JPanel source;
     private long projectId;
 
     /**
@@ -25,7 +26,7 @@ public class EventProjectPanel implements ActionListener {
      *
      * @param source : le panel qui fait les appels
      */
-    public EventProjectPanel(ProjectPanel source, long projectId){
+    public EventProjectPanel(JPanel source, long projectId){
         this.source = source;
         this.projectId = projectId;
     }

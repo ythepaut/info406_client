@@ -1,4 +1,4 @@
-package fr.groupe4.clientprojet.display.view.messagepanel.enums;
+package fr.groupe4.clientprojet.display.mainwindow.panels.projectpanel.messagepanel.enums;
 
 public enum MessageButton {
     SEND("send"),

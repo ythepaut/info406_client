@@ -1,21 +1,16 @@
 package fr.groupe4.clientprojet.display.dialog.taskcreationdialog.view;
 
-import fr.groupe4.clientprojet.display.dialog.taskcreationdialog.controller.EventExitCreationDialog;
+import com.github.lgooddatepicker.components.DatePicker;
+import com.github.lgooddatepicker.components.DatePickerSettings;
+import fr.groupe4.clientprojet.display.dialog.controller.GenericExitEvent;
 import fr.groupe4.clientprojet.display.dialog.taskcreationdialog.controller.EventTaskCreation;
 import fr.groupe4.clientprojet.display.view.draw.DrawDialog;
-import org.jdatepicker.impl.JDatePanelImpl;
-import org.jdatepicker.impl.JDatePickerImpl;
-import org.jdatepicker.impl.UtilDateModel;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.MatteBorder;
 import java.awt.*;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.format.DateTimeFormatter;
-import java.util.Calendar;
-import java.util.Properties;
+import java.time.DayOfWeek;
 
 /**
  * Dialog de création de tâche
@@ -100,36 +95,9 @@ public class TaskCreationDialog extends DrawDialog {
         JLabel datefinlabel = new JLabel("Entrez la date limite de la tâche : ");
         add(datefinlabel,c);
 
-        UtilDateModel model = new UtilDateModel();
-        Properties p = new Properties();
-        p.put("text.today", "Today");
-        p.put("text.month", "Month");
-        p.put("text.year", "Year");
-        JDatePanelImpl datePanel = new JDatePanelImpl(model, p);
-
-        String datePattern = "d/MM/yyyy";
-        SimpleDateFormat dateFormatter = new SimpleDateFormat(datePattern);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/MM/yyyy");
-
-
-        //Création d'un JFormattedTextField.AbstractFormatter
-        JFormattedTextField.AbstractFormatter form = new JFormattedTextField.AbstractFormatter() {
-            public Object stringToValue(String text) throws ParseException {
-                return dateFormatter.parseObject(text);
-            }
-
-            public String valueToString(Object value) throws ParseException {
-                if (value != null)
-                {
-                    Calendar cal = (Calendar) value;
-                    return dateFormatter.format(cal.getTime());
-                }
-                return "";
-
-            }
-        };
-
-        JDatePickerImpl datePicker = new JDatePickerImpl(datePanel,form);
+        DatePickerSettings dateSettings = new DatePickerSettings();
+        dateSettings.setFirstDayOfWeek(DayOfWeek.MONDAY);
+        DatePicker datePicker = new DatePicker(dateSettings);
         c.gridy++;
         add(datePicker,c);
 
@@ -139,11 +107,11 @@ public class TaskCreationDialog extends DrawDialog {
         c.gridwidth = 1;
         c.gridy++;
         JButton creeprojet = new JButton("Création Tâche");
-        creeprojet.addActionListener(new EventTaskCreation(this, model, nomprojet, description, projectId));
+        creeprojet.addActionListener(new EventTaskCreation(this, datePicker, nomprojet, description, projectId));
         add(creeprojet,c);
         c.gridx++;
         JButton cancelButton = new JButton("Annuler");
-        cancelButton.addActionListener(new EventExitCreationDialog(this));
+        cancelButton.addActionListener(new GenericExitEvent(this));
         add(cancelButton,c);
     }
 }

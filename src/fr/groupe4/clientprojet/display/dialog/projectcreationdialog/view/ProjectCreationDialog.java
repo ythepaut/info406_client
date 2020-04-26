@@ -1,24 +1,18 @@
 package fr.groupe4.clientprojet.display.dialog.projectcreationdialog.view;
 
-import fr.groupe4.clientprojet.display.dialog.projectcreationdialog.controller.EventExitCreationDialog;
+import com.github.lgooddatepicker.components.DatePicker;
+import com.github.lgooddatepicker.components.DatePickerSettings;
+import fr.groupe4.clientprojet.display.dialog.controller.GenericExitEvent;
 import fr.groupe4.clientprojet.display.dialog.projectcreationdialog.controller.EventProjectCreation;
 import fr.groupe4.clientprojet.display.view.draw.DrawDialog;
-import fr.groupe4.clientprojet.logger.Logger;
-import org.jdatepicker.DateModel;
-import org.jdatepicker.impl.*;
 
 import javax.swing.*;
 import javax.swing.border.MatteBorder;
 import java.awt.*;
-import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
+import java.time.DayOfWeek;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.Temporal;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Properties;
 
 /**
  * Fenetre de création de projet
@@ -97,46 +91,23 @@ public class ProjectCreationDialog extends DrawDialog {
         // Entrée de la date limite du projet
         c.gridy++;
         JLabel datefinlabel = new JLabel("Entrez la date limite du projet : ");
-        add(datefinlabel,c);
+        add(datefinlabel, c);
 
-        UtilDateModel model = new UtilDateModel();
-        Properties p = new Properties();
-        p.put("text.today", "Today");
-        p.put("text.month", "Month");
-        p.put("text.year", "Year");
-        JDatePanelImpl datePanel = new JDatePanelImpl(model, p);
-
-        //Création d'un JFormattedTextField.AbstractFormatter
-        JFormattedTextField.AbstractFormatter form = new JFormattedTextField.AbstractFormatter() {
-            public Object stringToValue(String text) throws ParseException {
-                return dateFormatter.parseObject(text);
-            }
-
-            public String valueToString(Object value) throws ParseException {
-                if (value != null)
-                {
-                    Calendar cal = (Calendar) value;
-                    return dateFormatter.format(cal.getTime());
-                }
-                return "";
-
-            }
-        };
-
-        JDatePickerImpl datePicker = new JDatePickerImpl(datePanel,form);
+        DatePickerSettings dateSettings = new DatePickerSettings();
+        dateSettings.setFirstDayOfWeek(DayOfWeek.MONDAY);
+        DatePicker datePicker = new DatePicker(dateSettings);
         c.gridy++;
-        add(datePicker,c);
-
+        add(datePicker, c);
 
         // Création des boutons de confirmation/annulation
         c.gridwidth = 1;
         c.gridy++;
         JButton creeprojet = new JButton("Création Projet");
-        creeprojet.addActionListener(new EventProjectCreation(this, model, nomprojet, description));
+        creeprojet.addActionListener(new EventProjectCreation(this, datePicker, nomprojet, description));
         add(creeprojet,c);
         c.gridx++;
         JButton cancelButton = new JButton("Annuler");
-        cancelButton.addActionListener(new EventExitCreationDialog(this));
+        cancelButton.addActionListener(new GenericExitEvent(this));
         add(cancelButton,c);
 
     }
