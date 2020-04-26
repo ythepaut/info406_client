@@ -1,14 +1,13 @@
 package fr.groupe4.clientprojet.display.view.calendar.view;
 
-import fr.groupe4.clientprojet.display.view.calendar.controller.CalendarKeyAdapter;
-import fr.groupe4.clientprojet.logger.Logger;
 import fr.groupe4.clientprojet.model.calendar.CalendarProject;
 import fr.groupe4.clientprojet.model.timeslot.TimeSlotList;
 import org.jetbrains.annotations.NotNull;
 
-import javax.swing.*;
-
-import java.awt.*;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import java.awt.Graphics;
+import java.awt.GridBagConstraints;
 
 /**
  * Composant générique de calendrier
@@ -58,7 +57,7 @@ abstract class GenericCalendarComponent {
      * @param parent Fenêtre parente
      * @param calendar Calendrier
      */
-    protected GenericCalendarComponent(JPanel parent, CalendarProject calendar) {
+    protected GenericCalendarComponent(@NotNull JPanel parent, @NotNull CalendarProject calendar) {
         this.parent = parent;
         this.calendar = calendar;
     }

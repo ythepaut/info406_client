@@ -94,7 +94,7 @@ public class ErrorDialog extends DrawDialog {
      *
      * @param message Message
      */
-    public ErrorDialog(String message) {
+    public ErrorDialog(@NotNull String message) {
         this(message, "ERREUR", Theme.POLICE_ERROR.getColor(Parameters.getThemeName()));
     }
 

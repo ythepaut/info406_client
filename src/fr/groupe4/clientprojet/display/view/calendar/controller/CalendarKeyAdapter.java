@@ -2,14 +2,19 @@ package fr.groupe4.clientprojet.display.view.calendar.controller;
 
 import fr.groupe4.clientprojet.logger.Logger;
 import fr.groupe4.clientprojet.model.calendar.CalendarProject;
+import org.jetbrains.annotations.NotNull;
 
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
 public class CalendarKeyAdapter extends KeyAdapter {
+    /**
+     * Calendrier
+     */
+    @NotNull
     private CalendarProject calendar;
 
-    public CalendarKeyAdapter(CalendarProject calendar) {
+    public CalendarKeyAdapter(@NotNull CalendarProject calendar) {
         this.calendar = calendar;
     }
 
@@ -20,7 +25,9 @@ public class CalendarKeyAdapter extends KeyAdapter {
      */
     @Override
     public void keyPressed(KeyEvent e) {
-        Logger.debug("Ça marche pas");
+        // TODO
+
+        Logger.debug("Hmmm c'est pas censé fonctionner pourtant...");
 
         switch (e.getKeyCode()) {
             case KeyEvent.VK_LEFT:

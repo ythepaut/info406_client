@@ -6,6 +6,7 @@ import fr.groupe4.clientprojet.model.parameters.Parameters;
 import fr.groupe4.clientprojet.model.parameters.themes.Theme;
 import fr.groupe4.clientprojet.model.timeslot.TimeSlot;
 import fr.groupe4.clientprojet.model.timeslot.TimeSlotList;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.JPanel;
 import javax.swing.JLabel;
@@ -35,7 +36,7 @@ class CalendarComponentWeek extends GenericCalendarComponent {
      * @param parent Fenêtre parente
      * @param calendar Calendrier
      */
-    CalendarComponentWeek(JPanel parent, CalendarProject calendar) {
+    CalendarComponentWeek(@NotNull JPanel parent, @NotNull CalendarProject calendar) {
         super(parent, calendar);
     }
 
@@ -104,20 +105,11 @@ class CalendarComponentWeek extends GenericCalendarComponent {
     }
 
     /**
-     * Affichage
+     * Découpage en 7 sous-listes pour chaque jour
      *
-     * @param g Graphics, où afficher
+     * @return Les 7 sous-listes
      */
-    @Override
-    protected void paintComponent(Graphics g) {
-        for (JPanel panel : daysPanel) {
-            // Suppression de ce qu'il y avait avant
-            panel.removeAll();
-        }
-
-        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // Découpage en 7 sous-listes pour chaque jour
-
+    private TimeSlotList[] getWeekTimeSlots() {
         final TimeSlotList[] weekTimeSlots = new TimeSlotList[7];
 
         for (int i=0; i<weekTimeSlots.length; i++) {
@@ -129,6 +121,23 @@ class CalendarComponentWeek extends GenericCalendarComponent {
 
             weekTimeSlots[dayPlacement].add(timeSlot);
         }
+
+        return weekTimeSlots;
+    }
+
+    /**
+     * Affichage
+     *
+     * @param g Graphics, où afficher
+     */
+    @Override
+    protected void paintComponent(Graphics g) {
+        for (JPanel panel : daysPanel) {
+            // Suppression de ce qu'il y avait avant
+            panel.removeAll();
+        }
+
+        final TimeSlotList[] weekTimeSlots = getWeekTimeSlots();
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // Calcul des chevauchements et des créneaux qu'il faudra combler avec un panel vide
@@ -142,11 +151,13 @@ class CalendarComponentWeek extends GenericCalendarComponent {
             present = new boolean[(TimeSlot.HIGHEST_TIME - TimeSlot.LOWEST_TIME) / TimeSlot.TIME_SCALE];
 
             for (TimeSlot timeSlot : dayTimeSlots) {
-                final int startTime = Math.max(TimeSlot.LOWEST_TIME,
+                final int startTime =
+                        Math.max(TimeSlot.LOWEST_TIME,
                         Math.min(TimeSlot.HIGHEST_TIME,
                                 timeSlot.getStartTime().toLocalTime().toSecondOfDay()));
 
-                final int duration = Math.max(0,
+                final int duration =
+                        Math.max(0,
                         Math.min(TimeSlot.HIGHEST_TIME - startTime,
                                 timeSlot.getEndTime().toLocalTime().toSecondOfDay() - startTime));
 

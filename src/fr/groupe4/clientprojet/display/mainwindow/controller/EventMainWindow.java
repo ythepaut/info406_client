@@ -15,12 +15,12 @@ public class EventMainWindow extends WindowAdapter {
      * La frame dont viennent les appels
      */
     @NotNull
-    private MainWindow source;
+    private final MainWindow source;
 
     /**
      * Constructeur
      *
-     * @param source : la frame dont viennent les appels
+     * @param source Frame dont viennent les appels
      */
     public EventMainWindow(@NotNull MainWindow source) {
         this.source = source;
@@ -29,7 +29,7 @@ public class EventMainWindow extends WindowAdapter {
     /**
      * Quand la fenêtre est fermée
      *
-     * @param e : l'event
+     * @param e Event
      */
     @Override
     public void windowClosing(WindowEvent e) {
@@ -39,7 +39,7 @@ public class EventMainWindow extends WindowAdapter {
     /**
      * Quand la fenêtre est ouverte
      *
-     * @param e : l'event
+     * @param e Event
      */
     @Override
     public void windowOpened(WindowEvent e) {

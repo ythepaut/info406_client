@@ -2,40 +2,62 @@ package fr.groupe4.clientprojet.display.dialog.usersgestiondialog.controller;
 
 import fr.groupe4.clientprojet.communication.Communication;
 import fr.groupe4.clientprojet.display.dialog.errordialog.view.ErrorDialog;
+import fr.groupe4.clientprojet.display.view.draw.DrawDialog;
+import fr.groupe4.clientprojet.model.project.Project;
 import fr.groupe4.clientprojet.model.resource.human.HumanResource;
 import fr.groupe4.clientprojet.model.resource.human.HumanResourceList;
+import org.jetbrains.annotations.NotNull;
 
-import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 public class EventGestionUsersConfirm implements ActionListener {
     /**
-     * Utilisateurs choisis
+     * Parent
      */
-    private boolean[] chosenUser;
+    @NotNull
+    private final DrawDialog parent;
 
     /**
-     * Id du projet
+     * Utilisateurs choisis
      */
-    private long projectId;
+    private final boolean[] chosenUser;
 
-    private JDialog parent;
+    /**
+     * Projet courant
+     */
+    @NotNull
+    private final Project project;
 
     /**
      * Liste des utilisateurs
      */
-    private HumanResourceList users;
+    private final HumanResourceList users;
 
-    public EventGestionUsersConfirm(JDialog parent, long projectId, HumanResourceList users, boolean[] chosenUser) {
+    /**
+     * Constructeur
+     *
+     * @param parent Parent
+     * @param project Projet courant
+     * @param users Utilisateurs
+     * @param chosenUser Utilisateurs sélectionnés
+     */
+    public EventGestionUsersConfirm(@NotNull DrawDialog parent,
+                                    @NotNull Project project,
+                                    @NotNull HumanResourceList users,
+                                    boolean[] chosenUser) {
         this.parent = parent;
-        this.projectId = projectId;
+        this.project = project;
         this.chosenUser = chosenUser;
         this.users = users;
     }
 
+    /**
+     * Clic bouton
+     *
+     * @param actionEvent Event
+     */
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
         ArrayList<Communication> comms = new ArrayList<>();
@@ -43,7 +65,12 @@ public class EventGestionUsersConfirm implements ActionListener {
         for (int i=0; i<users.size(); i++) {
             if (chosenUser[i]) {
                 HumanResource h = users.get(i);
-                Communication c = Communication.builder().startNow().addHumanResourceToProject(projectId, h.getResourceId(), null, null).build();
+
+                Communication c = Communication.builder()
+                        .startNow()
+                        .addHumanResourceToProject(project.getId(), h.getResourceId(), null, null)
+                        .build();
+
                 comms.add(c);
             }
         }
@@ -57,7 +84,8 @@ public class EventGestionUsersConfirm implements ActionListener {
 
             users.remove(i);
         }
-        new ErrorDialog("Utilisateurs bien ajoutés !", "SUCCESS", new Color(0, 127, 0));
+
+        new ErrorDialog("Utilisateurs bien ajoutés", "SUCCESS", ErrorDialog.COLOR_OK);
         parent.dispose();
     }
 }

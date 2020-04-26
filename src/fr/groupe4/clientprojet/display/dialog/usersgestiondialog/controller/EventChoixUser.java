@@ -1,42 +1,57 @@
 package fr.groupe4.clientprojet.display.dialog.usersgestiondialog.controller;
 
-import fr.groupe4.clientprojet.display.dialog.usersgestiondialog.view.UsersGestionDialog;
+import fr.groupe4.clientprojet.display.view.draw.DrawDialog;
 import fr.groupe4.clientprojet.model.resource.human.HumanResource;
+import org.jetbrains.annotations.NotNull;
 
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
 public class EventChoixUser implements ItemListener {
+    /**
+     * Source parente
+     */
+    private DrawDialog source;
 
     /**
-     * Attributs necessaire au controller
+     * Utilisateur courant
      */
-    private UsersGestionDialog source;
-    private HumanResource usercourant;
-    private boolean[] userchoisis;
-    private int idarraylist;
+    private final HumanResource currentUser;
+
+    /**
+     * Utilisateurs sélectionnés
+     */
+    private boolean[] selectedUsers;
+
+    /**
+     * Id dans l'ArrayList contenant les utilisateurs
+     */
+    private final int idArrayList;
 
     /**
      * Constructeur
-     * @param source
-     * @param usercourant
-     * @param userchoisis
+     * @param source Source
+     * @param currentUser Utilisateur courant
+     * @param selectedUsers Tableau si l'utilisateur a été sélectionné ou non
+     * @param idArrayList Id dans l'ArrayList contenant les utilisateurs
      */
-    public EventChoixUser(UsersGestionDialog source, HumanResource usercourant, boolean[] userchoisis, int idarraylist) {
+    public EventChoixUser(@NotNull DrawDialog source,
+                          @NotNull HumanResource currentUser,
+                          boolean[] selectedUsers,
+                          int idArrayList) {
         this.source = source;
-        this.usercourant = usercourant;
-        this.userchoisis = userchoisis;
-        this.idarraylist = idarraylist;
+        this.currentUser = currentUser;
+        this.selectedUsers = selectedUsers;
+        this.idArrayList = idArrayList;
     }
 
-
+    /**
+     * Case cochée ou décochée
+     *
+     * @param itemEvent Event
+     */
     @Override
     public void itemStateChanged(ItemEvent itemEvent) {
-
-        if (itemEvent.getStateChange () == ItemEvent.SELECTED){
-            userchoisis[idarraylist] = true;
-        } else {
-            userchoisis[idarraylist] = false;
-        }
+        selectedUsers[idArrayList] = (itemEvent.getStateChange() == ItemEvent.SELECTED);
     }
 }

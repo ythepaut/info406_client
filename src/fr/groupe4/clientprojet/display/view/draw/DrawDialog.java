@@ -1,13 +1,11 @@
 package fr.groupe4.clientprojet.display.view.draw;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JDialog;
 
 /**
  * Classe abstraite héritant de JDialog qui rajoute 2 méthodes
  */
 public abstract class DrawDialog extends JDialog {
-
     /**
      * Dessine le contenu
      */

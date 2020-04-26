@@ -1,5 +1,7 @@
 package fr.groupe4.clientprojet.display.view.slide.enums;
 
+import org.jetbrains.annotations.NotNull;
+
 /**
  * Enumération pour les boutons gauches et droites
  */
@@ -8,24 +10,26 @@ public enum SlideMove {
     RIGHT("right");
 
     /**
-     * Le nom du bouton
+     * Nom du bouton
      */
+    @NotNull
     private final String name;
 
     /**
      * Le constructeur
      *
-     * @param name : le nom du bouton
+     * @param name Nom du bouton
      */
-    SlideMove(String name) {
+    SlideMove(@NotNull String name) {
         this.name = name;
     }
 
     /**
      * Renvoie le nom du bouton
      *
-     * @return : le nom
+     * @return Nom
      */
+    @NotNull
     public String getName() {
         return name;
     }

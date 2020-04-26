@@ -120,7 +120,7 @@ public class TaskProjectPanel extends JPanel {
             }
 
             JButton b = new JButton("Nouvelle tâche");
-            b.addActionListener(new NewTaskListener(project.getId()));
+            b.addActionListener(new NewTaskListener(project, this));
             panel.add(b);
 
             add(panel, BorderLayout.CENTER);

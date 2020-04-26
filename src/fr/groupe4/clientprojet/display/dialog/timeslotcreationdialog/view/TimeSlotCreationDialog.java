@@ -9,16 +9,32 @@ import fr.groupe4.clientprojet.display.dialog.timeslotcreationdialog.controller.
 import fr.groupe4.clientprojet.display.dialog.timeslotcreationdialog.controller.TimeSlotCreationPolicy;
 import fr.groupe4.clientprojet.display.view.draw.DrawDialog;
 import fr.groupe4.clientprojet.model.task.Task;
+import org.jetbrains.annotations.NotNull;
 
-import javax.swing.*;
+import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.border.MatteBorder;
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.Toolkit;
 import java.time.DayOfWeek;
 
 public class TimeSlotCreationDialog extends DrawDialog {
-    private Task task;
+    /**
+     * Largeur et hauteur de la fenêtre
+     */
+    private static final int WIDTH = 300, HEIGHT = 550;
 
-    public TimeSlotCreationDialog(Task task) {
+    /**
+     * Tâche en cours
+     */
+    @NotNull
+    private final Task task;
+
+    public TimeSlotCreationDialog(@NotNull Task task) {
         this.task = task;
 
         setTitle("Fenêtre d'ajout' de créneau");
@@ -30,7 +46,7 @@ public class TimeSlotCreationDialog extends DrawDialog {
 
     @Override
     protected void drawContent() {
-        setSize(300, 550);
+        setSize(WIDTH, HEIGHT);
         setResizable(false);
         setUndecorated(true);
         rootPane.setBorder(new MatteBorder(2, 2, 2, 2, Color.BLACK));
@@ -39,10 +55,8 @@ public class TimeSlotCreationDialog extends DrawDialog {
 
         GridBagConstraints c = new GridBagConstraints();
 
-        /**
-         * Déclaration du layout
-         */
-        this.setLayout(new GridBagLayout());
+         // Déclaration du layout
+        setLayout(new GridBagLayout());
         c.gridx = 0;
         c.gridy = 0;
         c.gridwidth = 2;
@@ -65,7 +79,11 @@ public class TimeSlotCreationDialog extends DrawDialog {
 
         TimePickerSettings timeSettingsFrom = new TimePickerSettings();
         timeSettingsFrom.use24HourClockFormat();
-        timeSettingsFrom.generatePotentialMenuTimes(TimePickerSettings.TimeIncrement.TenMinutes, null, null);
+        timeSettingsFrom.generatePotentialMenuTimes(
+                TimePickerSettings.TimeIncrement.TenMinutes,
+                null,
+                null);
+
         TimePicker timePickerFrom = new TimePicker(timeSettingsFrom);
         c.gridy++;
         add(timePickerFrom, c);
@@ -75,7 +93,11 @@ public class TimeSlotCreationDialog extends DrawDialog {
 
         TimePickerSettings timeSettingsTo = new TimePickerSettings();
         timeSettingsTo.use24HourClockFormat();
-        timeSettingsTo.generatePotentialMenuTimes(TimePickerSettings.TimeIncrement.TenMinutes, null, null);
+        timeSettingsTo.generatePotentialMenuTimes(
+                TimePickerSettings.TimeIncrement.TenMinutes,
+                null,
+                null);
+
         TimePicker timePickerTo = new TimePicker(timeSettingsTo);
         c.gridy++;
         add(timePickerTo, c);
@@ -84,7 +106,13 @@ public class TimeSlotCreationDialog extends DrawDialog {
         timeSettingsTo.setVetoPolicy(new TimeSlotCreationPolicy(TimeSlotCreationPolicy.AFTER, timePickerFrom));
 
         JButton addTimeSlotButton = new JButton("Ajouter créneau");
-        addTimeSlotButton.addActionListener(new EventTimeSlotCreation(this, datePicker, timePickerFrom, timePickerTo, task));
+        addTimeSlotButton.addActionListener(new EventTimeSlotCreation(
+                this,
+                datePicker,
+                timePickerFrom,
+                timePickerTo,
+                task));
+
         c.gridwidth = 1;
         c.gridy++;
         add(addTimeSlotButton, c);

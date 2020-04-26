@@ -2,9 +2,10 @@ package fr.groupe4.clientprojet.display.mainwindow.panels.projectpanel.controlle
 
 import fr.groupe4.clientprojet.display.dialog.materielgestiondialog.view.MaterielGestionDialog;
 import fr.groupe4.clientprojet.display.dialog.usersgestiondialog.view.UsersGestionDialog;
-import fr.groupe4.clientprojet.display.mainwindow.panels.projectpanel.view.ProjectPanel;
+import fr.groupe4.clientprojet.model.project.Project;
+import org.jetbrains.annotations.NotNull;
 
-import javax.swing.*;
+import javax.swing.JPanel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -16,26 +17,36 @@ public class EventProjectPanel implements ActionListener {
     public static final String NEWMAT = "newmat";
 
     /**
-     * Le panel qui fait les appels
+     * Panel qui fait les appels
      */
-    private JPanel source;
-    private long projectId;
+    @NotNull
+    private final JPanel source;
 
     /**
-     * Le constructeur
-     *
-     * @param source : le panel qui fait les appels
+     * Projet courant
      */
-    public EventProjectPanel(JPanel source, long projectId){
+    @NotNull
+    private final Project project;
+
+    /**
+     * Constructeur
+     *
+     * @param source Panel qui fait les appels
+     */
+    public EventProjectPanel(@NotNull JPanel source, @NotNull Project project) {
         this.source = source;
-        this.projectId = projectId;
+        this.project = project;
     }
 
-
+    /**
+     * Bouton cliqué
+     *
+     * @param e Event
+     */
     @Override
     public void actionPerformed(ActionEvent e) {
         if (NEWUSERS.equals(e.getActionCommand())) {
-          new UsersGestionDialog(source, projectId);
+          new UsersGestionDialog(source, project);
         } else {
             new MaterielGestionDialog(source);
         }

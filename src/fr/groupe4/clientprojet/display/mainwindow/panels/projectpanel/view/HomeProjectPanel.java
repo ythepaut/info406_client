@@ -10,7 +10,7 @@ public class HomeProjectPanel extends JPanel {
     public HomeProjectPanel(Project project) {
         super(new BorderLayout());
 
-        EventProjectPanel eventProjectPanel = new EventProjectPanel(this, project.getId());
+        EventProjectPanel eventProjectPanel = new EventProjectPanel(this, project);
 
         add(new JLabel("HOME"), BorderLayout.NORTH);
         add(new JLabel(project.getDescription()), BorderLayout.CENTER);

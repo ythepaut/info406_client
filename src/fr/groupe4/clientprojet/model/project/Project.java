@@ -14,6 +14,16 @@ import java.time.ZoneId;
  */
 public class Project {
     /**
+     * Taille minimale d'un nom de projet
+     */
+    public static final int MIN_NAME_LENGTH = 3;
+
+    /**
+     * Taille maximale d'un nom de projet
+     */
+    public static final int MAX_NAME_LENGTH = 255;
+
+    /**
      * ID du projet
      */
     private final long id;
@@ -48,7 +58,7 @@ public class Project {
      * @param id ID BDD
      * @param name Nom
      * @param description Description
-     * @param deadline Deadline, nombre de secondes depuis le 01/01/1970 UTC
+     * @param deadline Échéance, nombre de secondes depuis le 01/01/1970 UTC
      * @param status Statu
      */
     public Project(long id, @NotNull String name, @NotNull String description, long deadline, @NotNull String status) {

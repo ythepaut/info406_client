@@ -1,35 +1,45 @@
 package fr.groupe4.clientprojet.display.view;
 
+import fr.groupe4.clientprojet.logger.Logger;
 import fr.groupe4.clientprojet.model.parameters.Parameters;
 import fr.groupe4.clientprojet.model.parameters.themes.Theme;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.imageio.ImageIO;
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JButton;
+import java.awt.BasicStroke;
+import java.awt.Cursor;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.RenderingHints;
 import java.io.File;
 import java.io.IOException;
 
 /**
- * Permet de créer des boutons rond avec ou sans image
- * Sans image -> un contour rond noir autour du bouton
- * Avec image -> l'image centrée sur le boutons, sans texte
+ * Permet de créer des boutons rond avec ou sans image <br>
+ * Sans image -&gt; un contour rond noir autour du bouton <br>
+ * Avec image -&gt; l'image centrée sur le boutons, sans texte
  */
 public class RoundButton extends JButton {
     /**
      * Si le bouton est sélectionné ou pas
      */
     private boolean selected;
+
     /**
      * L'image du bouton (pour bouton avec image)
      */
+    @Nullable
     private Image image;
 
     /**
      * Constructeur du bouton sans image
      *
-     * @param text : le texte du bouton
+     * @param text Texte du bouton
      */
-    public RoundButton(String text) {
+    public RoundButton(@NotNull String text) {
         super(text);
 
         setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -43,21 +53,21 @@ public class RoundButton extends JButton {
     /**
      * Constructeur du bouton avec image
      *
-     * @param file : L'image du bouton
+     * @param file Image du bouton
      */
     public RoundButton(File file) {
         this(" ");
         try {
             image = ImageIO.read(file);
         } catch (IOException e) {
-            e.printStackTrace();
+            Logger.warning(e);
         }
     }
 
     /**
      * Rend le bouton sélectionné ou pas
      *
-     * @param b : sélectionné ?
+     * @param b Sélectionné ?
      */
     public void setSelected(boolean b) {
         selected = b;
@@ -67,7 +77,7 @@ public class RoundButton extends JButton {
     /**
      * Dessine les composants du bouton
      *
-     * @param g : Graphics
+     * @param g Graphics
      */
     @Override
     protected void paintComponent(Graphics g) {

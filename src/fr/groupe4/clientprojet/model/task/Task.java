@@ -14,6 +14,16 @@ import java.time.ZoneId;
  */
 public class Task {
     /**
+     * Taille minimale d'un nom de tâche
+     */
+    public static final int MIN_NAME_LENGTH = 3;
+
+    /**
+     * Taille maximale d'un nom de tâche
+     */
+    public static final int MAX_NAME_LENGTH = 255;
+
+    /**
      * Id de la tâche
      */
     private final long id;

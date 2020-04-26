@@ -2,6 +2,7 @@ package fr.groupe4.clientprojet.display.dialog.loaddialog.controller;
 
 import fr.groupe4.clientprojet.communication.enums.CommunicationPropertyName;
 import fr.groupe4.clientprojet.display.dialog.loaddialog.view.LoadDialog;
+import org.jetbrains.annotations.NotNull;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -13,6 +14,7 @@ public class EventLoadDialog implements PropertyChangeListener {
     /**
      * Le LoadDialog
      */
+    @NotNull
     private final LoadDialog source;
 
     /**
@@ -20,7 +22,7 @@ public class EventLoadDialog implements PropertyChangeListener {
      *
      * @param source : Le loadDialog
      */
-    public EventLoadDialog(LoadDialog source) {
+    public EventLoadDialog(@NotNull LoadDialog source) {
         this.source = source;
     }
 

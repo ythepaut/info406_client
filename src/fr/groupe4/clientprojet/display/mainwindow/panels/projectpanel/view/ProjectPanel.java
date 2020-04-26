@@ -5,6 +5,7 @@ import fr.groupe4.clientprojet.display.mainwindow.panels.projectpanel.controller
 import fr.groupe4.clientprojet.display.mainwindow.panels.projectpanel.taskprojectpanel.view.TaskProjectPanel;
 import fr.groupe4.clientprojet.display.view.draw.DrawPanel;
 import fr.groupe4.clientprojet.display.mainwindow.panels.projectpanel.messagepanel.view.MessagePanel;
+import fr.groupe4.clientprojet.display.view.slide.SlideItem;
 import fr.groupe4.clientprojet.display.view.slide.view.Slide;
 import fr.groupe4.clientprojet.model.parameters.Parameters;
 import fr.groupe4.clientprojet.model.parameters.themes.Theme;
@@ -69,9 +70,9 @@ public class ProjectPanel extends DrawPanel {
 
         // Les slides
         Slide slides = new Slide();
-        slides.addSlide(homePanel(), "HOME");
-        slides.addSlide(taskPanel(), "TASK");
-        slides.addSlide(messagePanel(), "MESSAGE");
+        slides.addSlide(new SlideItem("HOME", homePanel()));
+        slides.addSlide(new SlideItem("TASK", taskPanel()));
+        slides.addSlide(new SlideItem("MESSAGE", messagePanel()));
 
         add(slides, BorderLayout.CENTER);
     }
@@ -79,10 +80,9 @@ public class ProjectPanel extends DrawPanel {
     /**
      * Dessine le premier slide du projet
      *
-     * @return : le jpanel
+     * @return Le JPanel
      */
     private JPanel homePanel() {
-
         // TODO : Construire panel accueil
         return new HomeProjectPanel(project);
     }
