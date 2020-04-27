@@ -406,22 +406,17 @@ public final class CommunicationBuilder {
      *
      * @param from From
      * @param to To
-     * @param what Quoi
-     * @param id Id
      *
      * @return Builder non terminé avec URL
      */
     private CommunicationBuilder getTimeSlotList(@NotNull Temporal from,
-                                                 @NotNull Temporal to,
-                                                 @NotNull String what,
-                                                 long id) {
+                                                 @NotNull Temporal to) {
         long t1 = temporalToSeconds(from, false);
         long t2 = temporalToSeconds(to, false);
         typeOfCommunication = CommunicationType.GET_TIME_SLOT_LIST;
         requestData.put("token", Communication.getRequestToken(this));
         requestData.put("from", t1);
         requestData.put("to", t2);
-        requestData.put(what, id);
         return this;
     }
 
@@ -446,7 +441,7 @@ public final class CommunicationBuilder {
      * @return Builder non terminé avec URL
      */
     public CommunicationBuilder getUserTimeSlotList(@NotNull Temporal from, @NotNull Temporal to) {
-        return getTimeSlotList(from, to, "hresource", User.getUser().getResourceId());
+        return getTimeSlotList(from, to);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
