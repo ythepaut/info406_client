@@ -124,6 +124,7 @@ public class Slide extends JPanel {
      */
     public void setSlide(int slide) {
         this.slide = Math.max(0, Math.min(slide, nbSlide-1));
+        redraw();
     }
 
     /**

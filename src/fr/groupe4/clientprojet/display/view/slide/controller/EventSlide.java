@@ -48,7 +48,5 @@ public class EventSlide implements ActionListener {
                 source.setSlide(i);
             }
         }
-
-        source.redraw();
     }
 }
