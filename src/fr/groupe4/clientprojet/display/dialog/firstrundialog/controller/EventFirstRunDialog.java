@@ -2,6 +2,7 @@ package fr.groupe4.clientprojet.display.dialog.firstrundialog.controller;
 
 import fr.groupe4.clientprojet.display.dialog.firstrundialog.view.FirstRunDialog;
 import fr.groupe4.clientprojet.model.parameters.Parameters;
+import org.jetbrains.annotations.NotNull;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -15,22 +16,35 @@ public class EventFirstRunDialog extends WindowAdapter implements ActionListener
     /**
      * Le dialog de premier lancement
      */
-    private FirstRunDialog source;
+    @NotNull
+    private final FirstRunDialog source;
+
     /**
      * Variables statiques pour les 2 boutons du dialog
      */
-    public static final String OK = "ok", CANCEL = "cancel";
+    @NotNull
+    public static final String OK = "ok";
 
+    /**
+     * Variables statiques pour les 2 boutons du dialog
+     */
+    @NotNull
+    public static final String CANCEL = "cancel";
 
     /**
      * Le constructeur
      *
      * @param source Le dialog de premier lancement
      */
-    public EventFirstRunDialog(FirstRunDialog source) {
+    public EventFirstRunDialog(@NotNull FirstRunDialog source) {
         this.source = source;
     }
 
+    /**
+     * Action effectuée
+     *
+     * @param e Event
+     */
     @Override
     public void actionPerformed(ActionEvent e) {
         switch (e.getActionCommand()) {
@@ -45,9 +59,15 @@ public class EventFirstRunDialog extends WindowAdapter implements ActionListener
                 break;
 
             default:
+                break;
         }
     }
 
+    /**
+     * Fenêtre fermée
+     *
+     * @param e Event
+     */
     @Override
     public void windowClosing(WindowEvent e) {
         source.dispose();

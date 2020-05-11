@@ -1,8 +1,8 @@
-package fr.groupe4.clientprojet.display.view.messagepanel.controller;
+package fr.groupe4.clientprojet.display.mainwindow.panels.projectpanel.messagepanel.controller;
 
 import fr.groupe4.clientprojet.communication.Communication;
-import fr.groupe4.clientprojet.display.view.messagepanel.enums.MessageButton;
-import fr.groupe4.clientprojet.display.view.messagepanel.view.MessagePanel;
+import fr.groupe4.clientprojet.display.mainwindow.panels.projectpanel.messagepanel.enums.MessageButton;
+import fr.groupe4.clientprojet.display.mainwindow.panels.projectpanel.messagepanel.view.MessagePanel;
 import fr.groupe4.clientprojet.model.message.enums.MessageResource;
 
 import java.awt.event.*;

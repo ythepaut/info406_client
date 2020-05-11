@@ -1,50 +1,72 @@
 package fr.groupe4.clientprojet.display.dialog.projectcreationdialog.controller;
 
+import com.github.lgooddatepicker.components.DatePicker;
 import fr.groupe4.clientprojet.communication.Communication;
 import fr.groupe4.clientprojet.display.dialog.errordialog.view.ErrorDialog;
 import fr.groupe4.clientprojet.display.dialog.loaddialog.view.LoadDialog;
-import fr.groupe4.clientprojet.display.dialog.projectcreationdialog.view.ProjectCreationDialog;
+import fr.groupe4.clientprojet.display.view.draw.DrawDialog;
 import fr.groupe4.clientprojet.logger.Logger;
+import fr.groupe4.clientprojet.model.project.Project;
 import fr.groupe4.clientprojet.model.project.enums.ProjectStatus;
+import org.jetbrains.annotations.NotNull;
 
-import org.jdatepicker.impl.*;
-
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.Date;
 
+/**
+ * Création de projet
+ */
 public class EventProjectCreation implements ActionListener {
-    private ProjectCreationDialog source;
-    private UtilDateModel dateModel;
-    private JTextField nomTextField;
-    private JTextArea descriptionTextArea;
+    /**
+     * Source
+     */
+    private final DrawDialog source;
 
-    public EventProjectCreation(ProjectCreationDialog source, UtilDateModel dateModel, JTextField nomTextField, JTextArea descriptionTextArea) {
+    /**
+     * Sélecteur de date
+     */
+    private final DatePicker datePicker;
+
+    /**
+     * Textfield du nom
+     */
+    private final JTextField nameTextField;
+
+    /**
+     * Zone de texte pour la description
+     */
+    private final JTextArea descriptionTextArea;
+
+    /**
+     * Constructeur
+     *
+     * @param source Source Swing
+     * @param datePicker Sélecteur de date
+     * @param nameTextField TextField du nom
+     * @param descriptionTextArea TextArea de la description
+     */
+    public EventProjectCreation(@NotNull DrawDialog source,
+                                @NotNull DatePicker datePicker,
+                                @NotNull JTextField nameTextField,
+                                @NotNull JTextArea descriptionTextArea) {
         this.source = source;
-        this.dateModel = dateModel;
-        this.nomTextField = nomTextField;
+        this.datePicker = datePicker;
+        this.nameTextField = nameTextField;
         this.descriptionTextArea = descriptionTextArea;
     }
 
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
-        Date date = dateModel.getValue();
-        String nom = nomTextField.getText();
+        LocalDate date = datePicker.getDate();
+        String name = nameTextField.getText();
         String description = descriptionTextArea.getText();
 
-        LocalDate deadline = null;
-
-        if (date != null) {
-            deadline = LocalDate.ofInstant(date.toInstant(), ZoneId.systemDefault());
-        }
-
-        if (!nom.isBlank() && nom.length() >= 3 && nom.length() < 255) {
+        if (!name.isBlank() && name.length() >= Project.MIN_NAME_LENGTH && name.length() < Project.MAX_NAME_LENGTH) {
             Communication c = Communication.builder()
-                    .createProject(nom, description, deadline, ProjectStatus.ONGOING)
+                    .createProject(name, description, date, ProjectStatus.ONGOING)
                     .build();
 
             new LoadDialog(c);
@@ -57,7 +79,7 @@ public class EventProjectCreation implements ActionListener {
 
                 case HTTP_OK:
                     // Projet créé
-                    new ErrorDialog("Projet créé", "SUCCESS", new Color(0, 127, 0));
+                    new ErrorDialog("Projet créé", "SUCCESS", ErrorDialog.COLOR_OK);
                     source.dispose();
                     break;
 

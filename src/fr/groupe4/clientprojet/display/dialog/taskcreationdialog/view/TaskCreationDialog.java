@@ -1,46 +1,78 @@
 package fr.groupe4.clientprojet.display.dialog.taskcreationdialog.view;
 
-import fr.groupe4.clientprojet.display.dialog.taskcreationdialog.controller.EventExitCreationDialog;
+import com.github.lgooddatepicker.components.DatePicker;
+import com.github.lgooddatepicker.components.DatePickerSettings;
+import fr.groupe4.clientprojet.display.dialog.controller.GenericExitEvent;
 import fr.groupe4.clientprojet.display.dialog.taskcreationdialog.controller.EventTaskCreation;
 import fr.groupe4.clientprojet.display.view.draw.DrawDialog;
-import org.jdatepicker.impl.JDatePanelImpl;
-import org.jdatepicker.impl.JDatePickerImpl;
-import org.jdatepicker.impl.UtilDateModel;
-import org.jetbrains.annotations.Nullable;
+import fr.groupe4.clientprojet.model.project.Project;
+import org.jetbrains.annotations.NotNull;
 
-import javax.swing.*;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
 import javax.swing.border.MatteBorder;
-import java.awt.*;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.format.DateTimeFormatter;
-import java.util.Calendar;
-import java.util.Properties;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.Toolkit;
+import java.time.DayOfWeek;
 
 /**
  * Dialog de création de tâche
  */
 public class TaskCreationDialog extends DrawDialog {
     /**
-     * Parent
+     * Largeur
      */
-    @Nullable
-    private JFrame parent;
+    private static final int WIDTH = 300;
 
     /**
-     * Id du projet
+     * Hauteur
      */
-    private long projectId;
+    private static final int HEIGHT = 550;
+
+    /**
+     * Nombre de lignes pour la description
+     */
+    private static final int DESCRIPTION_NB_ROWS = 18;
+
+    /**
+     * Nombre en colonnes pour la description
+     */
+    private static final int DESCRIPTION_NB_COLS = 22;
+
+    /**
+     * Nombre de colonnes pour le nom
+     */
+    private static final int NAME_NB_COLS = 15;
+
+    /**
+     * Parent
+     */
+    @NotNull
+    private final JPanel parent;
+
+    /**
+     * Projet associé
+     */
+    @NotNull
+    private final Project project;
 
     /**
      * Constructeur
      *
      * @param parent Parent
-     * @param projectId Id du projet
+     * @param project Projet associé
      */
-    public TaskCreationDialog(@Nullable JFrame parent, long projectId) {
+    public TaskCreationDialog(@NotNull JPanel parent, @NotNull Project project) {
         this.parent = parent;
-        this.projectId = projectId;
+        this.project = project;
 
         setTitle("Fenêtre de création de tâche");
         setModal(true);
@@ -54,7 +86,7 @@ public class TaskCreationDialog extends DrawDialog {
      */
     @Override
     protected void drawContent() {
-        setSize(300, 550);
+        setSize(WIDTH, HEIGHT);
         setResizable(false);
         setUndecorated(true);
         rootPane.setBorder(new MatteBorder(2, 2, 2, 2, Color.BLACK));
@@ -63,87 +95,53 @@ public class TaskCreationDialog extends DrawDialog {
 
         GridBagConstraints c = new GridBagConstraints();
 
-        /**
-         * Déclaration du layout
-         */
-        this.setLayout(new GridBagLayout());
+        setLayout(new GridBagLayout());
         c.gridx = 0;
         c.gridy = 0;
         c.gridwidth = 2;
         c.gridheight = 1;
         c.insets = new Insets(5,0,5,0);
 
+        add(new JLabel("Entrez le nom de la tâche : "), c);
 
-        /**
-         * Entrée du nom et description de projet
-         */
-        JLabel labelnom = new JLabel("Entrez le nom de la tâche : ");
-        add(labelnom,c);
-        JTextField nomprojet = new JTextField(15);
+        JTextField projectName = new JTextField(NAME_NB_COLS);
         c.gridy++;
-        add(nomprojet,c);
-        String strnomprojet = nomprojet.getText();
+        add(projectName, c);
 
         c.gridy++;
-        JLabel labeldescription = new JLabel("Entrez la description de la tâche : ");
-        add(labeldescription,c);
-        c.gridy++;
-        JTextArea description = new JTextArea(18, 22);
+        add(new JLabel("Entrez la description de la tâche : "), c);
+
+        JTextArea description = new JTextArea(DESCRIPTION_NB_ROWS, DESCRIPTION_NB_COLS);
         description.setLineWrap(true);
-        add(description,c);
-        String strdescription = description.getText();
-
-        /**
-         * Entrée de la date limite du projet
-         */
         c.gridy++;
-        JLabel datefinlabel = new JLabel("Entrez la date limite de la tâche : ");
-        add(datefinlabel,c);
+        add(description,c);
 
-        UtilDateModel model = new UtilDateModel();
-        Properties p = new Properties();
-        p.put("text.today", "Today");
-        p.put("text.month", "Month");
-        p.put("text.year", "Year");
-        JDatePanelImpl datePanel = new JDatePanelImpl(model, p);
+         // Entrée de la date limite du projet
+        c.gridy++;
+        add(new JLabel("Entrez la date limite de la tâche : "), c);
 
-        String datePattern = "d/MM/yyyy";
-        SimpleDateFormat dateFormatter = new SimpleDateFormat(datePattern);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/MM/yyyy");
-
-
-        //Création d'un JFormattedTextField.AbstractFormatter
-        JFormattedTextField.AbstractFormatter form = new JFormattedTextField.AbstractFormatter() {
-            public Object stringToValue(String text) throws ParseException {
-                return dateFormatter.parseObject(text);
-            }
-
-            public String valueToString(Object value) throws ParseException {
-                if (value != null)
-                {
-                    Calendar cal = (Calendar) value;
-                    return dateFormatter.format(cal.getTime());
-                }
-                return "";
-
-            }
-        };
-
-        JDatePickerImpl datePicker = new JDatePickerImpl(datePanel,form);
+        DatePickerSettings dateSettings = new DatePickerSettings();
+        dateSettings.setFirstDayOfWeek(DayOfWeek.MONDAY);
+        DatePicker datePicker = new DatePicker(dateSettings);
         c.gridy++;
         add(datePicker,c);
 
-        /**
-         * Création des boutons de confirmation/annulation
-         */
+        // Création des boutons de confirmation/annulation
+        JButton createProjectButton = new JButton("Création Tâche");
+        createProjectButton.addActionListener(new EventTaskCreation(
+                this,
+                datePicker,
+                projectName,
+                description,
+                project));
+
         c.gridwidth = 1;
         c.gridy++;
-        JButton creeprojet = new JButton("Création Tâche");
-        creeprojet.addActionListener(new EventTaskCreation(this, model, nomprojet, description, projectId));
-        add(creeprojet,c);
-        c.gridx++;
+        add(createProjectButton, c);
+
         JButton cancelButton = new JButton("Annuler");
-        cancelButton.addActionListener(new EventExitCreationDialog(this));
+        cancelButton.addActionListener(new GenericExitEvent(this));
+        c.gridx++;
         add(cancelButton,c);
     }
 }

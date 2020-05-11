@@ -1,6 +1,7 @@
 package fr.groupe4.clientprojet.display.view.calendar.controller;
 
 import fr.groupe4.clientprojet.model.calendar.CalendarProject;
+import org.jetbrains.annotations.NotNull;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -29,6 +30,7 @@ public class CalendarButtonListener implements ActionListener {
     /**
      * Calendrier à changer
      */
+    @NotNull
     private CalendarProject calendar;
 
     /**
@@ -37,7 +39,7 @@ public class CalendarButtonListener implements ActionListener {
      * @param calendar Calendrier
      * @param action Que faire
      */
-    public CalendarButtonListener(CalendarProject calendar, int action) {
+    public CalendarButtonListener(@NotNull CalendarProject calendar, int action) {
         this.calendar = calendar;
         this.action = action;
     }

@@ -1,28 +1,22 @@
 package fr.groupe4.clientprojet.display.mainwindow.panels.projectpanel.view;
 
 import fr.groupe4.clientprojet.communication.Communication;
-import fr.groupe4.clientprojet.display.mainwindow.panels.leftpanel.controller.EventLeftPanel;
-import fr.groupe4.clientprojet.display.mainwindow.panels.projectpanel.controller.EventProjectPanel;
-import fr.groupe4.clientprojet.display.mainwindow.panels.projectpanel.controller.NewTaskListener;
 import fr.groupe4.clientprojet.display.mainwindow.panels.projectpanel.controller.RightClicMenuProjectListener;
+import fr.groupe4.clientprojet.display.mainwindow.panels.projectpanel.taskprojectpanel.view.TaskProjectPanel;
 import fr.groupe4.clientprojet.display.view.draw.DrawPanel;
-import fr.groupe4.clientprojet.display.view.messagepanel.view.MessagePanel;
+import fr.groupe4.clientprojet.display.mainwindow.panels.projectpanel.messagepanel.view.MessagePanel;
+import fr.groupe4.clientprojet.display.view.slide.SlideItem;
 import fr.groupe4.clientprojet.display.view.slide.view.Slide;
 import fr.groupe4.clientprojet.model.parameters.Parameters;
 import fr.groupe4.clientprojet.model.parameters.themes.Theme;
 import fr.groupe4.clientprojet.model.project.Project;
 import fr.groupe4.clientprojet.model.project.ProjectList;
-import fr.groupe4.clientprojet.model.task.TaskList;
 
 import javax.swing.*;
 import java.awt.*;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.time.LocalDateTime;
-
 /**
- * Le panel des projets
+ * Panel des projets
  */
 public class ProjectPanel extends DrawPanel {
     /**
@@ -76,9 +70,9 @@ public class ProjectPanel extends DrawPanel {
 
         // Les slides
         Slide slides = new Slide();
-        slides.addSlide(homePanel(), "HOME");
-        slides.addSlide(taskPanel(), "TASK");
-        slides.addSlide(messagePanel(), "MESSAGE");
+        slides.addSlide(new SlideItem("HOME", homePanel()));
+        slides.addSlide(new SlideItem("TASK", taskPanel()));
+        slides.addSlide(new SlideItem("MESSAGE", messagePanel()));
 
         add(slides, BorderLayout.CENTER);
     }
@@ -86,95 +80,26 @@ public class ProjectPanel extends DrawPanel {
     /**
      * Dessine le premier slide du projet
      *
-     * @return : le jpanel
+     * @return Le JPanel
      */
     private JPanel homePanel() {
-        EventProjectPanel eventProjectPanel = new EventProjectPanel(this, project.getId());
-        JPanel panel = new JPanel(new BorderLayout());
-        panel.add(new JLabel("HOME"), BorderLayout.NORTH);
-        panel.add(new JLabel(project.getDescription()), BorderLayout.CENTER);
-
-        //Ajout d'un panel d'ajout de ressources
-        JPanel ajoutRessource = new JPanel();
-        ajoutRessource.setBorder(BorderFactory.createEmptyBorder(10,10,20,10));
-        ajoutRessource.setLayout(new FlowLayout());
-        JButton bouttonAddRessourcesMateriel = new JButton("Gérer les ressources matériels du projet");
-        JButton bouttonAddRessourcesHumaine = new JButton ("Gérer les utilisateurs du projet");
-        ajoutRessource.add(bouttonAddRessourcesHumaine);
-        ajoutRessource.add(bouttonAddRessourcesMateriel);
-        panel.add(ajoutRessource,BorderLayout.SOUTH);
-
-        //Création du controller de ressources humaines
-        bouttonAddRessourcesHumaine.setActionCommand(EventProjectPanel.NEWUSERS);
-        bouttonAddRessourcesHumaine.addActionListener(eventProjectPanel);
-
-        //Création du controller de ressources matériels
-        bouttonAddRessourcesMateriel.setActionCommand(EventProjectPanel.NEWMAT);
-        bouttonAddRessourcesMateriel.addActionListener(eventProjectPanel);
-
         // TODO : Construire panel accueil
-        return panel;
+        return new HomeProjectPanel(project);
     }
 
     /**
      * Dessine le slide des tâches du projet
      *
-     * @return : le jpanel
+     * @return JPanel des tâches
      */
     private JPanel taskPanel() {
-        JPanel panel = new JPanel();
-        Communication c = Communication.builder().sleepUntilFinished().startNow().getTaskList(project.getId()).build();
-        TaskList tasks = (TaskList) c.getResult();
-        panel.setLayout(new GridLayout());
-        JPanel panelL = new JPanel();
-        JPanel panelC = new JPanel();
-        JPanel panelR = new JPanel();
-        panel.add(panelL);
-        panel.add(panelC);
-        panel.add(panelR);
-        panelL.setLayout(new BoxLayout(panelL, BoxLayout.Y_AXIS));
-        panelC.setLayout(new BoxLayout(panelC, BoxLayout.Y_AXIS));
-        panelR.setLayout(new BoxLayout(panelR, BoxLayout.Y_AXIS));
-        panelL.add(new JLabel("TÂCHES"));
-        panelC.add(new JLabel("DESCRIPTION"));
-        panelR.add(new JLabel("DATE LIMITE"));
-        assert tasks != null;
-        for (fr.groupe4.clientprojet.model.task.Task task : tasks) {
-            panelL.add(new JLabel(task.getName()));
-
-            String description = task.getDescription();
-
-            if (description.isBlank()) {
-                description = " ";
-            }
-
-            panelC.add(new JLabel(description));
-
-            LocalDateTime deadline = task.getDeadline();
-            String deadlineString = " ";
-
-            if (deadline != null) {
-                deadlineString = deadline.toString();
-            }
-
-            panelR.add(new JLabel(deadlineString));
-        }
-
-        JButton b = new JButton("Nouvelle tâche");
-        b.addActionListener(new NewTaskListener(project.getId()));
-        panel.add(b);
-
-        JPanel superPanel = new JPanel(new BorderLayout());
-        superPanel.add(panel, BorderLayout.CENTER);
-        superPanel.add(b, BorderLayout.SOUTH);
-
-        return superPanel;
+        return new TaskProjectPanel(project);
     }
 
     /**
      * Dessine le slide de la messagerie du projet
      *
-     * @return : le jpanel
+     * @return JPanel de la messagerie
      */
     private JPanel messagePanel() {
         MessagePanel m = new MessagePanel(Communication.builder().getProjectMessageList(0, project.getId()));

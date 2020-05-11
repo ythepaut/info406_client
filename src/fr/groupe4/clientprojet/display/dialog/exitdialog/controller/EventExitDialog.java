@@ -2,11 +2,9 @@ package fr.groupe4.clientprojet.display.dialog.exitdialog.controller;
 
 import fr.groupe4.clientprojet.Main;
 import fr.groupe4.clientprojet.display.dialog.exitdialog.enums.ExitChoice;
-import fr.groupe4.clientprojet.display.dialog.projectcreationdialog.controller.EventExitCreationDialog;
-import fr.groupe4.clientprojet.display.dialog.projectcreationdialog.view.ProjectCreationDialog;
 import fr.groupe4.clientprojet.display.dialog.exitdialog.view.ExitDialog;
+import org.jetbrains.annotations.NotNull;
 
-import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
@@ -19,21 +17,22 @@ public class EventExitDialog extends WindowAdapter implements ActionListener {
     /**
      * Le dialog en question
      */
-    private ExitDialog source;
+    @NotNull
+    private final ExitDialog source;
 
     /**
      * Le constructeur
      *
      * @param source : le dialog
      */
-    public EventExitDialog(ExitDialog source) {
+    public EventExitDialog(@NotNull ExitDialog source) {
         this.source = source;
     }
 
     /**
      * Quand un bouton est cliqué
      *
-     * @param e : l'event
+     * @param e Event
      */
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -56,7 +55,7 @@ public class EventExitDialog extends WindowAdapter implements ActionListener {
     /**
      * Quand on ferme la fenêtre
      *
-     * @param e : l'event
+     * @param e Event
      */
     @Override
     public void windowClosing(WindowEvent e) {

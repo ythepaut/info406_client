@@ -1,63 +1,112 @@
 package fr.groupe4.clientprojet.model.parameters.themes;
 
-import java.awt.*;
+import org.jetbrains.annotations.NotNull;
+
+import java.awt.Color;
 
 /**
  * Les différentes couleurs pour les thèmes
  */
 public enum Theme {
+    /**
+     * Le fond
+     */
     FOND(
             Color.WHITE,
             Color.BLACK
-    ), // Le fond
+    ),
+
+    /**
+     * Fond des champs de texte
+     */
     FOND_FIELD(
             new Color(220, 220, 220),
             new Color(30, 30, 30)
-    ), // Fond des champs texte
+    ),
+
+    /**
+     * Police normale
+     */
     POLICE_NORMAL(
             Color.BLACK,
             Color.WHITE
-    ), // La police normale
+    ),
+
+    /**
+     * Police d'erreurs
+     */
     POLICE_ERROR(
             Color.RED,
             Color.RED
-    ), // Les erreurs
+    ),
+
+    /**
+     * Police accentuée
+     */
     POLICE_ACCENT(
             new Color(0, 0, 50),
             new Color(0, 0, 200)
-    ), // Les accentuation
+    ),
+
+    /**
+     * Bordures
+     */
     BORDER(
             Color.LIGHT_GRAY,
             Color.DARK_GRAY
-    ), // Les bordures
+    ),
+
+    /**
+     * Boutons
+     */
     FOND_BUTTON(
             Color.LIGHT_GRAY,
             Color.DARK_GRAY
-    ), // Les boutons
+    ),
+
+    /**
+     * RoundButton sélectionné
+     */
     BUTTON_SELECTED(
             new Color(84, 180, 255),
             new Color(42, 90, 128)
-    ), // RoundButton sélectionné
+    ),
+
+    /**
+     * Message envoyé
+     */
     MESSAGE_SENT(
             new Color(200, 200, 200),
             new Color(55, 55, 55)
-    ), // Message envoyé
+    ),
+
+    /**
+     * Message reçu
+     */
     MESSAGE_RECEIVED(
             new Color(240, 240, 240),
             new Color(15, 15, 15)
-    ), // Message reçu
-    ;
+    );
 
     /**
-     * La couleur pour le thème clair
+     * Couleur pour le thème clair
      */
-    private Color clair;
-    /**
-     * La couleur pour le thème sombre
-     */
-    private Color sombre;
+    @NotNull
+    private final Color clair;
 
-    Theme(Color clair, Color sombre) {
+    /**
+     * Couleur pour le thème sombre
+     */
+    @NotNull
+    private final Color sombre;
+
+    /**
+     * Constructeur
+     *
+     * @param clair Couleur du thème clair
+     * @param sombre Couleur du thème sombre
+     */
+    Theme(@NotNull Color clair, @NotNull Color sombre) {
         this.clair = clair;
         this.sombre = sombre;
     }
@@ -69,18 +118,10 @@ public enum Theme {
      * @return Color
      */
     public Color getColor(ThemeName name) {
-        Color res = null;
+        Color res = clair;
 
-        switch (name) {
-            case CLAIR:
-                res = this.clair;
-                break;
-
-            case SOMBRE:
-                res = this.sombre;
-                break;
-
-            default:
+        if (name == ThemeName.SOMBRE) {
+            res = sombre;
         }
 
         return res;

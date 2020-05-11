@@ -107,7 +107,7 @@ final class JsonTreatment {
      * @param jsonObject Contenu à traiter
      */
     private static void login(Communication comm, Object jsonObject) {
-        if (comm.status.equals(CommunicationStatus.STATUS_SUCCESS)) {
+        if (comm.status == CommunicationStatus.STATUS_SUCCESS) {
             JSONObject jsonContent = (JSONObject) jsonObject;
 
             JSONObject jsonRequestToken = (JSONObject) jsonContent.get("requests-token");
@@ -127,14 +127,14 @@ final class JsonTreatment {
      * @param jsonObject Contenu à traiter
      */
     private static void updateConnection(Communication comm, Object jsonObject) {
-        if (comm.HTTPCode == HTTPCode.HTTP_OK) {
+        if (comm.httpCode == HTTPCode.HTTP_OK) {
             JSONObject jsonContent = (JSONObject) jsonObject;
 
             JSONObject jsonTokenContent = (JSONObject) jsonContent.get("requests-token");
 
             Communication.setRequestToken(singleton, (String) jsonTokenContent.get("value"));
         }
-        else if (comm.HTTPCode == HTTPCode.HTTP_FORBIDDEN) {
+        else if (comm.httpCode == HTTPCode.HTTP_FORBIDDEN) {
             Logger.error("Update interdite !?");
         }
         else {
@@ -149,15 +149,13 @@ final class JsonTreatment {
             JSONObject jsonContent = (JSONObject) jsonObject;
             JSONObject jsonProject = (JSONObject) jsonContent.get("project");
 
-            Project p = new Project(
+            comm.communicationResult = new Project(
                     (long) jsonProject.get("id"),
                     (String) jsonProject.get("name"),
                     (String) jsonProject.get("description"),
                     (long) jsonProject.get("deadline"),
                     (String) jsonProject.get("status")
             );
-
-            comm.communicationResult = p;
         }
     }
 
@@ -214,7 +212,7 @@ final class JsonTreatment {
      * @param jsonObject Contenu à traiter
      */
     private static void getUserInfos(Communication comm, Object jsonObject) {
-        if (comm.HTTPCode == HTTPCode.HTTP_OK) {
+        if (comm.httpCode == HTTPCode.HTTP_OK) {
             JSONObject jsonContent = (JSONObject) jsonObject;
             JSONObject jsonDataContent = (JSONObject) jsonContent.get("data");
             JSONObject jsonControlContent = (JSONObject) jsonDataContent.get("control");
@@ -229,12 +227,20 @@ final class JsonTreatment {
 
             HumanResource humanResource = (HumanResource) c.getResult();
 
-            comm.communicationResult = new User(humanResource,
-                    (String) jsonControlContent.get("ip"),
-                    (String) jsonControlContent.get("type"),
-                    (long) jsonUserContent.get("id"),
-                    (String) jsonUserContent.get("username"),
-                    (String) jsonUserContent.get("email"));
+            if (humanResource == null) {
+                Logger.error("humanResource null ??", c);
+            }
+            else {
+                 User.initUser(
+                         humanResource,
+                        (String) jsonControlContent.get("ip"),
+                        (String) jsonControlContent.get("type"),
+                        (long) jsonUserContent.get("id"),
+                        (String) jsonUserContent.get("username"),
+                        (String) jsonUserContent.get("email"));
+
+                comm.communicationResult = User.getUser();
+            }
         }
         else {
             Logger.error("Déconnecté en cours de route ?");
@@ -345,7 +351,7 @@ final class JsonTreatment {
      * @param jsonObject Contenu à traiter
      */
     private static void getTimeSlotList(Communication comm, Object jsonObject) {
-        if (comm.status.equals(CommunicationStatus.STATUS_SUCCESS)) {
+        if (comm.status == CommunicationStatus.STATUS_SUCCESS) {
             JSONObject jsonContent = (JSONObject) jsonObject;
             JSONArray jsonTimeSlots = (JSONArray) jsonContent.get("timeslots");
 
@@ -381,7 +387,7 @@ final class JsonTreatment {
      * @param jsonObject Contenu à traiter
      */
     private static void listMessages(Communication comm, Object jsonObject) {
-        if (comm.status.equals(CommunicationStatus.STATUS_SUCCESS)) {
+        if (comm.status == CommunicationStatus.STATUS_SUCCESS) {
             JSONObject jsonContent = (JSONObject) jsonObject;
 
             JSONArray jsonMessages = (JSONArray) jsonContent.get("messages");
@@ -407,16 +413,21 @@ final class JsonTreatment {
 
                 HumanResource humanResource = (HumanResource) c.getResult();
 
-                Message message = new Message(
-                        humanResource,
-                        (long) jsonMessage.get("id"),
-                        (long) jsonMessage.get("date"),
-                        (long) jsonMessage.get("destinationId"),
-                        (String) jsonMessage.get("destination"),
-                        (String) jsonMessage.get("content")
-                );
+                if (humanResource == null) {
+                    Logger.error("humanResource null ??", c);
+                }
+                else {
+                    Message message = new Message(
+                            humanResource,
+                            (long) jsonMessage.get("id"),
+                            (long) jsonMessage.get("date"),
+                            (long) jsonMessage.get("destinationId"),
+                            (String) jsonMessage.get("destination"),
+                            (String) jsonMessage.get("content")
+                    );
 
-                messages.add(message);
+                    messages.add(message);
+                }
             }
 
             comm.communicationResult = messages;

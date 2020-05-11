@@ -1,6 +1,6 @@
 package fr.groupe4.clientprojet.display.view.draw;
 
-import javax.swing.*;
+import javax.swing.JPanel;
 
 /**
  * Classe abstraite héritant de JPanel qui rajoute 2 méthodes

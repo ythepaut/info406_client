@@ -2,21 +2,23 @@ package fr.groupe4.clientprojet.display.dialog.loaddialog.view;
 
 import fr.groupe4.clientprojet.communication.Communication;
 import fr.groupe4.clientprojet.display.dialog.loaddialog.controller.EventLoadDialog;
+import org.jetbrains.annotations.NotNull;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JDialog;
+import java.awt.Toolkit;
+import java.awt.Dimension;
 
 /**
- * Dialog de chargement
+ * Dialog de chargement <br>
  * Permet de notifier l'utilisateur d'un chargement
  */
 public class LoadDialog extends JDialog {
     /**
-     * Le constructeur
+     * Constructeur
      *
-     * @param comm : l'instance de communication
+     * @param comm Instance de communication
      */
-    public LoadDialog(Communication comm) {
+    public LoadDialog(@NotNull Communication comm) {
         setModal(true);
         comm.addPropertyChangeListener(new EventLoadDialog(this));
         comm.start();

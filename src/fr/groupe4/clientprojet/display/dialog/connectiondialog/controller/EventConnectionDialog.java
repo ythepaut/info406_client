@@ -6,31 +6,36 @@ import fr.groupe4.clientprojet.display.dialog.connectiondialog.view.ConnectionDi
 import fr.groupe4.clientprojet.display.dialog.connectiondialog.enums.ConnectionChoice;
 import fr.groupe4.clientprojet.display.dialog.errordialog.view.ErrorDialog;
 import fr.groupe4.clientprojet.display.dialog.loaddialog.view.LoadDialog;
+import org.jetbrains.annotations.NotNull;
 
-import java.awt.event.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 /**
- * Le listener de la connexion
+ * Listener de la connexion
  */
 public class EventConnectionDialog extends WindowAdapter implements ActionListener {
     /**
-     * Le dialog de connexion
+     * Dialog de connexion
      */
-    private ConnectionDialog source;
+    @NotNull
+    private final ConnectionDialog source;
 
     /**
-     * Le constructeur
+     * Constructeur
      *
-     * @param source : le dialog de connexion
+     * @param source Dialog de connexion
      */
-    public EventConnectionDialog(ConnectionDialog source) {
+    public EventConnectionDialog(@NotNull ConnectionDialog source) {
         this.source = source;
     }
 
     /**
      * Quand la fenêtre est fermée
      *
-     * @param e : l'event
+     * @param e Event
      */
     @Override
     public void windowClosing(WindowEvent e) {
@@ -38,9 +43,9 @@ public class EventConnectionDialog extends WindowAdapter implements ActionListen
     }
 
     /**
-     * Quand un bouton est clické
+     * Quand un bouton est cliqué
      *
-     * @param e : l'event
+     * @param e Event
      */
     @Override
     public void actionPerformed(ActionEvent e) {

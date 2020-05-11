@@ -2,9 +2,11 @@ package fr.groupe4.clientprojet.display.dialog.parametersdialog.controller;
 
 import fr.groupe4.clientprojet.display.dialog.parametersdialog.view.ParametersDialog;
 import fr.groupe4.clientprojet.model.parameters.Parameters;
-import fr.groupe4.clientprojet.model.parameters.themes.ThemeName;
 
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 /**
  * Le listener du dialog des paramètres
@@ -13,7 +15,8 @@ public class EventParametersDialog extends WindowAdapter implements ActionListen
     /**
      * Le dialog des paramètres
      */
-    private ParametersDialog source;
+    private final ParametersDialog source;
+
     /**
      * Variables statiques pour les 3 boutons du dialog
      */
@@ -28,11 +31,21 @@ public class EventParametersDialog extends WindowAdapter implements ActionListen
         this.source = source;
     }
 
+    /**
+     * Fenêtre fermée
+     *
+     * @param e Event
+     */
     @Override
     public void windowClosing(WindowEvent e) {
         source.dispose();
     }
 
+    /**
+     * Action effectuée
+     *
+     * @param e Event
+     */
     @Override
     public void actionPerformed(ActionEvent e) {
         switch (e.getActionCommand()) {
@@ -53,6 +66,9 @@ public class EventParametersDialog extends WindowAdapter implements ActionListen
         }
     }
 
+    /**
+     * Applique les paramètres
+     */
     private void applyParameters() {
         Parameters.setServerUrl(source.getServerUrl());
         Parameters.setThemeName(source.getTheme());

@@ -3,28 +3,44 @@ package fr.groupe4.clientprojet.model.parameters;
 import fr.groupe4.clientprojet.logger.Logger;
 import fr.groupe4.clientprojet.model.parameters.themes.ThemeName;
 import fr.groupe4.clientprojet.utils.Location;
+import org.jetbrains.annotations.NotNull;
 
-import java.io.*;
 import java.util.HashMap;
+
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 
 /**
  * Classe abstraite qui contient les paramètres de l'application
  */
 public abstract class Parameters {
-    private static final String fileName = "/parameters.set";
     /**
-     * Liste des paramètres avec leurs valeurs
-     * ParametersName -> Object
-     * Nom paramètre  -> valeur
+     * URL par défaut pour le serveur
+     */
+    private static final String DEFAULT_SERVER_URL = "https://api.ythepaut.com/g4/actions";
+
+    /**
+     * Nom du fichier paramètres
+     */
+    private static final String fileName = "/parameters.set";
+
+    /**
+     * Liste des paramètres avec leurs valeurs<br>
+     * ParametersName -&gt; Object<br>
+     * Nom paramètre  -&gt; valeur<br>
      *
      * La liste des paramètres est dans une énumération
+     *
      * @see ParametersNames
      */
     private static HashMap<ParametersNames, Object> parameters;
 
     /**
-     * <!> Obligatoire </!>
-     * Permet de récuperer tous les paramètres stocké dans le fichier
+     * <b> Obligatoire ! </b><br>
+     * Permet de récupérer tous les paramètres stocké dans le fichier
      */
     public static void init() {
         parameters = new HashMap<>();
@@ -32,6 +48,7 @@ public abstract class Parameters {
         try {
             ObjectInputStream inputStream = new ObjectInputStream(
                     new FileInputStream(Location.getDataPath() + fileName));
+
             parameters = (HashMap<ParametersNames, Object>) inputStream.readObject();
             inputStream.close();
         } catch (IOException | ClassNotFoundException e) {
@@ -39,13 +56,13 @@ public abstract class Parameters {
 
             // Définition des paramètres par défaut
             parameters.put(ParametersNames.FIRSTRUN, true);
-            parameters.put(ParametersNames.SERVERURL, "https://api.ythepaut.com/g4/actions");
+            parameters.put(ParametersNames.SERVERURL, DEFAULT_SERVER_URL);
             parameters.put(ParametersNames.THEME, ThemeName.SOMBRE);
         }
     }
 
     /**
-     * <!> Obligatoire </!>
+     * <b>Obligatoire !</b><br>
      * Permet de sauvegarder tous les paramètres dans le fichier
      */
     public static void exit() {
@@ -64,6 +81,12 @@ public abstract class Parameters {
     // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
     // Getters et Setters
 
+    /**
+     * Récupère l'URL du serveur
+     *
+     * @return URL
+     */
+    @NotNull
     public static String getServerUrl() {
         String res = "";
         try {
@@ -75,7 +98,12 @@ public abstract class Parameters {
         return res;
     }
 
-    public static void setServerUrl(String serverUrl) {
+    /**
+     * Set l'URL du serveur
+     *
+     * @param serverUrl URL
+     */
+    public static void setServerUrl(@NotNull String serverUrl) {
         try {
             if (parameters == null) throw new InitParametersException();
             parameters.put(ParametersNames.SERVERURL, serverUrl);
@@ -84,6 +112,11 @@ public abstract class Parameters {
         }
     }
 
+    /**
+     * Premier lancement ou non ?
+     *
+     * @return Premier lancement ?
+     */
     public static boolean isFirstRun() {
         boolean res = true;
         try {
@@ -95,6 +128,11 @@ public abstract class Parameters {
         return res;
     }
 
+    /**
+     * Set premier lancement
+     *
+     * @param firstRun Premier lancement
+     */
     public static void setFirstRun(boolean firstRun) {
         try {
             if (parameters == null) throw new InitParametersException();
@@ -104,8 +142,14 @@ public abstract class Parameters {
         }
     }
 
+    /**
+     * Récupère le nom du thème
+     *
+     * @return Thème
+     */
+    @NotNull
     public static ThemeName getThemeName() {
-        ThemeName res = null;
+        ThemeName res = ThemeName.DEFAULT;
         try {
             if (parameters == null) throw new InitParametersException();
             res = (ThemeName) parameters.get(ParametersNames.THEME);
@@ -115,7 +159,12 @@ public abstract class Parameters {
         return res;
     }
 
-    public static void setThemeName(ThemeName name) {
+    /**
+     * Change le thème
+     *
+     * @param name Nouveau thème
+     */
+    public static void setThemeName(@NotNull ThemeName name) {
         try {
             if (parameters == null) throw new InitParametersException();
             parameters.put(ParametersNames.THEME, name);

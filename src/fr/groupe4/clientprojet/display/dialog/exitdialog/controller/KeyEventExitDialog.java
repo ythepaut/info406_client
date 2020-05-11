@@ -2,6 +2,7 @@ package fr.groupe4.clientprojet.display.dialog.exitdialog.controller;
 
 import fr.groupe4.clientprojet.Main;
 import fr.groupe4.clientprojet.display.dialog.exitdialog.view.ExitDialog;
+import org.jetbrains.annotations.NotNull;
 
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -13,21 +14,22 @@ public class KeyEventExitDialog extends KeyAdapter {
     /**
      * Le dialog de sortie
      */
-    private ExitDialog source;
+    @NotNull
+    private final ExitDialog source;
 
     /**
      * Le constructeur
      *
-     * @param source : Le dialog de sortie
+     * @param source Dialog de sortie
      */
-    public KeyEventExitDialog(ExitDialog source) {
+    public KeyEventExitDialog(@NotNull ExitDialog source) {
         this.source = source;
     }
 
     /**
-     * Quand une touche est préssée
+     * Quand une touche est pressée
      *
-     * @param e : L'event
+     * @param e Event
      */
     @Override
     public void keyPressed(KeyEvent e) {
@@ -43,6 +45,7 @@ public class KeyEventExitDialog extends KeyAdapter {
                 break;
 
             default:
+                break;
         }
     }
 }
