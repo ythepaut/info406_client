@@ -121,8 +121,12 @@ public enum Theme {
     public Color getColor(ThemeName name) {
         Color res = clair;
 
-        if (name == ThemeName.SOMBRE) {
-            res = sombre;
+        switch (name) { // Switch pour quand on rajoutera des thèmes
+            case SOMBRE:
+                res = sombre;
+                break;
+
+            default:
         }
 
         return res;

@@ -142,19 +142,13 @@ public abstract class Parameters {
      *
      * @return Thème
      */
-    @NotNull
     public static ThemeName getThemeName() {
-        ThemeName res = ThemeName.DEFAULT;
+        ThemeName res = ThemeName.SOMBRE;
         try {
             if (parameters == null) throw new InitParametersException();
             res = (ThemeName) parameters.get(ParametersNames.THEME);
         } catch (InitParametersException e) {
             Logger.error(e.getMessage());
-        }
-
-        if (res == null) {
-            res = ThemeName.DEFAULT;
-            Logger.warning("Theme null ?");
         }
 
         return res;
