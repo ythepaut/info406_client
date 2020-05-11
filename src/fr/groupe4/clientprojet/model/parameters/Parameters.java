@@ -151,6 +151,12 @@ public abstract class Parameters {
         } catch (InitParametersException e) {
             Logger.error(e.getMessage());
         }
+
+        if (res == null) {
+            res = ThemeName.DEFAULT;
+            Logger.warning("Theme null ?");
+        }
+
         return res;
     }
 
