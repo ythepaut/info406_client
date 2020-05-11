@@ -73,29 +73,29 @@ public class MessagePanel extends DrawPanel {
         setBackground(Theme.FOND.getColor(Parameters.getThemeName()));
 
         // Panel du bas
-        JPanel bottomPanel = new JPanel(new GridLayout(1, 3));
+        JPanel bottomPanel = new JPanel(new BorderLayout());
         bottomPanel.setBackground(Theme.FOND.getColor(Parameters.getThemeName()));
         bottomPanel.setBorder(new EmptyBorder(10, 50, 10, 50));
         RoundButton refreshButton = new RoundButton(new File(Location.getImgDataPath() + "/refresh.png"));
         refreshButton.setForeground(Theme.POLICE_NORMAL.getColor(Parameters.getThemeName()));
-        refreshButton.setMaximumSize(new Dimension(20, 20));
+        refreshButton.setPreferredSize(new Dimension(25, 25));
         refreshButton.setActionCommand(MessageButton.REFRESH.toString());
         refreshButton.addActionListener(eventMessagePanel);
-        bottomPanel.add(refreshButton);
-        messageField = new JTextArea(1, 120);
+        bottomPanel.add(refreshButton, BorderLayout.WEST);
+        messageField = new JTextArea(1, 300);
+        messageField.setLineWrap(true);
         messageField.setBorder(null);
         messageField.setBackground(Theme.FOND_FIELD.getColor(Parameters.getThemeName()));
         messageField.setForeground(Theme.POLICE_NORMAL.getColor(Parameters.getThemeName()));
-        messageField.setBorder(new MatteBorder(1, 1, 1, 1, Color.BLACK));
+        messageField.setBorder(new MatteBorder(1, 1, 1, 1, Theme.BORDER.getColor()));
         messageField.grabFocus();
-        bottomPanel.add(messageField);
+        bottomPanel.add(messageField, BorderLayout.CENTER);
         RoundButton sentButton = new RoundButton(new File(Location.getImgDataPath() + "/sent.png"));
         sentButton.setForeground(Theme.POLICE_NORMAL.getColor(Parameters.getThemeName()));
-        sentButton.setMaximumSize(new Dimension(20, 20));
-        sentButton.setMaximumSize(new Dimension(30, 30));
+        sentButton.setPreferredSize(new Dimension(25, 25));
         sentButton.setActionCommand(MessageButton.SEND.toString());
         sentButton.addActionListener(eventMessagePanel);
-        bottomPanel.add(sentButton);
+        bottomPanel.add(sentButton, BorderLayout.EAST);
 
         add(bottomPanel, BorderLayout.SOUTH);
 
