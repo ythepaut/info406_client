@@ -1,12 +1,15 @@
 package fr.groupe4.clientprojet.display.mainwindow.panels.projectpanel.view;
 
 import fr.groupe4.clientprojet.communication.Communication;
+import fr.groupe4.clientprojet.display.dialog.loaddialog.view.LoadDialog;
 import fr.groupe4.clientprojet.display.mainwindow.panels.projectpanel.controller.RightClicMenuProjectListener;
 import fr.groupe4.clientprojet.display.mainwindow.panels.projectpanel.messagepanel.view.MessagePanel;
 import fr.groupe4.clientprojet.display.mainwindow.panels.projectpanel.taskprojectpanel.view.TaskProjectPanel;
+import fr.groupe4.clientprojet.display.mainwindow.view.MainWindow;
 import fr.groupe4.clientprojet.display.view.draw.DrawPanel;
 import fr.groupe4.clientprojet.display.view.slide.SlideItem;
 import fr.groupe4.clientprojet.display.view.slide.view.Slide;
+import fr.groupe4.clientprojet.logger.Logger;
 import fr.groupe4.clientprojet.model.parameters.Parameters;
 import fr.groupe4.clientprojet.model.parameters.themes.Theme;
 import fr.groupe4.clientprojet.model.project.Project;
@@ -30,7 +33,7 @@ public class ProjectPanel extends DrawPanel {
      * @param projectName : Le nom du projet
      */
     public ProjectPanel(String projectName) {
-        Communication comm = Communication.builder().sleepUntilFinished().startNow().getProjectList().build();
+        Communication comm = Communication.builder().getProjectList().sleepUntilFinished().startNow().build();
 
         ProjectList list = (ProjectList) comm.getResult();
 

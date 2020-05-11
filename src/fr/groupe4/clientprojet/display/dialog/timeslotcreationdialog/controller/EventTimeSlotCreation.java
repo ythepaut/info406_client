@@ -87,7 +87,7 @@ public class EventTimeSlotCreation implements ActionListener {
                     .addTimeSlot(from, to, task.getId(), roomId)
                     .build();
 
-            new LoadDialog(c);
+            new LoadDialog(c, source);
 
             switch (c.getHTTPCode()) {
                 case HTTP_FORBIDDEN:

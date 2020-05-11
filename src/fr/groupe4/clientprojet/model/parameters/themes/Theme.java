@@ -1,5 +1,6 @@
 package fr.groupe4.clientprojet.model.parameters.themes;
 
+import fr.groupe4.clientprojet.model.parameters.Parameters;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
@@ -125,5 +126,9 @@ public enum Theme {
         }
 
         return res;
+    }
+
+    public Color getColor() {
+        return getColor(Parameters.getThemeName());
     }
 }

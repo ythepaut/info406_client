@@ -68,7 +68,7 @@ public class EventProjectCreation implements ActionListener {
                     .createProject(name, description, date, ProjectStatus.ONGOING)
                     .build();
 
-            new LoadDialog(c);
+            new LoadDialog(c, source);
 
             switch (c.getHTTPCode()) {
                 case HTTP_FORBIDDEN:

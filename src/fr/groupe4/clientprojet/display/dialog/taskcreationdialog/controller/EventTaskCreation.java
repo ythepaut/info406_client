@@ -82,7 +82,7 @@ public class EventTaskCreation implements ActionListener {
                     .createTask(nom, description, TaskStatus.ONGOING, date, project.getId())
                     .build();
 
-            new LoadDialog(c);
+            new LoadDialog(c, parent);
 
             switch (c.getHTTPCode()) {
                 case HTTP_FORBIDDEN:

@@ -55,7 +55,7 @@ public class EventConnectionDialog extends WindowAdapter implements ActionListen
                         .connect(source.getUsername(), source.getPassword())
                         .build();
 
-                new LoadDialog(comm);
+                new LoadDialog(comm, source);
 
                 if (Communication.isConnected()) {
                     source.dispose();
