@@ -33,7 +33,7 @@ public class TimeSlotCreationPolicy implements TimeVetoPolicy {
     /**
      * Constructeur
      *
-     * @param reference Référence, si avant ou après
+     * @param reference   Référence, si avant ou après
      * @param otherPicker Autre picker pour comparer
      */
     public TimeSlotCreationPolicy(boolean reference, @NotNull TimePicker otherPicker) {
@@ -45,7 +45,6 @@ public class TimeSlotCreationPolicy implements TimeVetoPolicy {
      * Temps valide ou non
      *
      * @param time Temps à vérifier
-     *
      * @return Valide ou non
      */
     @Override
@@ -61,16 +60,14 @@ public class TimeSlotCreationPolicy implements TimeVetoPolicy {
 
             if (otherTime == null) {
                 return true;
-            }
-            else {
+            } else {
                 if (reference == BEFORE) {
                     return time.isBefore(otherTime);
                 } else {
                     return time.isAfter(otherTime);
                 }
             }
-        }
-        else {
+        } else {
             return false;
         }
     }

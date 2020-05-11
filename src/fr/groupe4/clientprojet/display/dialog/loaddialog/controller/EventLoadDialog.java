@@ -36,8 +36,7 @@ public class EventLoadDialog implements PropertyChangeListener {
         String propertyName = evt.getPropertyName();
 
         if (CommunicationPropertyName.fromString(propertyName)
-            == CommunicationPropertyName.COMMUNICATION_LOADING_FINISHED)
-        {
+                == CommunicationPropertyName.COMMUNICATION_LOADING_FINISHED) {
             source.dispose();
         }
     }

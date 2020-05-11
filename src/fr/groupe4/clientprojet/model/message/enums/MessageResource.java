@@ -32,9 +32,7 @@ public enum MessageResource {
      * Transforme une String en son enum associée
      *
      * @param msg Message
-     *
      * @return Enum associé
-     *
      * @throws IllegalArgumentException Si l'enum n'est pas trouvée
      */
     @NotNull

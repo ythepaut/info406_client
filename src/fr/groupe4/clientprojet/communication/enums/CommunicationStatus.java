@@ -31,9 +31,7 @@ public enum CommunicationStatus {
      * Chaine vers enum
      *
      * @param msg Chaine
-     *
      * @return Enum
-     *
      * @throws IllegalArgumentException Enum non trouvée
      */
     @NotNull

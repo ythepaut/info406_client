@@ -39,9 +39,7 @@ public enum ConnectionChoice {
      * Renvoie l'enum correspondante au nom
      *
      * @param name Nom
-     *
      * @return Enum
-     *
      * @throws IllegalArgumentException Pas d'enum associée
      */
     @NotNull

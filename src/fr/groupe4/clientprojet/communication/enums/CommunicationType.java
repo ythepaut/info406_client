@@ -72,8 +72,7 @@ public enum CommunicationType {
     /**
      * Constructeur
      *
-     * @param url URL
-     *
+     * @param url             URL
      * @param checkConnection Vérifie la connexion
      */
     CommunicationType(@NotNull String url, boolean checkConnection) {

@@ -37,9 +37,7 @@ public enum ThemeName implements Serializable {
      * Récupère l'instance
      *
      * @param name Nom
-     *
      * @return Instance
-     *
      * @throws IllegalArgumentException Si l'enum n'existe pas
      */
     @NotNull

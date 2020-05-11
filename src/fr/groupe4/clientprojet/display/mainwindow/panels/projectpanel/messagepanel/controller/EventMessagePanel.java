@@ -5,7 +5,8 @@ import fr.groupe4.clientprojet.display.mainwindow.panels.projectpanel.messagepan
 import fr.groupe4.clientprojet.display.mainwindow.panels.projectpanel.messagepanel.view.MessagePanel;
 import fr.groupe4.clientprojet.model.message.enums.MessageResource;
 
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 /**
  * Le listener de la messagerie

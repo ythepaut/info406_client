@@ -17,14 +17,14 @@ public class HomeProjectPanel extends JPanel {
 
         //Ajout d'un panel d'ajout de ressources
         JPanel ajoutRessource = new JPanel();
-        ajoutRessource.setBorder(BorderFactory.createEmptyBorder(10,10,20,10));
+        ajoutRessource.setBorder(BorderFactory.createEmptyBorder(10, 10, 20, 10));
         ajoutRessource.setLayout(new FlowLayout());
         JButton bouttonAddRessourcesMateriel = new JButton("Gérer les ressources matériels du projet");
-        JButton bouttonAddRessourcesHumaine = new JButton ("Gérer les utilisateurs du projet");
+        JButton bouttonAddRessourcesHumaine = new JButton("Gérer les utilisateurs du projet");
         ajoutRessource.add(bouttonAddRessourcesHumaine);
         ajoutRessource.add(bouttonAddRessourcesMateriel);
 
-        add(ajoutRessource,BorderLayout.SOUTH);
+        add(ajoutRessource, BorderLayout.SOUTH);
 
         //Création du controller de ressources humaines
         bouttonAddRessourcesHumaine.setActionCommand(EventProjectPanel.NEWUSERS);

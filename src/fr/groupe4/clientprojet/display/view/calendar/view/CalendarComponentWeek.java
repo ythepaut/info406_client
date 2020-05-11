@@ -8,19 +8,8 @@ import fr.groupe4.clientprojet.model.timeslot.TimeSlot;
 import fr.groupe4.clientprojet.model.timeslot.TimeSlotList;
 import org.jetbrains.annotations.NotNull;
 
-import javax.swing.JPanel;
-import javax.swing.JLabel;
-import javax.swing.SwingConstants;
-import javax.swing.BorderFactory;
-
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.GridLayout;
-import java.awt.Graphics;
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Font;
-
+import javax.swing.*;
+import java.awt.*;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 
@@ -33,7 +22,7 @@ class CalendarComponentWeek extends GenericCalendarComponent {
     /**
      * Constructeur
      *
-     * @param parent Fenêtre parente
+     * @param parent   Fenêtre parente
      * @param calendar Calendrier
      */
     CalendarComponentWeek(@NotNull JPanel parent, @NotNull CalendarProject calendar) {
@@ -68,7 +57,7 @@ class CalendarComponentWeek extends GenericCalendarComponent {
 
             daysTitle[i] = new JLabel(
                     "<html><div style='color:"
-                            + (LocalDate.now().isEqual(date) ? "red":"blue")
+                            + (LocalDate.now().isEqual(date) ? "red" : "blue")
                             + "'>"
                             + days[i][0]
                             + " "
@@ -112,7 +101,7 @@ class CalendarComponentWeek extends GenericCalendarComponent {
     private TimeSlotList[] getWeekTimeSlots() {
         final TimeSlotList[] weekTimeSlots = new TimeSlotList[7];
 
-        for (int i=0; i<weekTimeSlots.length; i++) {
+        for (int i = 0; i < weekTimeSlots.length; i++) {
             weekTimeSlots[i] = new TimeSlotList();
         }
 
@@ -146,20 +135,20 @@ class CalendarComponentWeek extends GenericCalendarComponent {
         JPanel subPanel;
         JPanel empty;
 
-        for (int day=0; day<7; day++) {
+        for (int day = 0; day < 7; day++) {
             TimeSlotList dayTimeSlots = weekTimeSlots[day];
             present = new boolean[(TimeSlot.HIGHEST_TIME - TimeSlot.LOWEST_TIME) / TimeSlot.TIME_SCALE];
 
             for (TimeSlot timeSlot : dayTimeSlots) {
                 final int startTime =
                         Math.max(TimeSlot.LOWEST_TIME,
-                        Math.min(TimeSlot.HIGHEST_TIME,
-                                timeSlot.getStartTime().toLocalTime().toSecondOfDay()));
+                                Math.min(TimeSlot.HIGHEST_TIME,
+                                        timeSlot.getStartTime().toLocalTime().toSecondOfDay()));
 
                 final int duration =
                         Math.max(0,
-                        Math.min(TimeSlot.HIGHEST_TIME - startTime,
-                                timeSlot.getEndTime().toLocalTime().toSecondOfDay() - startTime));
+                                Math.min(TimeSlot.HIGHEST_TIME - startTime,
+                                        timeSlot.getEndTime().toLocalTime().toSecondOfDay() - startTime));
 
                 final int startPlacement = (startTime - TimeSlot.LOWEST_TIME) / TimeSlot.TIME_SCALE;
                 final int durationPlacement = (int) Math.ceil(((double) duration) / ((double) TimeSlot.TIME_SCALE));
@@ -179,13 +168,13 @@ class CalendarComponentWeek extends GenericCalendarComponent {
             for (TimeSlot timeSlot : dayTimeSlots) {
                 final int startTime =
                         Math.max(TimeSlot.LOWEST_TIME,
-                        Math.min(TimeSlot.HIGHEST_TIME,
-                                timeSlot.getStartTime().toLocalTime().toSecondOfDay()));
+                                Math.min(TimeSlot.HIGHEST_TIME,
+                                        timeSlot.getStartTime().toLocalTime().toSecondOfDay()));
 
                 final int duration =
                         Math.max(0,
-                        Math.min(TimeSlot.HIGHEST_TIME - startTime,
-                                timeSlot.getEndTime().toLocalTime().toSecondOfDay() - startTime));
+                                Math.min(TimeSlot.HIGHEST_TIME - startTime,
+                                        timeSlot.getEndTime().toLocalTime().toSecondOfDay() - startTime));
 
                 final int startPlacement = (startTime - TimeSlot.LOWEST_TIME) / TimeSlot.TIME_SCALE;
                 final int durationPlacement = (int) Math.ceil(((double) duration) / ((double) TimeSlot.TIME_SCALE));

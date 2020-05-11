@@ -31,9 +31,7 @@ public enum APICode {
      * Retourne l'énum associée à la chaine
      *
      * @param msg Message
-     *
      * @return Enum associée
-     *
      * @throws IllegalArgumentException Si l'énum n'existe pas
      */
     @NotNull

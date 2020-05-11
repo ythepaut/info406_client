@@ -6,7 +6,6 @@ import fr.groupe4.clientprojet.display.mainwindow.view.MainWindow;
 import fr.groupe4.clientprojet.model.project.Project;
 import org.jetbrains.annotations.NotNull;
 
-import javax.swing.JPanel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -40,7 +39,7 @@ public class EventProjectPanel implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (NEWUSERS.equals(e.getActionCommand())) {
-          new UsersGestionDialog(MainWindow.getInstance(), project);
+            new UsersGestionDialog(MainWindow.getInstance(), project);
         } else {
             new MaterielGestionDialog(MainWindow.getInstance());
         }

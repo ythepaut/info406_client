@@ -1,13 +1,13 @@
 package fr.groupe4.clientprojet.display.mainwindow.panels.centerpanel.view;
 
-import java.awt.*;
-
 import fr.groupe4.clientprojet.display.mainwindow.panels.calendarpanel.view.CalendarPanel;
 import fr.groupe4.clientprojet.display.mainwindow.panels.projectpanel.view.ProjectPanel;
 import fr.groupe4.clientprojet.display.mainwindow.panels.userpanel.view.UserPanel;
 import fr.groupe4.clientprojet.display.view.draw.DrawPanel;
 import fr.groupe4.clientprojet.model.parameters.Parameters;
 import fr.groupe4.clientprojet.model.parameters.themes.Theme;
+
+import java.awt.*;
 
 /**
  * Créé le panel du centre de la fenêtre

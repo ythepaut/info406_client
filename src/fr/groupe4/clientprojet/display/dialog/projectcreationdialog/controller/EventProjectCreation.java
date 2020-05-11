@@ -10,8 +10,7 @@ import fr.groupe4.clientprojet.model.project.Project;
 import fr.groupe4.clientprojet.model.project.enums.ProjectStatus;
 import org.jetbrains.annotations.NotNull;
 
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
+import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.time.LocalDate;
@@ -43,9 +42,9 @@ public class EventProjectCreation implements ActionListener {
     /**
      * Constructeur
      *
-     * @param source Source Swing
-     * @param datePicker Sélecteur de date
-     * @param nameTextField TextField du nom
+     * @param source              Source Swing
+     * @param datePicker          Sélecteur de date
+     * @param nameTextField       TextField du nom
      * @param descriptionTextArea TextArea de la description
      */
     public EventProjectCreation(@NotNull DrawDialog source,
@@ -91,8 +90,7 @@ public class EventProjectCreation implements ActionListener {
                     Logger.error("Code invalide :", c);
                     break;
             }
-        }
-        else {
+        } else {
             // Si le nom n'est pas conforme
             new ErrorDialog("Nom de projet invalide", source);
         }

@@ -55,11 +55,11 @@ public class Project {
     /**
      * Constructeur
      *
-     * @param id ID BDD
-     * @param name Nom
+     * @param id          ID BDD
+     * @param name        Nom
      * @param description Description
-     * @param deadline Échéance, nombre de secondes depuis le 01/01/1970 UTC
-     * @param status Statu
+     * @param deadline    Échéance, nombre de secondes depuis le 01/01/1970 UTC
+     * @param status      Statu
      */
     public Project(long id, @NotNull String name, @NotNull String description, long deadline, @NotNull String status) {
         this.id = id;
@@ -68,8 +68,7 @@ public class Project {
 
         if (deadline == 0) {
             this.deadline = null;
-        }
-        else {
+        } else {
             this.deadline = Instant.ofEpochMilli(deadline * 1000).atZone(ZoneId.systemDefault()).toLocalDateTime();
         }
 
@@ -130,15 +129,13 @@ public class Project {
      * Récupère la deadline sous forme de secondes depuis le 01/01/1970 UTC
      *
      * @return Deadline en secondes
-     *
      * @throws IllegalStateException S'il n'y a pas de deadline
      */
     public long getDeadlineAsSeconds() throws IllegalStateException {
         if (deadline == null) {
             Logger.error("Deadline null, essai de conversion vers secondes");
             throw new IllegalStateException("Méthode impossible à exécuter lorsque la deadline est null");
-        }
-        else {
+        } else {
             return deadline.atZone(ZoneId.systemDefault()).toEpochSecond();
         }
     }

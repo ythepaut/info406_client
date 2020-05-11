@@ -2,7 +2,7 @@ package fr.groupe4.clientprojet.model.parameters.themes;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.awt.Color;
+import java.awt.*;
 
 /**
  * Les différentes couleurs pour les thèmes
@@ -103,7 +103,7 @@ public enum Theme {
     /**
      * Constructeur
      *
-     * @param clair Couleur du thème clair
+     * @param clair  Couleur du thème clair
      * @param sombre Couleur du thème sombre
      */
     Theme(@NotNull Color clair, @NotNull Color sombre) {

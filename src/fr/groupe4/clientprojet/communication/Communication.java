@@ -1,7 +1,18 @@
 package fr.groupe4.clientprojet.communication;
 
-import java.beans.PropertyChangeSupport;
+import fr.groupe4.clientprojet.communication.enums.*;
+import fr.groupe4.clientprojet.logger.Logger;
+import fr.groupe4.clientprojet.logger.enums.LoggerOption;
+import fr.groupe4.clientprojet.model.parameters.Parameters;
+import org.jetbrains.annotations.Async;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+
 import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.net.URI;
 import java.net.URLEncoder;
 import java.net.http.HttpClient;
@@ -10,25 +21,12 @@ import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.Base64;
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.CancellationException;
 import java.util.concurrent.atomic.AtomicReference;
-
-import fr.groupe4.clientprojet.model.parameters.Parameters;
-import org.jetbrains.annotations.Async;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
-
-import fr.groupe4.clientprojet.logger.Logger;
-import fr.groupe4.clientprojet.communication.enums.*;
-import fr.groupe4.clientprojet.logger.enums.LoggerOption;
 
 /**
  * Communication, effectue les appels API.
@@ -37,25 +35,25 @@ import fr.groupe4.clientprojet.logger.enums.LoggerOption;
  * Cette classe utilise le pattern Builder.
  * <br><br>
  * Exemple d'utilisation : <br><code>
- *      Communication comm = Communication.builder() <br>
- *                                        .connect("username", "password") <br>
- *                                        .build(); <br>
- *      comm.start(); <br>
- *      comm.sleepUntilFinished(); </code><br>
+ * Communication comm = Communication.builder() <br>
+ * .connect("username", "password") <br>
+ * .build(); <br>
+ * comm.start(); <br>
+ * comm.sleepUntilFinished(); </code><br>
  * <br>
  * Autre exemple : <br><code>
- *      Communication comm = Communication.builder() <br>
- *                                        .startNow() <br>
- *                                        .sleepUntilFinished() <br>
- *                                        .connect("username", "password") <br>
- *                                        .build();</code><br>
+ * Communication comm = Communication.builder() <br>
+ * .startNow() <br>
+ * .sleepUntilFinished() <br>
+ * .connect("username", "password") <br>
+ * .build();</code><br>
  * <br>
  * Résultats de la connexion : <br><code>
- *      comm.getStatus(); // success <br>
- *      comm.getCode(); // SUCCESS_AUTHENTICATED <br>
- *      comm.getMessage(); // Authentication successful and JWT generated. <br>
- *      comm.getHtmlCode(); // 200 <br>
- *      Communication.isConnected(); // true </code><br>
+ * comm.getStatus(); // success <br>
+ * comm.getCode(); // SUCCESS_AUTHENTICATED <br>
+ * comm.getMessage(); // Authentication successful and JWT generated. <br>
+ * comm.getHtmlCode(); // 200 <br>
+ * Communication.isConnected(); // true </code><br>
  *
  * @author Romain
  */
@@ -104,15 +102,13 @@ public final class Communication implements Runnable {
      * Getter du token de requête
      *
      * @param editor Qui veut accéder au token ? JsonTreatment ou CommunicationBuilder seulement sont autorisés
-     *
      * @return Token
      */
     @NotNull
     static synchronized String getRequestToken(@NotNull Object editor) {
         if (editor instanceof CommunicationBuilder || editor instanceof JsonTreatment) {
             return requestToken.get();
-        }
-        else {
+        } else {
             Logger.error("Accès au token non autorisé");
             return "";
         }
@@ -122,14 +118,13 @@ public final class Communication implements Runnable {
      * Setter du token de requête
      *
      * @param editor Qui veut accéder au token ? JsonTreatment seulement est autorisés
-     * @param token Token
+     * @param token  Token
      */
     @SuppressWarnings("SameParameterValue")
     static synchronized void setRequestToken(@NotNull Object editor, @NotNull String token) {
         if (editor instanceof JsonTreatment) {
             requestToken.set(token);
-        }
-        else {
+        } else {
             Logger.error("Accès au token non autorisé");
         }
     }
@@ -138,15 +133,13 @@ public final class Communication implements Runnable {
      * Getter du token de renew
      *
      * @param editor Qui veut accéder au token ? JsonTreatment ou CommunicationBuilder seulement sont autorisés
-     *
      * @return Token
      */
     @NotNull
     static synchronized String getRenewToken(@NotNull Object editor) {
         if (editor instanceof CommunicationBuilder || editor instanceof JsonTreatment) {
             return renewToken.get();
-        }
-        else {
+        } else {
             Logger.error("Accès au token non autorisé");
             return "";
         }
@@ -156,19 +149,17 @@ public final class Communication implements Runnable {
      * Setter du token de renew
      *
      * @param editor Qui veut accéder au token ? JsonTreatment seulement est autorisés
-     * @param token Token
+     * @param token  Token
      */
     @SuppressWarnings("SameParameterValue")
     static synchronized void setRenewToken(@NotNull Object editor, @NotNull String token) {
         if (editor instanceof JsonTreatment) {
             if (token.isEmpty()) {
                 renewToken.set("");
-            }
-            else {
+            } else {
                 renewToken.set(token);
             }
-        }
-        else {
+        } else {
             Logger.error("Accès au token non autorisé");
         }
     }
@@ -205,11 +196,10 @@ public final class Communication implements Runnable {
 
                 long remainingTime = expirationTime - currentTime;
 
-                if (remainingTime < TIMEOUT_DELAY.toSeconds()*2) {
+                if (remainingTime < TIMEOUT_DELAY.toSeconds() * 2) {
                     requestToken.set("");
                 }
-            }
-            catch (ParseException e) {
+            } catch (ParseException e) {
                 Logger.error("Vérification de token invalide");
             }
         }
@@ -227,7 +217,6 @@ public final class Communication implements Runnable {
      * Source : <a href="https://mkyong.com/java/how-to-send-http-request-getpost-in-java/">mkyong.com</a>
      *
      * @param data Data en entrée
-     *
      * @return Formulaire pour POST
      */
     @NotNull
@@ -371,8 +360,7 @@ public final class Communication implements Runnable {
         if (builder.sleepUntilFinished) {
             if (started) {
                 sleepUntilFinished();
-            }
-            else {
+            } else {
                 Logger.warning("sleepUntilFinished sur communication non démarrée");
             }
         }
@@ -463,8 +451,9 @@ public final class Communication implements Runnable {
 
         while (!loadingFinished) {
             try {
-                Thread.sleep(UPDATE_DELAY.toMillis()/10);
-            } catch (InterruptedException ignored) {}
+                Thread.sleep(UPDATE_DELAY.toMillis() / 10);
+            } catch (InterruptedException ignored) {
+            }
         }
     }
 
@@ -473,7 +462,8 @@ public final class Communication implements Runnable {
      *
      * @return String
      */
-    @Override @NotNull
+    @Override
+    @NotNull
     public String toString() {
         return httpCode
                 + " | " + status
@@ -525,22 +515,18 @@ public final class Communication implements Runnable {
                 if (communicationAllowed && requestAllowed) {
                     // Mise en pause du thread jusqu'à ce que la requête soit validée
                     Thread.sleep(UPDATE_DELAY.toMillis());
-                }
-                else {
+                } else {
                     requestSent.cancel(true);
                 }
             }
 
             response = requestSent.get();
-        }
-        catch (InterruptedException e) {
+        } catch (InterruptedException e) {
             Logger.error("Erreur inconnue :", e, toString());
-        }
-        catch (ExecutionException e) {
+        } catch (ExecutionException e) {
             httpCode = HTTPCode.HTTP_CUSTOM_TIMEOUT;
             Logger.error("Requête time out :", e, toString());
-        }
-        catch (CancellationException e) {
+        } catch (CancellationException e) {
             httpCode = HTTPCode.HTTP_CUSTOM_CANCEL;
             Logger.error("Requête annulée :", e, toString());
         }
@@ -586,8 +572,7 @@ public final class Communication implements Runnable {
         while (started && !loadingFinished && communicationAllowed) {
             try {
                 Thread.sleep(UPDATE_DELAY.toMillis());
-            }
-            catch (InterruptedException e) {
+            } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
@@ -616,8 +601,7 @@ public final class Communication implements Runnable {
                 if (requestToken.get().isEmpty()) {
                     // S'il n'est pas recréé, euh oups
                     Logger.error("Token invalide une 2nde fois", toString());
-                }
-                else {
+                } else {
                     // Si jeton recréé, on reprend
 
                     if (requestData.get("token") != null) {
@@ -641,8 +625,7 @@ public final class Communication implements Runnable {
             try {
                 Thread.sleep(timeBetweenRequests.toMillis());
 
-            }
-            catch (InterruptedException e) {
+            } catch (InterruptedException e) {
                 Logger.error("Erreur pour keepAlive :", toString());
             }
         }

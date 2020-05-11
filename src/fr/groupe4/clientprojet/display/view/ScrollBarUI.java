@@ -3,10 +3,9 @@ package fr.groupe4.clientprojet.display.view;
 import fr.groupe4.clientprojet.model.parameters.Parameters;
 import fr.groupe4.clientprojet.model.parameters.themes.Theme;
 
-import javax.swing.JComponent;
+import javax.swing.*;
 import javax.swing.plaf.basic.BasicScrollBarUI;
-import java.awt.Graphics;
-import java.awt.Rectangle;
+import java.awt.*;
 
 /**
  * ScrollBar
@@ -15,8 +14,8 @@ public class ScrollBarUI extends BasicScrollBarUI {
     /**
      * Affichage
      *
-     * @param g Graphics
-     * @param c Component
+     * @param g           Graphics
+     * @param c           Component
      * @param trackBounds Limites
      */
     @Override
@@ -31,13 +30,13 @@ public class ScrollBarUI extends BasicScrollBarUI {
     /**
      * Affichage
      *
-     * @param g Graphics
-     * @param c Component
+     * @param g           Graphics
+     * @param c           Component
      * @param thumbBounds Limites
      */
     @Override
     protected void paintThumb(Graphics g, JComponent c, Rectangle thumbBounds) {
-        int arc = (Math.min(thumbBounds.width, thumbBounds.height)) *2;
+        int arc = (Math.min(thumbBounds.width, thumbBounds.height)) * 2;
         g.setColor(Theme.FOND_FIELD.getColor(Parameters.getThemeName()));
         g.fillRoundRect(thumbBounds.x,
                 thumbBounds.y,

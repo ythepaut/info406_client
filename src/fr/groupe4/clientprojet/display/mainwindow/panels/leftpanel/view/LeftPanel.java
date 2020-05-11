@@ -4,15 +4,15 @@ import fr.groupe4.clientprojet.communication.Communication;
 import fr.groupe4.clientprojet.display.mainwindow.panels.centerpanel.view.CenterPanel;
 import fr.groupe4.clientprojet.display.mainwindow.panels.leftpanel.controller.EventLeftPanel;
 import fr.groupe4.clientprojet.display.mainwindow.view.MainWindow;
+import fr.groupe4.clientprojet.display.view.RoundButton;
 import fr.groupe4.clientprojet.display.view.ScrollBarUI;
+import fr.groupe4.clientprojet.display.view.draw.DrawPanel;
 import fr.groupe4.clientprojet.model.parameters.Parameters;
 import fr.groupe4.clientprojet.model.parameters.themes.Theme;
 import fr.groupe4.clientprojet.model.project.Project;
 import fr.groupe4.clientprojet.model.project.ProjectList;
-import fr.groupe4.clientprojet.display.view.draw.DrawPanel;
 import fr.groupe4.clientprojet.model.resource.human.User;
 import fr.groupe4.clientprojet.utils.Location;
-import fr.groupe4.clientprojet.display.view.RoundButton;
 
 import javax.swing.*;
 import javax.swing.border.CompoundBorder;
@@ -96,7 +96,7 @@ public class LeftPanel extends DrawPanel {
 
         RoundButton button = new RoundButton(new File(Location.getImgDataPath() + "/plus.png"));
         button.setForeground(Theme.POLICE_NORMAL.getColor(Parameters.getThemeName()));
-        if(User.getUser().canCreateProject()) {
+        if (User.getUser().canCreateProject()) {
             c.gridy = 0;
             buttons.add(button);
             button.setActionCommand(EventLeftPanel.NEWPROJECT);
@@ -132,7 +132,7 @@ public class LeftPanel extends DrawPanel {
      * Dessine la liste des projets
      *
      * @param eventLeftPanel : le listener du panel
-     * @param buttonFont : la police des boutons
+     * @param buttonFont     : la police des boutons
      */
     private void drawProjectButton(EventLeftPanel eventLeftPanel, Font buttonFont) {
         JPanel projectPanel = new JPanel(new GridBagLayout());
@@ -150,7 +150,7 @@ public class LeftPanel extends DrawPanel {
         scrollPane.getVerticalScrollBar().setUnitIncrement(10);
         scrollPane.getVerticalScrollBar().setPreferredSize(new Dimension(0, 0));
 
-        for (Project p: projectList) {
+        for (Project p : projectList) {
             String name = p.getName();
             RoundButton button = new RoundButton(name.substring(0, 1));
             button.setForeground(Theme.POLICE_NORMAL.getColor(Parameters.getThemeName()));
@@ -165,7 +165,7 @@ public class LeftPanel extends DrawPanel {
         add(scrollPane, BorderLayout.CENTER);
     }
 
-    public MainWindow getOwner(){
+    public MainWindow getOwner() {
         return owner;
     }
 }

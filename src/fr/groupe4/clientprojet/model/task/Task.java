@@ -60,12 +60,12 @@ public class Task {
     /**
      * Constructeur
      *
-     * @param id Id
-     * @param name Nom
+     * @param id          Id
+     * @param name        Nom
      * @param description description
-     * @param status Status
-     * @param deadline Deadline en secondes depuis le 01/01/1970 UTC
-     * @param projectId Id du projet associé
+     * @param status      Status
+     * @param deadline    Deadline en secondes depuis le 01/01/1970 UTC
+     * @param projectId   Id du projet associé
      */
     public Task(long id,
                 @NotNull String name,
@@ -79,12 +79,12 @@ public class Task {
     /**
      * Constructeur
      *
-     * @param id Id
-     * @param name Nom
+     * @param id          Id
+     * @param name        Nom
      * @param description description
-     * @param status Status
-     * @param deadline Deadline en secondes depuis le 01/01/1970 UTC
-     * @param projectId Id du projet associé
+     * @param status      Status
+     * @param deadline    Deadline en secondes depuis le 01/01/1970 UTC
+     * @param projectId   Id du projet associé
      */
     public Task(long id,
                 @NotNull String name,
@@ -99,9 +99,8 @@ public class Task {
 
         if (deadline == 0) {
             this.deadline = null;
-        }
-        else {
-            this.deadline = Instant.ofEpochMilli(deadline*1000).atZone(ZoneId.systemDefault()).toLocalDateTime();
+        } else {
+            this.deadline = Instant.ofEpochMilli(deadline * 1000).atZone(ZoneId.systemDefault()).toLocalDateTime();
         }
 
         this.projectId = projectId;
@@ -160,15 +159,13 @@ public class Task {
      * Récupère la deadline en secondes depuis le 01/01/1970 UTC
      *
      * @return Nombre de secondes
-     *
      * @throws IllegalStateException S'il n'y a pas de deadline
      */
     public long getDeadlineAsSeconds() throws IllegalStateException {
         if (deadline == null) {
             Logger.error("Deadline null");
             throw new IllegalStateException("Méthode impossible à exécuter lorsque la deadline est null");
-        }
-        else {
+        } else {
             return deadline.atZone(ZoneId.systemDefault()).toEpochSecond();
         }
     }

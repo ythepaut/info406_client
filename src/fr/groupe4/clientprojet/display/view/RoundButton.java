@@ -7,13 +7,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.imageio.ImageIO;
-import javax.swing.JButton;
-import java.awt.BasicStroke;
-import java.awt.Cursor;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Image;
-import java.awt.RenderingHints;
+import javax.swing.*;
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 
@@ -84,7 +79,7 @@ public class RoundButton extends JButton {
         Graphics2D g2 = (Graphics2D) g;
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         int taille = Math.min(getWidth(), getHeight()); // La taille du cercle
-        int x = (Math.max(getWidth(), getHeight()) - taille) /2; // La position en x, en y c'est toujours 0
+        int x = (Math.max(getWidth(), getHeight()) - taille) / 2; // La position en x, en y c'est toujours 0
         if (selected) {
             g2.setColor(Theme.BUTTON_SELECTED.getColor(Parameters.getThemeName()));
             g2.fillOval(x, 0, taille, taille);

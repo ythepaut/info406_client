@@ -38,9 +38,9 @@ public class EventGestionUsersConfirm implements ActionListener {
     /**
      * Constructeur
      *
-     * @param parent Parent
-     * @param project Projet courant
-     * @param users Utilisateurs
+     * @param parent     Parent
+     * @param project    Projet courant
+     * @param users      Utilisateurs
      * @param chosenUser Utilisateurs sélectionnés
      */
     public EventGestionUsersConfirm(@NotNull DrawDialog parent,
@@ -62,7 +62,7 @@ public class EventGestionUsersConfirm implements ActionListener {
     public void actionPerformed(ActionEvent actionEvent) {
         ArrayList<Communication> comms = new ArrayList<>();
 
-        for (int i=0; i<users.size(); i++) {
+        for (int i = 0; i < users.size(); i++) {
             if (chosenUser[i]) {
                 HumanResource h = users.get(i);
 
@@ -75,7 +75,7 @@ public class EventGestionUsersConfirm implements ActionListener {
             }
         }
 
-        for (int i=comms.size()-1; i>=0; i--) {
+        for (int i = comms.size() - 1; i >= 0; i--) {
             Communication c = comms.get(i);
 
             if (!c.isFinished()) {

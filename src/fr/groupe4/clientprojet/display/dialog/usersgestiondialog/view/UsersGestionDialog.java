@@ -11,11 +11,7 @@ import fr.groupe4.clientprojet.model.resource.human.HumanResource;
 import fr.groupe4.clientprojet.model.resource.human.HumanResourceList;
 import org.jetbrains.annotations.NotNull;
 
-import javax.swing.JButton;
-import javax.swing.JCheckBoxMenuItem;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JPanel;
+import javax.swing.*;
 import javax.swing.border.MatteBorder;
 import java.awt.*;
 
@@ -34,7 +30,7 @@ public class UsersGestionDialog extends DrawDialog {
     /**
      * Constructeur
      *
-     * @param owner Parent
+     * @param owner   Parent
      * @param project Projet
      */
     public UsersGestionDialog(Window owner, @NotNull Project project) {
@@ -71,7 +67,7 @@ public class UsersGestionDialog extends DrawDialog {
         c.gridy = 0;
         c.gridwidth = 2;
         c.gridheight = 1;
-        c.insets = new Insets(10,5,10,5);
+        c.insets = new Insets(10, 5, 10, 5);
 
         // Récupération de la liste des utilisateurs
         Communication comm = Communication.builder().getHumanResourceList().startNow().sleepUntilFinished().build();
@@ -89,12 +85,12 @@ public class UsersGestionDialog extends DrawDialog {
 
         boolean[] selectedUsers = new boolean[users.size()];
 
-        for (int i = 0; i<users.size(); i++){
+        for (int i = 0; i < users.size(); i++) {
             HumanResource currentUser = users.get(i);
             JCheckBoxMenuItem user = new JCheckBoxMenuItem(
                     currentUser.getFirstname()
-                    + " "
-                    + currentUser.getLastname());
+                            + " "
+                            + currentUser.getLastname());
 
             selectedUsers[i] = false;
             user.addItemListener(new EventChoixUser(this, currentUser, selectedUsers, i));
@@ -118,12 +114,12 @@ public class UsersGestionDialog extends DrawDialog {
         menusupp.add(user8);
 
         c.gridy++;
-        add(barmenusupp,c);
+        add(barmenusupp, c);
 
         // Création des boutons de confirmation/annulation
         JButton addUsersButton = new JButton("Ajouter les utilisateurs");
         addUsersButton.addActionListener(new EventGestionUsersConfirm(this, project, users, selectedUsers));
-        c.insets = new Insets(50,5,15,5);
+        c.insets = new Insets(50, 5, 15, 5);
         c.gridwidth = 1;
         c.gridy++;
         add(addUsersButton, c);

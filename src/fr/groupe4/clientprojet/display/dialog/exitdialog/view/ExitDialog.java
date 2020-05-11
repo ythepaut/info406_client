@@ -4,18 +4,12 @@ import fr.groupe4.clientprojet.display.dialog.exitdialog.controller.EventExitDia
 import fr.groupe4.clientprojet.display.dialog.exitdialog.controller.KeyEventExitDialog;
 import fr.groupe4.clientprojet.display.dialog.exitdialog.enums.ExitChoice;
 import fr.groupe4.clientprojet.display.view.draw.DrawDialog;
-import fr.groupe4.clientprojet.logger.Logger;
 import fr.groupe4.clientprojet.model.parameters.Parameters;
 import fr.groupe4.clientprojet.model.parameters.themes.Theme;
 import org.jetbrains.annotations.NotNull;
 
-import javax.swing.JButton;
-import javax.swing.JPanel;
-import javax.swing.JFrame;
-
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.Toolkit;
+import javax.swing.*;
+import java.awt.*;
 
 /**
  * Fenêtre de confirmation pour la sortie du logiciel
@@ -30,7 +24,7 @@ public class ExitDialog extends DrawDialog {
     /**
      * Le constructeur
      *
-     * @param owner Frame à laquelle appartient le dialog
+     * @param owner         Frame à laquelle appartient le dialog
      * @param avertissement Titre
      */
     public ExitDialog(@NotNull JFrame owner, @NotNull String avertissement) {
@@ -40,7 +34,7 @@ public class ExitDialog extends DrawDialog {
         setSize(300, 70);
         setResizable(false);
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-        setLocation(dim.width/2 - getWidth()/2, dim.height/2 - getHeight()/2);
+        setLocation(dim.width / 2 - getWidth() / 2, dim.height / 2 - getHeight() / 2);
         setModal(true);
         eventExitDialog = new EventExitDialog(this); // Le listener du dialog
 

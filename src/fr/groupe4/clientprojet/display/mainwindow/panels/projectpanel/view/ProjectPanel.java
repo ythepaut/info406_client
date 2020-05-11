@@ -2,9 +2,9 @@ package fr.groupe4.clientprojet.display.mainwindow.panels.projectpanel.view;
 
 import fr.groupe4.clientprojet.communication.Communication;
 import fr.groupe4.clientprojet.display.mainwindow.panels.projectpanel.controller.RightClicMenuProjectListener;
+import fr.groupe4.clientprojet.display.mainwindow.panels.projectpanel.messagepanel.view.MessagePanel;
 import fr.groupe4.clientprojet.display.mainwindow.panels.projectpanel.taskprojectpanel.view.TaskProjectPanel;
 import fr.groupe4.clientprojet.display.view.draw.DrawPanel;
-import fr.groupe4.clientprojet.display.mainwindow.panels.projectpanel.messagepanel.view.MessagePanel;
 import fr.groupe4.clientprojet.display.view.slide.SlideItem;
 import fr.groupe4.clientprojet.display.view.slide.view.Slide;
 import fr.groupe4.clientprojet.model.parameters.Parameters;
@@ -35,7 +35,7 @@ public class ProjectPanel extends DrawPanel {
         ProjectList list = (ProjectList) comm.getResult();
 
         assert list != null;
-        for (Project p: list) {
+        for (Project p : list) {
             if (p.getName().equals(projectName)) {
                 project = p;
             }

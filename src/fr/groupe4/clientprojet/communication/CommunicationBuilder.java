@@ -1,21 +1,20 @@
 package fr.groupe4.clientprojet.communication;
 
+import fr.groupe4.clientprojet.communication.enums.CommunicationType;
+import fr.groupe4.clientprojet.logger.Logger;
+import fr.groupe4.clientprojet.model.message.enums.MessageResource;
+import fr.groupe4.clientprojet.model.project.enums.ProjectStatus;
+import fr.groupe4.clientprojet.model.resource.ResourceType;
+import fr.groupe4.clientprojet.model.resource.human.User;
+import fr.groupe4.clientprojet.model.task.enums.TaskStatus;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.temporal.Temporal;
 import java.util.HashMap;
-
-import fr.groupe4.clientprojet.logger.Logger;
-import fr.groupe4.clientprojet.model.resource.ResourceType;
-import fr.groupe4.clientprojet.model.task.enums.TaskStatus;
-import fr.groupe4.clientprojet.model.resource.human.User;
-import fr.groupe4.clientprojet.communication.enums.CommunicationType;
-import fr.groupe4.clientprojet.model.message.enums.MessageResource;
-import fr.groupe4.clientprojet.model.project.enums.ProjectStatus;
-
-import org.jetbrains.annotations.Nullable;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * Builder de la communication <br>
@@ -23,6 +22,7 @@ import org.jetbrains.annotations.NotNull;
  * Les variables ne sont accessibles qu'au package <br>
  * <br>
  * Cf. Communication pour voir un exemple
+ *
  * @see Communication
  */
 @SuppressWarnings("unused")
@@ -30,12 +30,10 @@ public final class CommunicationBuilder {
     /**
      * Transforme une variable Temporal en seconde
      *
-     * @param time LocalDate ou LocalDateTime, à transformer en secondes
+     * @param time      LocalDate ou LocalDateTime, à transformer en secondes
      * @param allowNull Si true, null renverra 0
-     *
-     * @throws IllegalArgumentException Si not allowNull et time == null, ou si time n'est ni LocalDate ni LocalDateTime
-     *
      * @return Temps en secondes
+     * @throws IllegalArgumentException Si not allowNull et time == null, ou si time n'est ni LocalDate ni LocalDateTime
      */
     private static long temporalToSeconds(@Nullable Temporal time, boolean allowNull) throws IllegalArgumentException {
         long sec;
@@ -43,12 +41,10 @@ public final class CommunicationBuilder {
         if (time == null) {
             if (allowNull) {
                 sec = 0;
-            }
-            else {
+            } else {
                 throw new IllegalArgumentException("Temps null");
             }
-        }
-        else {
+        } else {
             if (time instanceof LocalDate) {
                 sec = ((LocalDate) time).atStartOfDay().atZone(ZoneId.systemDefault()).toEpochSecond();
             } else if (time instanceof LocalDateTime) {
@@ -150,7 +146,6 @@ public final class CommunicationBuilder {
      *
      * @param username Nom d'utilisateur
      * @param password Mot de passe
-     *
      * @return Builder non terminé avec URL
      */
     public CommunicationBuilder connect(@NotNull String username,
@@ -178,15 +173,13 @@ public final class CommunicationBuilder {
      * Crée un nouveau projet
      * Cf. getTaskList pour exemple détaillé de l'utilisation de Temporal
      *
-     * @param name Nom du projet
+     * @param name        Nom du projet
      * @param description Description du projet
-     * @param deadline Date limite du projet : LocalDate ou LocalDateTime, null sera traité comme sans date limite
-     * @param status État du projet
-     *
+     * @param deadline    Date limite du projet : LocalDate ou LocalDateTime, null sera traité comme sans date limite
+     * @param status      État du projet
+     * @return Builder non terminé avec URL
      * @see ProjectStatus
      * @see #getTaskList
-     *
-     * @return Builder non terminé avec URL
      */
     public CommunicationBuilder createProject(@NotNull String name,
                                               @NotNull String description,
@@ -206,7 +199,6 @@ public final class CommunicationBuilder {
      * Récupère un projet
      *
      * @param id Id du projet
-     *
      * @return Builder non terminé avec URL
      */
     public CommunicationBuilder getProject(long id) {
@@ -230,15 +222,13 @@ public final class CommunicationBuilder {
     /**
      * Ajoute une ressource à un projet
      *
-     * @param projectId Id du projet
-     * @param type Type de la ressource
+     * @param projectId  Id du projet
+     * @param type       Type de la ressource
      * @param resourceId Id de la ressource
-     * @param start Date de début, maintenant si null
-     * @param end Date de fin, pas de fin si null
-     *
-     * @see #getUserTimeSlotList Exemple de Temporal
-     *
+     * @param start      Date de début, maintenant si null
+     * @param end        Date de fin, pas de fin si null
      * @return Builder non terminé avec URL
+     * @see #getUserTimeSlotList Exemple de Temporal
      */
     public CommunicationBuilder addResourceToProject(long projectId,
                                                      @NotNull ResourceType type,
@@ -271,13 +261,11 @@ public final class CommunicationBuilder {
      * Ajoute une ressource humaine à un projet
      *
      * @param projectId Id du projet
-     * @param humanId Id de la ressource
-     * @param start Date de début, maintenant si null
-     * @param end Date de fin, pas de fin si null
-     *
-     * @see #getUserTimeSlotList Exemple de Temporal
-     *
+     * @param humanId   Id de la ressource
+     * @param start     Date de début, maintenant si null
+     * @param end       Date de fin, pas de fin si null
      * @return Builder non terminé avec URL
+     * @see #getUserTimeSlotList Exemple de Temporal
      */
     public CommunicationBuilder addHumanResourceToProject(long projectId,
                                                           long humanId,
@@ -303,7 +291,6 @@ public final class CommunicationBuilder {
      * Récupère une ressource humaine
      *
      * @param id Id de la ressource humaine
-     *
      * @return Builder non terminé avec URL
      */
     public CommunicationBuilder getHumanResource(long id) {
@@ -330,16 +317,14 @@ public final class CommunicationBuilder {
      * Crée une tâche <br>
      * Cf. getUserTimeSlotList pour exemple détaillé de l'utilisation de Temporal
      *
-     * @param name Nom de la tâche
+     * @param name        Nom de la tâche
      * @param description Description de la tâche
-     * @param status État de la tâche
-     * @param deadline Date limite de la tâche : LocalDate ou LocalDateTime, null sera traité comme sans date limite
-     * @param projectId Id du projet parent
-     *
+     * @param status      État de la tâche
+     * @param deadline    Date limite de la tâche : LocalDate ou LocalDateTime, null sera traité comme sans date limite
+     * @param projectId   Id du projet parent
+     * @return Builder non terminé avec URL
      * @see TaskStatus
      * @see #getUserTimeSlotList
-     *
-     * @return Builder non terminé avec URL
      */
     public CommunicationBuilder createTask(@NotNull String name,
                                            @NotNull String description,
@@ -361,7 +346,6 @@ public final class CommunicationBuilder {
      * Récupère la liste des tâches d'un projet
      *
      * @param projectId Id du projet parent
-     *
      * @return Builder non terminé avec URL
      */
     public CommunicationBuilder getTaskList(long projectId) {
@@ -377,14 +361,12 @@ public final class CommunicationBuilder {
      * Ajoute un créneau <br>
      * Cf. getTaskList pour exemple détaillé de l'utilisation de Temporal
      *
-     * @param from Date de début
-     * @param to Date de fin
+     * @param from   Date de début
+     * @param to     Date de fin
      * @param taskId Id de la tâche parente
      * @param roomId Id de la salle du créneau
-     *
-     * @see #getUserTimeSlotList
-     *
      * @return Builder non terminé avec URL
+     * @see #getUserTimeSlotList
      */
     public CommunicationBuilder addTimeSlot(@NotNull Temporal from,
                                             @NotNull Temporal to,
@@ -405,8 +387,7 @@ public final class CommunicationBuilder {
      * Récupère la liste des créneaux
      *
      * @param from From
-     * @param to To
-     *
+     * @param to   To
      * @return Builder non terminé avec URL
      */
     private CommunicationBuilder getTimeSlotList(@NotNull Temporal from,
@@ -426,18 +407,17 @@ public final class CommunicationBuilder {
      * Fonctionne avec des dates pures (LocalDate) et des dates + temps (LocalDateTime) <br>
      * <br>
      * Exemple d'utilisation : <code>
-     *      LocalDateTime from = LocalDateTime.of(2020, 1, 1, 15, 30); // Date et heure, 1er janvier 2020 à 15h30 <br>
-     *      LocalDate to = LocalDate.of(2020, 12, 31); // Date seulement, 31 décembre 2020 <br>
-     *
-     *      Communication c = Communication.builder() <br>
-     *          .getUserTimeSlotList(from, to) <br>
-     *          .startNow() <br>
-     *          .sleepUntilFinished() <br>
-     *          .build(); </code>
+     * LocalDateTime from = LocalDateTime.of(2020, 1, 1, 15, 30); // Date et heure, 1er janvier 2020 à 15h30 <br>
+     * LocalDate to = LocalDate.of(2020, 12, 31); // Date seulement, 31 décembre 2020 <br>
+     * <p>
+     * Communication c = Communication.builder() <br>
+     * .getUserTimeSlotList(from, to) <br>
+     * .startNow() <br>
+     * .sleepUntilFinished() <br>
+     * .build(); </code>
      *
      * @param from Date de début
-     * @param to Date de fin
-     *
+     * @param to   Date de fin
      * @return Builder non terminé avec URL
      */
     public CommunicationBuilder getUserTimeSlotList(@NotNull Temporal from, @NotNull Temporal to) {
@@ -448,13 +428,12 @@ public final class CommunicationBuilder {
 
     /**
      * Envoie un message
+     *
      * @param content Contenu
-     * @param dst Type de destination
-     * @param id Id de la destination
-     *
-     * @see MessageResource
-     *
+     * @param dst     Type de destination
+     * @param id      Id de la destination
      * @return Builder non terminé avec URL
+     * @see MessageResource
      */
     public CommunicationBuilder sendMessage(@NotNull String content, @NotNull MessageResource dst, long id) {
         typeOfCommunication = CommunicationType.SEND_MESSAGE;
@@ -468,13 +447,11 @@ public final class CommunicationBuilder {
     /**
      * Récupère la liste des messages
      *
-     * @param page Numéro de page
-     * @param id Id d'à qui récupérer les messages
+     * @param page   Numéro de page
+     * @param id     Id d'à qui récupérer les messages
      * @param origin Origine des messages
-     *
-     * @see MessageResource
-     *
      * @return Builder non terminé avec URL
+     * @see MessageResource
      */
     public CommunicationBuilder getMessageList(int page, long id, @NotNull MessageResource origin) {
         typeOfCommunication = CommunicationType.LIST_MESSAGES;
@@ -489,7 +466,6 @@ public final class CommunicationBuilder {
      * Récupère la liste des messages de l'utilisateur
      *
      * @param page Numéro de page
-     *
      * @return Builder non terminé avec URL
      */
     public CommunicationBuilder getUserMessageList(int page) {
@@ -499,9 +475,8 @@ public final class CommunicationBuilder {
     /**
      * Récupère la liste des messages pour un projet
      *
-     * @param page Numéro de page
+     * @param page      Numéro de page
      * @param idProject Id du projet
-     *
      * @return Builder non terminé avec URL
      */
     public CommunicationBuilder getProjectMessageList(int page, long idProject) {

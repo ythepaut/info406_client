@@ -38,9 +38,9 @@ public class EventSlide implements ActionListener {
         String command = e.getActionCommand();
 
         if (command.equals(SlideMove.LEFT.getName())) {
-            source.setSlide(source.getSlide() -1);
+            source.setSlide(source.getSlide() - 1);
         } else if (command.equals(SlideMove.RIGHT.getName())) {
-            source.setSlide(source.getSlide() +1);
+            source.setSlide(source.getSlide() + 1);
         } else {
             ArrayList<SlideItem> slides = source.getSlideItems();
 
@@ -49,8 +49,7 @@ public class EventSlide implements ActionListener {
             for (SlideItem slide : slides) {
                 if (slide.getName().equals(command)) {
                     source.setSlide(i);
-                }
-                else {
+                } else {
                     i++;
                 }
             }

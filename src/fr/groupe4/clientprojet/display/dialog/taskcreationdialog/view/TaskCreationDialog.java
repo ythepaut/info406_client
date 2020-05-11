@@ -8,12 +8,7 @@ import fr.groupe4.clientprojet.display.view.draw.DrawDialog;
 import fr.groupe4.clientprojet.model.project.Project;
 import org.jetbrains.annotations.NotNull;
 
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
+import javax.swing.*;
 import javax.swing.border.MatteBorder;
 import java.awt.*;
 import java.time.DayOfWeek;
@@ -56,7 +51,7 @@ public class TaskCreationDialog extends DrawDialog {
     /**
      * Constructeur
      *
-     * @param owner Parent
+     * @param owner   Parent
      * @param project Projet associé
      */
     public TaskCreationDialog(Window owner, @NotNull Project project) {
@@ -80,7 +75,7 @@ public class TaskCreationDialog extends DrawDialog {
         setUndecorated(true);
         rootPane.setBorder(new MatteBorder(2, 2, 2, 2, Color.BLACK));
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-        setLocation(dim.width/2 - getWidth()/2, dim.height/2 - getHeight()/2);
+        setLocation(dim.width / 2 - getWidth() / 2, dim.height / 2 - getHeight() / 2);
 
         GridBagConstraints c = new GridBagConstraints();
 
@@ -89,7 +84,7 @@ public class TaskCreationDialog extends DrawDialog {
         c.gridy = 0;
         c.gridwidth = 2;
         c.gridheight = 1;
-        c.insets = new Insets(5,0,5,0);
+        c.insets = new Insets(5, 0, 5, 0);
 
         add(new JLabel("Entrez le nom de la tâche : "), c);
 
@@ -103,9 +98,9 @@ public class TaskCreationDialog extends DrawDialog {
         JTextArea description = new JTextArea(DESCRIPTION_NB_ROWS, DESCRIPTION_NB_COLS);
         description.setLineWrap(true);
         c.gridy++;
-        add(description,c);
+        add(description, c);
 
-         // Entrée de la date limite du projet
+        // Entrée de la date limite du projet
         c.gridy++;
         add(new JLabel("Entrez la date limite de la tâche : "), c);
 
@@ -113,7 +108,7 @@ public class TaskCreationDialog extends DrawDialog {
         dateSettings.setFirstDayOfWeek(DayOfWeek.MONDAY);
         DatePicker datePicker = new DatePicker(dateSettings);
         c.gridy++;
-        add(datePicker,c);
+        add(datePicker, c);
 
         // Création des boutons de confirmation/annulation
         JButton createProjectButton = new JButton("Création Tâche");
@@ -131,6 +126,6 @@ public class TaskCreationDialog extends DrawDialog {
         JButton cancelButton = new JButton("Annuler");
         cancelButton.addActionListener(new GenericExitEvent(this));
         c.gridx++;
-        add(cancelButton,c);
+        add(cancelButton, c);
     }
 }

@@ -20,7 +20,6 @@ public class User extends HumanResource {
      * Récupère l'utilisateur courant
      *
      * @return Utilsiateur
-     *
      * @throws IllegalStateException Si l'utilisateur ne s'est pas connecté
      */
     @NotNull
@@ -37,11 +36,11 @@ public class User extends HumanResource {
      * Construit l'utilisateur
      *
      * @param resource Ressource humaine
-     * @param ip IP
-     * @param type Type
-     * @param userId Id utilisateur
+     * @param ip       IP
+     * @param type     Type
+     * @param userId   Id utilisateur
      * @param username Nom d'utilisateur
-     * @param email email
+     * @param email    email
      */
     public static void initUser(@NotNull HumanResource resource,
                                 @NotNull String ip,
@@ -85,11 +84,11 @@ public class User extends HumanResource {
      * Constructeur
      *
      * @param resource Ressource humaine
-     * @param ip IP
-     * @param type Type
-     * @param userId Id utilisateur
+     * @param ip       IP
+     * @param type     Type
+     * @param userId   Id utilisateur
      * @param username Nom d'utilisateur
-     * @param email email
+     * @param email    email
      */
     private User(@NotNull HumanResource resource,
                  @NotNull String ip,
@@ -168,7 +167,6 @@ public class User extends HumanResource {
      * Si l'utilisateur est l'expéditeur d'un message ou non
      *
      * @param message Message
-     *
      * @return Expéditeur ou non
      */
     public boolean isSender(@NotNull Message message) {

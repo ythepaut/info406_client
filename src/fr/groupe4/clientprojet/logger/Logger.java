@@ -7,13 +7,7 @@ import fr.groupe4.clientprojet.utils.Location;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.IOException;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.BufferedWriter;
-import java.io.PrintWriter;
-import java.io.PrintStream;
-
+import java.io.*;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -26,13 +20,13 @@ import java.util.ArrayList;
  * Chaque fichier .log est nommé selon l'heure à laquelle il a été créé <br>
  * <br>
  * Exemples d'utilisation simple : <br><code>
- *      Logger.warning("Mauvais caractère"); <br>
- *      // Affiche un texte en jaune et l'enregiste dans le fichier</code><br>
+ * Logger.warning("Mauvais caractère"); <br>
+ * // Affiche un texte en jaune et l'enregiste dans le fichier</code><br>
  * <br>
  * Exemple plus complexe : <br><code>
- *      Logger.debug("variable ", maVariable, " devait valoir", uneAutreVariable, LoggerOption.LOG_FILE_ONLY); <br>
- *      // N'affiche rien à l'écran mais sauvegarde dans le dossier une ligne, <br>
- *      // ici "Variable 1 66 variable 2 Jean DUJARDIN, COLLABORATOR, Jardinier" (sans quote) </code><br>
+ * Logger.debug("variable ", maVariable, " devait valoir", uneAutreVariable, LoggerOption.LOG_FILE_ONLY); <br>
+ * // N'affiche rien à l'écran mais sauvegarde dans le dossier une ligne, <br>
+ * // ici "Variable 1 66 variable 2 Jean DUJARDIN, COLLABORATOR, Jardinier" (sans quote) </code><br>
  */
 public abstract class Logger {
     /**
@@ -69,8 +63,7 @@ public abstract class Logger {
 
             bufferedWriter = new BufferedWriter(fileWriter);
             ok = true;
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
             ok = false;
         }
@@ -83,8 +76,7 @@ public abstract class Logger {
             if (dirCreated) {
                 warning("Dossier logs créé");
             }
-        }
-        else {
+        } else {
             error("Erreur de log");
         }
     }
@@ -93,8 +85,8 @@ public abstract class Logger {
      * Log générique
      *
      * @param where System.out, System.err, ou même possiblement ailleurs
-     * @param args Arguments (messages, options de log...)
-     * @param type Type de log (debug, warning...)
+     * @param args  Arguments (messages, options de log...)
+     * @param type  Type de log (debug, warning...)
      */
     private static synchronized void genericLog(@NotNull PrintStream where,
                                                 @NotNull Object[] args,
@@ -105,8 +97,7 @@ public abstract class Logger {
         for (Object arg : args) {
             if (arg instanceof LoggerOption) {
                 options.add((LoggerOption) arg);
-            }
-            else {
+            } else {
                 messages.add(String.valueOf(arg));
             }
         }
@@ -115,10 +106,10 @@ public abstract class Logger {
 
         StringBuilder message = new StringBuilder();
 
-        for (int i=0; i<messages.size(); i++) {
+        for (int i = 0; i < messages.size(); i++) {
             message.append(messages.get(i));
 
-            if (i != messages.size()-1) {
+            if (i != messages.size() - 1) {
                 message.append(separator);
             }
         }
@@ -198,7 +189,7 @@ public abstract class Logger {
         return String.format("%02d", now.getHour())
                 + ":" + String.format("%02d", now.getMinute())
                 + ":" + String.format("%02d", now.getSecond())
-                + ":" + String.format("%03d", now.getNano()/1000);
+                + ":" + String.format("%03d", now.getNano() / 1000);
     }
 
     /**
@@ -221,7 +212,7 @@ public abstract class Logger {
     /**
      * Écrit dans le fichier
      *
-     * @param msg Messsage à écrire
+     * @param msg  Messsage à écrire
      * @param type Type de log
      */
     private static synchronized void writeToFile(@NotNull String msg, @NotNull LoggerType type) {
@@ -258,7 +249,7 @@ public abstract class Logger {
 
             printWriter.println(builder);
 
-            nbWrite ++;
+            nbWrite++;
 
             printWriter.flush();
         }

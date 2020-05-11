@@ -10,12 +10,7 @@ import fr.groupe4.clientprojet.model.parameters.themes.Theme;
 import fr.groupe4.clientprojet.model.parameters.themes.ThemeName;
 import org.jetbrains.annotations.NotNull;
 
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-
+import javax.swing.*;
 import java.awt.*;
 
 /**
@@ -38,7 +33,7 @@ public class ParametersDialog extends DrawDialog {
     /**
      * Choix des thèmes
      */
-    private JComboBox<ThemeName>themeChoice;
+    private JComboBox<ThemeName> themeChoice;
 
     /**
      * Le constructeur
@@ -97,7 +92,7 @@ public class ParametersDialog extends DrawDialog {
      *
      * @param panel_1 Panel 1
      * @param panel_2 Panel 2
-     * @param c Contrainte
+     * @param c       Contrainte
      */
     private static void initPanel(JPanel panel_1, JPanel panel_2, GridBagConstraints c) {
         panel_1.setLayout(new GridBagLayout());
@@ -145,7 +140,7 @@ public class ParametersDialog extends DrawDialog {
         JPanel themePanel = new JPanel();
         GridBagConstraints c = new GridBagConstraints();
 
-        initPanel(panel, themePanel, c) ;
+        initPanel(panel, themePanel, c);
 
         JLabel label = new JLabel("Thème :");
         label.setForeground(Theme.POLICE_NORMAL.getColor(Parameters.getThemeName()));

@@ -50,8 +50,7 @@ public class CalendarProject {
      * Constructeur
      *
      * @param type Type de calendrier
-     *
-     * @throws IllegalArgumentException Type de calendrier inconnu
+     * @throws IllegalArgumentException      Type de calendrier inconnu
      * @throws UnsupportedOperationException Pour les affichages pas encore faits
      */
     public CalendarProject(@NotNull CalendarType type) throws IllegalArgumentException, UnsupportedOperationException {
@@ -65,7 +64,7 @@ public class CalendarProject {
     /**
      * Ajuste les variables from et to
      *
-     * @throws IllegalArgumentException Type de calendrier inconnu
+     * @throws IllegalArgumentException      Type de calendrier inconnu
      * @throws UnsupportedOperationException Pour les affichages pas encore faits
      */
     private void changeFromTo() throws IllegalArgumentException, UnsupportedOperationException {

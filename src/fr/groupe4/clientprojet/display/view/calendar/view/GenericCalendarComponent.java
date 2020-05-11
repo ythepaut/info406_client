@@ -4,10 +4,8 @@ import fr.groupe4.clientprojet.model.calendar.CalendarProject;
 import fr.groupe4.clientprojet.model.timeslot.TimeSlotList;
 import org.jetbrains.annotations.NotNull;
 
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import java.awt.Graphics;
-import java.awt.GridBagConstraints;
+import javax.swing.*;
+import java.awt.*;
 
 /**
  * Composant générique de calendrier
@@ -54,7 +52,7 @@ abstract class GenericCalendarComponent {
     /**
      * Constructeur
      *
-     * @param parent Fenêtre parente
+     * @param parent   Fenêtre parente
      * @param calendar Calendrier
      */
     protected GenericCalendarComponent(@NotNull JPanel parent, @NotNull CalendarProject calendar) {

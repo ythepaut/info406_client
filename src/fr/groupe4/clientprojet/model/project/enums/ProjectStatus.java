@@ -32,9 +32,7 @@ public enum ProjectStatus {
      * Transforme une String en son status associé
      *
      * @param msg Message
-     *
      * @return Status associé
-     *
      * @throws IllegalArgumentException S'il n'y a pas d'enum associée
      */
     @NotNull

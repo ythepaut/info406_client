@@ -3,9 +3,7 @@ package fr.groupe4.clientprojet.display.dialog.loaddialog.view;
 import fr.groupe4.clientprojet.utils.Location;
 
 import javax.imageio.ImageIO;
-import java.awt.Canvas;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 
@@ -35,8 +33,8 @@ public class LoadCanvas extends Canvas {
         Graphics2D g2 = (Graphics2D) g;
         g2.translate(getWidth() / 2, getHeight() / 2); // Translate au milieu
         int width = 50;
-        int x = - (width /2);
-        int y = - (width /2);
+        int x = -(width / 2);
+        int y = -(width / 2);
         g2.rotate(Math.toRadians(angle));
         try {
             g2.drawImage(ImageIO.read(new File(Location.getPath() + "/data/img/loading.png")),

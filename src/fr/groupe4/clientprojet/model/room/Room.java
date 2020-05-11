@@ -31,9 +31,9 @@ public class Room {
     /**
      * Constructeur
      *
-     * @param id Id
-     * @param roomType Type de salle
-     * @param nbSeats Nombre de sièges
+     * @param id          Id
+     * @param roomType    Type de salle
+     * @param nbSeats     Nombre de sièges
      * @param nbComputers Nombre d'ordinateurs
      */
     public Room(long id, @NotNull String roomType, long nbSeats, long nbComputers) {
@@ -43,9 +43,9 @@ public class Room {
     /**
      * Constructeur
      *
-     * @param id Id
-     * @param roomType Type de salle
-     * @param nbSeats Nombre de sièges
+     * @param id          Id
+     * @param roomType    Type de salle
+     * @param nbSeats     Nombre de sièges
      * @param nbComputers Nombre d'ordinateurs
      */
     public Room(long id, @NotNull RoomType roomType, long nbSeats, long nbComputers) {

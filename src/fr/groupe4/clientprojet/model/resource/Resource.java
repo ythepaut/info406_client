@@ -21,7 +21,7 @@ public class Resource {
      * Constructeur
      *
      * @param type Type de la ressource
-     * @param id Id de la ressource
+     * @param id   Id de la ressource
      */
     public Resource(@NotNull ResourceType type, long id) {
         resourceType = type;

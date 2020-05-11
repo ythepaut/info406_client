@@ -1,12 +1,9 @@
 package fr.groupe4.clientprojet.display.dialog.materielgestiondialog.view;
 
 import fr.groupe4.clientprojet.display.view.draw.DrawDialog;
-import org.jetbrains.annotations.NotNull;
 
-import javax.swing.JPanel;
-import javax.swing.JButton;
+import javax.swing.*;
 import javax.swing.border.MatteBorder;
-
 import java.awt.*;
 
 /**
@@ -25,6 +22,7 @@ public class MaterielGestionDialog extends DrawDialog {
 
     /**
      * Constructeur
+     *
      * @param owner Propriétaire
      */
     public MaterielGestionDialog(Window owner) {
@@ -57,7 +55,7 @@ public class MaterielGestionDialog extends DrawDialog {
         c.gridy = 0;
         c.gridwidth = 2;
         c.gridheight = 1;
-        c.insets = new Insets(5,0,5,0);
+        c.insets = new Insets(5, 0, 5, 0);
 
         c.gridwidth = 1;
         c.gridy++;

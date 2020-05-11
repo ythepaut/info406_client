@@ -2,16 +2,16 @@ package fr.groupe4.clientprojet.display.dialog.connectiondialog.controller;
 
 import fr.groupe4.clientprojet.Main;
 import fr.groupe4.clientprojet.communication.Communication;
-import fr.groupe4.clientprojet.display.dialog.connectiondialog.view.ConnectionDialog;
 import fr.groupe4.clientprojet.display.dialog.connectiondialog.enums.ConnectionChoice;
+import fr.groupe4.clientprojet.display.dialog.connectiondialog.view.ConnectionDialog;
 import fr.groupe4.clientprojet.display.dialog.errordialog.view.ErrorDialog;
 import fr.groupe4.clientprojet.display.dialog.loaddialog.view.LoadDialog;
 import org.jetbrains.annotations.NotNull;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 
 /**
  * Listener de la connexion
@@ -52,8 +52,8 @@ public class EventConnectionDialog extends WindowAdapter implements ActionListen
         switch (ConnectionChoice.getEnum(e.getActionCommand())) {
             case OK:
                 Communication comm = Communication.builder()
-                                                  .connect(source.getUsername(), source.getPassword())
-                                                  .build();
+                        .connect(source.getUsername(), source.getPassword())
+                        .build();
 
                 new LoadDialog(comm);
 

@@ -1,10 +1,9 @@
 package fr.groupe4.clientprojet.display.mainwindow.panels.calendarpanel.view;
 
 import fr.groupe4.clientprojet.display.view.calendar.controller.CalendarButtonListener;
-import fr.groupe4.clientprojet.display.view.calendar.controller.CalendarKeyAdapter;
-import fr.groupe4.clientprojet.model.calendar.CalendarProject;
 import fr.groupe4.clientprojet.display.view.calendar.view.CalendarComponent;
 import fr.groupe4.clientprojet.display.view.draw.DrawPanel;
+import fr.groupe4.clientprojet.model.calendar.CalendarProject;
 import fr.groupe4.clientprojet.model.calendar.enums.CalendarType;
 
 import javax.swing.*;

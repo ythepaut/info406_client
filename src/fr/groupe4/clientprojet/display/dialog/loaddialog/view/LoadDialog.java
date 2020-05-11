@@ -4,9 +4,8 @@ import fr.groupe4.clientprojet.communication.Communication;
 import fr.groupe4.clientprojet.display.dialog.loaddialog.controller.EventLoadDialog;
 import org.jetbrains.annotations.NotNull;
 
-import javax.swing.JDialog;
-import java.awt.Toolkit;
-import java.awt.Dimension;
+import javax.swing.*;
+import java.awt.*;
 
 /**
  * Dialog de chargement <br>
@@ -25,14 +24,13 @@ public class LoadDialog extends JDialog {
         setUndecorated(true);
         setSize(350, 80);
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-        setLocation(dim.width/2 - getWidth()/2, dim.height/2 - getHeight()/2);
+        setLocation(dim.width / 2 - getWidth() / 2, dim.height / 2 - getHeight() / 2);
 
         add(new LoadCanvas());
 
         if (comm.isFinished()) {
             dispose();
-        }
-        else {
+        } else {
             setVisible(true);
         }
     }

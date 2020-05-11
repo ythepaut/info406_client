@@ -7,7 +7,6 @@ import com.github.lgooddatepicker.components.TimePickerSettings;
 import fr.groupe4.clientprojet.display.dialog.controller.GenericExitEvent;
 import fr.groupe4.clientprojet.display.dialog.timeslotcreationdialog.controller.EventTimeSlotCreation;
 import fr.groupe4.clientprojet.display.dialog.timeslotcreationdialog.controller.TimeSlotCreationPolicy;
-import fr.groupe4.clientprojet.display.mainwindow.panels.projectpanel.taskprojectpanel.view.TaskProjectPanel;
 import fr.groupe4.clientprojet.display.view.draw.DrawDialog;
 import fr.groupe4.clientprojet.model.task.Task;
 import org.jetbrains.annotations.NotNull;
@@ -47,17 +46,17 @@ public class TimeSlotCreationDialog extends DrawDialog {
         setUndecorated(true);
         rootPane.setBorder(new MatteBorder(2, 2, 2, 2, Color.BLACK));
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-        setLocation(dim.width/2 - getWidth()/2, dim.height/2 - getHeight()/2);
+        setLocation(dim.width / 2 - getWidth() / 2, dim.height / 2 - getHeight() / 2);
 
         GridBagConstraints c = new GridBagConstraints();
 
-         // Déclaration du layout
+        // Déclaration du layout
         setLayout(new GridBagLayout());
         c.gridx = 0;
         c.gridy = 0;
         c.gridwidth = 2;
         c.gridheight = 1;
-        c.insets = new Insets(5,0,5,0);
+        c.insets = new Insets(5, 0, 5, 0);
 
         add(new JLabel("Ajout d'un créneau"), c);
 

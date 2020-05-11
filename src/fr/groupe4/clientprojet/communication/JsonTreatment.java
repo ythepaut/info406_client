@@ -1,11 +1,5 @@
 package fr.groupe4.clientprojet.communication;
 
-import fr.groupe4.clientprojet.model.resource.human.HumanResourceList;
-import fr.groupe4.clientprojet.model.task.Task;
-import fr.groupe4.clientprojet.model.task.TaskList;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-
 import fr.groupe4.clientprojet.communication.enums.CommunicationStatus;
 import fr.groupe4.clientprojet.communication.enums.HTTPCode;
 import fr.groupe4.clientprojet.logger.Logger;
@@ -14,9 +8,14 @@ import fr.groupe4.clientprojet.model.message.MessageList;
 import fr.groupe4.clientprojet.model.project.Project;
 import fr.groupe4.clientprojet.model.project.ProjectList;
 import fr.groupe4.clientprojet.model.resource.human.HumanResource;
+import fr.groupe4.clientprojet.model.resource.human.HumanResourceList;
 import fr.groupe4.clientprojet.model.resource.human.User;
+import fr.groupe4.clientprojet.model.task.Task;
+import fr.groupe4.clientprojet.model.task.TaskList;
 import fr.groupe4.clientprojet.model.timeslot.TimeSlot;
 import fr.groupe4.clientprojet.model.timeslot.TimeSlotList;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 
 /**
  * Traite le JSON de la classe Communication
@@ -33,14 +32,15 @@ final class JsonTreatment {
     /**
      * Constructeur vide, utile seulement pour le singleton
      */
-    private JsonTreatment() {}
+    private JsonTreatment() {
+    }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     /**
      * Fait quelque chose du contenu de la réponse de l'API
      *
-     * @param comm Communication à traiter
+     * @param comm       Communication à traiter
      * @param jsonObject Contenu à traiter
      */
     static void doSomethingWithData(Communication comm, Object jsonObject) {
@@ -103,7 +103,7 @@ final class JsonTreatment {
     /**
      * Connexion
      *
-     * @param comm Communication à traiter
+     * @param comm       Communication à traiter
      * @param jsonObject Contenu à traiter
      */
     private static void login(Communication comm, Object jsonObject) {
@@ -123,7 +123,7 @@ final class JsonTreatment {
     /**
      * Mise à jour de la connexion
      *
-     * @param comm Communication à traiter
+     * @param comm       Communication à traiter
      * @param jsonObject Contenu à traiter
      */
     private static void updateConnection(Communication comm, Object jsonObject) {
@@ -133,11 +133,9 @@ final class JsonTreatment {
             JSONObject jsonTokenContent = (JSONObject) jsonContent.get("requests-token");
 
             Communication.setRequestToken(singleton, (String) jsonTokenContent.get("value"));
-        }
-        else if (comm.httpCode == HTTPCode.HTTP_FORBIDDEN) {
+        } else if (comm.httpCode == HTTPCode.HTTP_FORBIDDEN) {
             Logger.error("Update interdite !?");
-        }
-        else {
+        } else {
             Logger.error("Update malformée !?");
         }
     }
@@ -162,7 +160,7 @@ final class JsonTreatment {
     /**
      * Liste les projets
      *
-     * @param comm Communication à traiter
+     * @param comm       Communication à traiter
      * @param jsonObject Contenu à traiter
      */
     private static void listProjects(Communication comm, Object jsonObject) {
@@ -180,7 +178,7 @@ final class JsonTreatment {
 
             Project project = new Project(
                     (long) jsonProject.get("id"),
-                    (String)jsonProject.get("name"),
+                    (String) jsonProject.get("name"),
                     (String) jsonProject.get("description"),
                     (long) jsonProject.get("deadline"),
                     (String) jsonProject.get("status"));
@@ -194,7 +192,7 @@ final class JsonTreatment {
     /**
      * Ajoute une ressource à un projet
      *
-     * @param comm Communication à traiter
+     * @param comm       Communication à traiter
      * @param jsonObject Contenu à traiter
      */
     private static void addResourceToProject(Communication comm, Object jsonObject) {
@@ -208,7 +206,7 @@ final class JsonTreatment {
     /**
      * Récupère les infos de l'utilisateur
      *
-     * @param comm Communication à traiter
+     * @param comm       Communication à traiter
      * @param jsonObject Contenu à traiter
      */
     private static void getUserInfos(Communication comm, Object jsonObject) {
@@ -229,10 +227,9 @@ final class JsonTreatment {
 
             if (humanResource == null) {
                 Logger.error("humanResource null ??", c);
-            }
-            else {
-                 User.initUser(
-                         humanResource,
+            } else {
+                User.initUser(
+                        humanResource,
                         (String) jsonControlContent.get("ip"),
                         (String) jsonControlContent.get("type"),
                         (long) jsonUserContent.get("id"),
@@ -241,8 +238,7 @@ final class JsonTreatment {
 
                 comm.communicationResult = User.getUser();
             }
-        }
-        else {
+        } else {
             Logger.error("Déconnecté en cours de route ?");
         }
     }
@@ -250,7 +246,7 @@ final class JsonTreatment {
     /**
      * Récupère une ressource humaine
      *
-     * @param comm Communication à traiter
+     * @param comm       Communication à traiter
      * @param jsonObject Contenu à traiter
      */
     private static void getHumanResource(Communication comm, Object jsonObject) {
@@ -270,7 +266,7 @@ final class JsonTreatment {
     /**
      * Récupère la liste des ressources humaines
      *
-     * @param comm Communication à traiter
+     * @param comm       Communication à traiter
      * @param jsonObject Contenu à traiter
      */
     private static void listHumanResource(Communication comm, Object jsonObject) {
@@ -307,7 +303,7 @@ final class JsonTreatment {
     /**
      * Récupère la liste des tâches
      *
-     * @param comm Communication à traiter
+     * @param comm       Communication à traiter
      * @param jsonObject Contenu à traiter
      */
     private static void getTaskList(Communication comm, Object jsonObject) {
@@ -347,7 +343,7 @@ final class JsonTreatment {
     /**
      * Récupère une liste de créneaux
      *
-     * @param comm Communication à traiter
+     * @param comm       Communication à traiter
      * @param jsonObject Contenu à traiter
      */
     private static void getTimeSlotList(Communication comm, Object jsonObject) {
@@ -383,7 +379,7 @@ final class JsonTreatment {
     /**
      * Liste les messages de l'utilisateur
      *
-     * @param comm Communication à traiter
+     * @param comm       Communication à traiter
      * @param jsonObject Contenu à traiter
      */
     private static void listMessages(Communication comm, Object jsonObject) {
@@ -415,8 +411,7 @@ final class JsonTreatment {
 
                 if (humanResource == null) {
                     Logger.error("humanResource null ??", c);
-                }
-                else {
+                } else {
                     Message message = new Message(
                             humanResource,
                             (long) jsonMessage.get("id"),

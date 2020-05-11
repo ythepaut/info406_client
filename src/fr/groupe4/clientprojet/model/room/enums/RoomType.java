@@ -44,9 +44,7 @@ public enum RoomType {
      * String vers enum
      *
      * @param name Nom
-     *
      * @return Enum
-     *
      * @throws IllegalArgumentException Si l'enum n'est pas trouvée
      */
     @NotNull

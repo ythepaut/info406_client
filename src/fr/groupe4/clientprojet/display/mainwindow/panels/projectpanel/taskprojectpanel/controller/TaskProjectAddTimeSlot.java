@@ -1,12 +1,9 @@
 package fr.groupe4.clientprojet.display.mainwindow.panels.projectpanel.taskprojectpanel.controller;
 
 import fr.groupe4.clientprojet.display.dialog.timeslotcreationdialog.view.TimeSlotCreationDialog;
-import fr.groupe4.clientprojet.display.mainwindow.panels.projectpanel.taskprojectpanel.view.TaskProjectPanel;
 import fr.groupe4.clientprojet.display.mainwindow.view.MainWindow;
 import fr.groupe4.clientprojet.model.task.Task;
 
-import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 

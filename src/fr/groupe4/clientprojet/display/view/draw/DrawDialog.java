@@ -1,6 +1,6 @@
 package fr.groupe4.clientprojet.display.view.draw;
 
-import javax.swing.JDialog;
+import javax.swing.*;
 import java.awt.*;
 
 /**

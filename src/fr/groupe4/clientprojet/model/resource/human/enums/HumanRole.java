@@ -31,9 +31,7 @@ public enum HumanRole {
      * Chaine vers enum
      *
      * @param role Role
-     *
      * @return Enum
-     *
      * @throws IllegalArgumentException Si l'enum n'est pas trouvée
      */
     @NotNull

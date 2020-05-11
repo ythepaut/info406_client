@@ -8,11 +8,7 @@ import fr.groupe4.clientprojet.model.parameters.Parameters;
 import fr.groupe4.clientprojet.model.parameters.themes.Theme;
 import org.jetbrains.annotations.NotNull;
 
-import javax.swing.JPanel;
-import javax.swing.JLabel;
-import javax.swing.JButton;
-import javax.swing.WindowConstants;
-
+import javax.swing.*;
 import java.awt.*;
 
 /**
@@ -52,15 +48,14 @@ public class ErrorDialog extends DrawDialog {
      * Constructeur custom
      *
      * @param message Message
-     * @param title Titre
-     * @param color Couleur
+     * @param title   Titre
+     * @param color   Couleur
      */
     public ErrorDialog(@NotNull String message, @NotNull String title, @NotNull Color color, Window owner) {
         super(owner);
         if (color == COLOR_OK) {
             Logger.success("SUCCESS DIALOG:", title, message);
-        }
-        else {
+        } else {
             Logger.warning("ERROR DIALOG:", title, message);
         }
 
@@ -76,7 +71,7 @@ public class ErrorDialog extends DrawDialog {
         keyEventErrorDialog = new KeyEventErrorDialog(this);
         addKeyListener(keyEventErrorDialog);
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-        setLocation(dim.width/2 - getWidth()/2, dim.height/2 - getHeight()/2);
+        setLocation(dim.width / 2 - getWidth() / 2, dim.height / 2 - getHeight() / 2);
         setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 
         drawContent();

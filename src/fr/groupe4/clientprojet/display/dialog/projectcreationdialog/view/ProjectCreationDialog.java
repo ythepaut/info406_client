@@ -7,18 +7,9 @@ import fr.groupe4.clientprojet.display.dialog.projectcreationdialog.controller.E
 import fr.groupe4.clientprojet.display.view.draw.DrawDialog;
 import org.jetbrains.annotations.NotNull;
 
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
+import javax.swing.*;
 import javax.swing.border.MatteBorder;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
-import java.awt.Toolkit;
+import java.awt.*;
 import java.time.DayOfWeek;
 
 /**
@@ -64,7 +55,7 @@ public class ProjectCreationDialog extends DrawDialog {
         setUndecorated(true);
         rootPane.setBorder(new MatteBorder(2, 2, 2, 2, Color.BLACK));
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-        setLocation(dim.width/2 - getWidth()/2, dim.height/2 - getHeight()/2);
+        setLocation(dim.width / 2 - getWidth() / 2, dim.height / 2 - getHeight() / 2);
 
         drawContent();
         setVisible(true);
@@ -83,7 +74,7 @@ public class ProjectCreationDialog extends DrawDialog {
         c.gridy = 0;
         c.gridwidth = 2;
         c.gridheight = 1;
-        c.insets = new Insets(5,0,5,0);
+        c.insets = new Insets(5, 0, 5, 0);
 
         // Entrée du nom
         add(new JLabel("Entrez le nom du projet : "), c);
@@ -99,7 +90,7 @@ public class ProjectCreationDialog extends DrawDialog {
         JTextArea descriptionTextArea = new JTextArea(NB_ROWS, NB_COLS);
         descriptionTextArea.setLineWrap(true);
         c.gridy++;
-        add(descriptionTextArea,c);
+        add(descriptionTextArea, c);
 
         // Entrée de la date limite du projet
         c.gridy++;
@@ -126,7 +117,7 @@ public class ProjectCreationDialog extends DrawDialog {
         JButton cancelButton = new JButton("Annuler");
         cancelButton.addActionListener(new GenericExitEvent(this));
         c.gridx++;
-        add(cancelButton,c);
+        add(cancelButton, c);
 
     }
 }

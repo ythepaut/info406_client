@@ -42,11 +42,11 @@ public class HumanResource extends Resource {
     /**
      * Constructeur
      *
-     * @param resourceId Id
-     * @param firstname Prénom
-     * @param lastname Nom
-     * @param job Job
-     * @param role Rôle
+     * @param resourceId  Id
+     * @param firstname   Prénom
+     * @param lastname    Nom
+     * @param job         Job
+     * @param role        Rôle
      * @param description Description
      */
     public HumanResource(long resourceId,

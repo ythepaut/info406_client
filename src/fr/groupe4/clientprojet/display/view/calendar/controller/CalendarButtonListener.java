@@ -37,7 +37,7 @@ public class CalendarButtonListener implements ActionListener {
      * Constructeur
      *
      * @param calendar Calendrier
-     * @param action Que faire
+     * @param action   Que faire
      */
     public CalendarButtonListener(@NotNull CalendarProject calendar, int action) {
         this.calendar = calendar;
@@ -53,8 +53,7 @@ public class CalendarButtonListener implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         if (action == PREVIOUS) {
             calendar.previous();
-        }
-        else {
+        } else {
             calendar.next();
         }
     }

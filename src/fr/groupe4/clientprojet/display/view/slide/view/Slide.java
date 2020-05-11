@@ -8,10 +8,8 @@ import fr.groupe4.clientprojet.model.parameters.Parameters;
 import fr.groupe4.clientprojet.model.parameters.themes.Theme;
 import org.jetbrains.annotations.NotNull;
 
-import javax.swing.JButton;
-import javax.swing.JPanel;
-import java.awt.BorderLayout;
-import java.awt.FlowLayout;
+import javax.swing.*;
+import java.awt.*;
 import java.util.ArrayList;
 
 /**
@@ -123,7 +121,7 @@ public class Slide extends JPanel {
      * @param slideId Numéro du slide sur lequel on veut être
      */
     public void setSlide(int slideId) {
-        this.slideId = Math.max(0, Math.min(slideId, slides.size()-1));
+        this.slideId = Math.max(0, Math.min(slideId, slides.size() - 1));
         redraw();
     }
 

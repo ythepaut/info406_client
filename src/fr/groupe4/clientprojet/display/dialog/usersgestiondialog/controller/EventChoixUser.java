@@ -30,10 +30,11 @@ public class EventChoixUser implements ItemListener {
 
     /**
      * Constructeur
-     * @param source Source
-     * @param currentUser Utilisateur courant
+     *
+     * @param source        Source
+     * @param currentUser   Utilisateur courant
      * @param selectedUsers Tableau si l'utilisateur a été sélectionné ou non
-     * @param idArrayList Id dans l'ArrayList contenant les utilisateurs
+     * @param idArrayList   Id dans l'ArrayList contenant les utilisateurs
      */
     public EventChoixUser(@NotNull DrawDialog source,
                           @NotNull HumanResource currentUser,

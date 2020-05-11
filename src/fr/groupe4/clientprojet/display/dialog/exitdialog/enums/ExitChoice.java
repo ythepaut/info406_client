@@ -39,9 +39,7 @@ public enum ExitChoice {
      * Renvoie l'enum correspondante au nom
      *
      * @param name Nom
-     *
      * @return Enum
-     *
      * @throws IllegalArgumentException S'il n'y a pas d'enum associée
      */
     @NotNull

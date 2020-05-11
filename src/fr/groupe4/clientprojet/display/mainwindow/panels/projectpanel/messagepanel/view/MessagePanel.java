@@ -1,11 +1,11 @@
 package fr.groupe4.clientprojet.display.mainwindow.panels.projectpanel.messagepanel.view;
 
 import fr.groupe4.clientprojet.communication.CommunicationBuilder;
+import fr.groupe4.clientprojet.display.mainwindow.panels.projectpanel.messagepanel.controller.EventMessagePanel;
+import fr.groupe4.clientprojet.display.mainwindow.panels.projectpanel.messagepanel.enums.MessageButton;
 import fr.groupe4.clientprojet.display.view.RoundButton;
 import fr.groupe4.clientprojet.display.view.ScrollBarUI;
 import fr.groupe4.clientprojet.display.view.draw.DrawPanel;
-import fr.groupe4.clientprojet.display.mainwindow.panels.projectpanel.messagepanel.controller.EventMessagePanel;
-import fr.groupe4.clientprojet.display.mainwindow.panels.projectpanel.messagepanel.enums.MessageButton;
 import fr.groupe4.clientprojet.model.message.Message;
 import fr.groupe4.clientprojet.model.message.MessageList;
 import fr.groupe4.clientprojet.model.message.enums.MessageResource;
@@ -123,7 +123,7 @@ public class MessagePanel extends DrawPanel {
             scrollPane.getHorizontalScrollBar().setUI(new ScrollBarUI());
             scrollPane.getHorizontalScrollBar().setPreferredSize(new Dimension(0, 0));
 
-            for (Message message: messageList) {
+            for (Message message : messageList) {
                 JPanel panel = new JPanel(new BorderLayout());
 
                 JLabel content = new JLabel(message.getContent());

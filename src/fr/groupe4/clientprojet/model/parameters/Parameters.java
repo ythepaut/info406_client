@@ -5,13 +5,8 @@ import fr.groupe4.clientprojet.model.parameters.themes.ThemeName;
 import fr.groupe4.clientprojet.utils.Location;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.*;
 import java.util.HashMap;
-
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 
 /**
  * Classe abstraite qui contient les paramètres de l'application
@@ -31,7 +26,7 @@ public abstract class Parameters {
      * Liste des paramètres avec leurs valeurs<br>
      * ParametersName -&gt; Object<br>
      * Nom paramètre  -&gt; valeur<br>
-     *
+     * <p>
      * La liste des paramètres est dans une énumération
      *
      * @see ParametersNames
@@ -121,7 +116,7 @@ public abstract class Parameters {
         boolean res = true;
         try {
             if (parameters == null) throw new InitParametersException();
-            res =  (boolean) parameters.get(ParametersNames.FIRSTRUN);
+            res = (boolean) parameters.get(ParametersNames.FIRSTRUN);
         } catch (InitParametersException e) {
             Logger.error(e.getMessage());
         }

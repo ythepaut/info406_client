@@ -4,10 +4,8 @@ import fr.groupe4.clientprojet.logger.Logger;
 import fr.groupe4.clientprojet.model.calendar.CalendarProject;
 import org.jetbrains.annotations.NotNull;
 
-import javax.swing.JPanel;
-
-import java.awt.Graphics;
-
+import javax.swing.*;
+import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
@@ -27,7 +25,6 @@ public class CalendarComponent extends JPanel implements PropertyChangeListener 
      * Constructeur
      *
      * @param calendar Calendrier
-     *
      * @throws IllegalArgumentException Type de calendrier inconnu ou pas encore fait
      */
     public CalendarComponent(@NotNull CalendarProject calendar) throws IllegalArgumentException {

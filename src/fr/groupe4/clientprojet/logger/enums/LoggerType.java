@@ -30,7 +30,7 @@ public enum LoggerType {
     /**
      * Constructeur
      *
-     * @param msg Message, nom
+     * @param msg       Message, nom
      * @param textColor Couleur
      */
     LoggerType(@NotNull String msg, @NotNull LoggerColor textColor) {

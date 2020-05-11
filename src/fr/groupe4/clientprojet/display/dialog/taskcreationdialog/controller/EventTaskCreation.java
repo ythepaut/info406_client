@@ -11,8 +11,7 @@ import fr.groupe4.clientprojet.model.task.Task;
 import fr.groupe4.clientprojet.model.task.enums.TaskStatus;
 import org.jetbrains.annotations.NotNull;
 
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
+import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.time.LocalDate;
@@ -54,11 +53,11 @@ public class EventTaskCreation implements ActionListener {
     /**
      * Constructeur
      *
-     * @param parent Parent
-     * @param datePicker Sélecteur de date
-     * @param nameTextField TextField de nom
+     * @param parent              Parent
+     * @param datePicker          Sélecteur de date
+     * @param nameTextField       TextField de nom
      * @param descriptionTextArea TextArea de description
-     * @param project Projet
+     * @param project             Projet
      */
     public EventTaskCreation(@NotNull DrawDialog parent,
                              @NotNull DatePicker datePicker,
@@ -108,8 +107,7 @@ public class EventTaskCreation implements ActionListener {
                     Logger.error("Code invalide :", c);
                     break;
             }
-        }
-        else {
+        } else {
             // Si le nom n'est pas conforme
             Logger.warning("Nom de tâche invalide");
             new ErrorDialog("Nom de tâche invalide", parent);

@@ -2,7 +2,7 @@ package fr.groupe4.clientprojet.display.view.slide;
 
 import org.jetbrains.annotations.NotNull;
 
-import javax.swing.JPanel;
+import javax.swing.*;
 
 /**
  * Élément des slides
@@ -23,7 +23,7 @@ public class SlideItem {
     /**
      * Constructeur
      *
-     * @param name Nom
+     * @param name  Nom
      * @param panel Panel
      */
     public SlideItem(@NotNull String name, @NotNull JPanel panel) {

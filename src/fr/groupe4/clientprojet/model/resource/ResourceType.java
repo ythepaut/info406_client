@@ -24,7 +24,7 @@ public enum ResourceType {
     /**
      * Constructeur
      *
-     * @param name Nom
+     * @param name       Nom
      * @param nameForAPI Nom pour l'API
      */
     ResourceType(@NotNull String name, @NotNull String nameForAPI) {

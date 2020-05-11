@@ -41,9 +41,7 @@ public enum CommunicationPropertyName {
      * String vers enum
      *
      * @param name Nom
-     *
      * @return Enum
-     *
      * @throws IllegalArgumentException Si enum non trouvée
      */
     @NotNull
@@ -55,8 +53,7 @@ public enum CommunicationPropertyName {
         for (CommunicationPropertyName var : vars) {
             if (var.name.equals(name)) {
                 result = var;
-            }
-            else if (var.name.equalsIgnoreCase(name)) {
+            } else if (var.name.equalsIgnoreCase(name)) {
                 Logger.warning("Même nom mais case différente :", name);
             }
         }

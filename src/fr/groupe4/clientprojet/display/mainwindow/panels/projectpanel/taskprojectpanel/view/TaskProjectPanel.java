@@ -8,13 +8,8 @@ import fr.groupe4.clientprojet.model.project.Project;
 import fr.groupe4.clientprojet.model.task.Task;
 import fr.groupe4.clientprojet.model.task.TaskList;
 
-import javax.swing.JPanel;
-import javax.swing.JLabel;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-
+import javax.swing.*;
 import java.awt.*;
-
 import java.time.LocalDateTime;
 
 /**
@@ -27,7 +22,6 @@ public class TaskProjectPanel extends JPanel {
      * Constructeur
      *
      * @param project Projet associé
-     *
      * @throws NullPointerException Si la liste des tâches est nulle
      */
     public TaskProjectPanel(Project project) throws NullPointerException {
@@ -43,7 +37,7 @@ public class TaskProjectPanel extends JPanel {
         c.gridy = 0;
         c.weighty = 0.0;
 
-        for (int i=0; i<titles.length; i++) {
+        for (int i = 0; i < titles.length; i++) {
             c.gridx = i;
 
             c.weightx = 1.0;
@@ -59,13 +53,12 @@ public class TaskProjectPanel extends JPanel {
         if (tasks == null) {
             Logger.error("Tâches nulles");
             throw new NullPointerException("Tâches nulles");
-        }
-        else {
-            for (int i=0; i<tasks.size(); i++) {
+        } else {
+            for (int i = 0; i < tasks.size(); i++) {
                 Task task = tasks.get(i);
 
-                c.gridy = i+1;
-                c.weighty = ((float) (i+1)) / ((float) (tasks.size() + 1));
+                c.gridy = i + 1;
+                c.weighty = ((float) (i + 1)) / ((float) (tasks.size() + 1));
                 c.weightx = 1.0;
                 c.fill = GridBagConstraints.BOTH;
 
@@ -96,25 +89,25 @@ public class TaskProjectPanel extends JPanel {
 
                 c.gridx = 3;
 
-                if (i == tasks.size()-1 && tasks.size() >= MIN_NB_TASKS) {
+                if (i == tasks.size() - 1 && tasks.size() >= MIN_NB_TASKS) {
                     c.anchor = GridBagConstraints.PAGE_END;
                 }
 
                 panel.add(b, c);
             }
 
-            for (int i=tasks.size(); i<MIN_NB_TASKS; i++) {
-                c.gridy = i+1;
-                c.weighty = ((float) (i+1)) / ((float) (tasks.size() + 1));
+            for (int i = tasks.size(); i < MIN_NB_TASKS; i++) {
+                c.gridy = i + 1;
+                c.weighty = ((float) (i + 1)) / ((float) (tasks.size() + 1));
                 c.weightx = 1.0;
                 c.fill = GridBagConstraints.BOTH;
 
-                for (int x=0; x<4; x++) {
+                for (int x = 0; x < 4; x++) {
                     c.gridx = x;
                     panel.add(new JLabel(" "), c);
                 }
 
-                if (i == tasks.size()-1) {
+                if (i == tasks.size() - 1) {
                     c.anchor = GridBagConstraints.PAGE_END;
                 }
             }

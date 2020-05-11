@@ -51,11 +51,11 @@ public class EventTimeSlotCreation implements ActionListener {
     /**
      * Constructeur
      *
-     * @param source Parent
-     * @param datePicker Sélecteur de date
+     * @param source         Parent
+     * @param datePicker     Sélecteur de date
      * @param timePickerFrom Sélecteur d'heure 1
-     * @param timePickerTo Sélecteur d'heure 2
-     * @param task Tâche actuelle
+     * @param timePickerTo   Sélecteur d'heure 2
+     * @param task           Tâche actuelle
      */
     public EventTimeSlotCreation(@NotNull DrawDialog source,
                                  @NotNull DatePicker datePicker,
@@ -112,8 +112,7 @@ public class EventTimeSlotCreation implements ActionListener {
                     Logger.error("Code invalide :", c);
                     break;
             }
-        }
-        else {
+        } else {
             new ErrorDialog("Temps invalides : date de début après date de fin", source);
         }
     }

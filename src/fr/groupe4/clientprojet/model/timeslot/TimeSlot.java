@@ -56,20 +56,20 @@ public class TimeSlot {
     /**
      * Constructeur
      *
-     * @param id Id BDD
+     * @param id        Id BDD
      * @param startTime Temps de début en secondes depuis le 01/01/1970 UTC
-     * @param endTime Temps de fin en secondes aussi
-     * @param taskId Id de la tâche
-     * @param roomId Id de la salle
+     * @param endTime   Temps de fin en secondes aussi
+     * @param taskId    Id de la tâche
+     * @param roomId    Id de la salle
      */
     public TimeSlot(long id, long startTime, long endTime, long taskId, long roomId) {
         this.id = id;
 
-        this.startTime = Instant.ofEpochMilli((startTime/TIME_SCALE)*TIME_SCALE*1000)
-                                .atZone(ZoneId.systemDefault()).toLocalDateTime();
+        this.startTime = Instant.ofEpochMilli((startTime / TIME_SCALE) * TIME_SCALE * 1000)
+                .atZone(ZoneId.systemDefault()).toLocalDateTime();
 
-        this.endTime = Instant.ofEpochMilli((endTime/TIME_SCALE)*TIME_SCALE*1000)
-                              .atZone(ZoneId.systemDefault()).toLocalDateTime();
+        this.endTime = Instant.ofEpochMilli((endTime / TIME_SCALE) * TIME_SCALE * 1000)
+                .atZone(ZoneId.systemDefault()).toLocalDateTime();
 
         this.taskId = taskId;
         this.roomId = roomId;
@@ -140,21 +140,21 @@ public class TimeSlot {
     @Override
     public String toString() {
         return "from "
-                    + startTime.getDayOfMonth() + " "
-                    + startTime.getMonth() + " "
-                    + startTime.getYear()
+                + startTime.getDayOfMonth() + " "
+                + startTime.getMonth() + " "
+                + startTime.getYear()
                 + " at "
-                    + startTime.getHour() + ":"
-                    + String.format("%02d", startTime.getMinute()) + ":"
-                    + String.format("%02d", startTime.getSecond())
+                + startTime.getHour() + ":"
+                + String.format("%02d", startTime.getMinute()) + ":"
+                + String.format("%02d", startTime.getSecond())
                 + " to "
-                    + endTime.getDayOfMonth() + " "
-                    + endTime.getMonth() + " "
-                    + endTime.getYear()
+                + endTime.getDayOfMonth() + " "
+                + endTime.getMonth() + " "
+                + endTime.getYear()
                 + " at "
-                    + endTime.getHour() + ":"
-                    + String.format("%02d", endTime.getMinute()) + ":"
-                    + String.format("%02d", endTime.getSecond())
+                + endTime.getHour() + ":"
+                + String.format("%02d", endTime.getMinute()) + ":"
+                + String.format("%02d", endTime.getSecond())
                 ;
     }
 }
