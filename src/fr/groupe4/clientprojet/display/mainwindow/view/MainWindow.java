@@ -32,12 +32,15 @@ public class MainWindow extends JFrame {
     @NotNull
     private LeftPanel leftPanel;
 
+    private static MainWindow instance = null;
+
     /**
      * Constructeur de la fenêtre
      *
      * @param title Titre de la fenêtre
      */
     public MainWindow(@NotNull String title) {
+        if (instance == null) instance = this;
         // Définition de la fenêtre
         setTitle(title);
         try {
@@ -86,5 +89,9 @@ public class MainWindow extends JFrame {
     @NotNull
     public LeftPanel getLeftPanel() {
         return leftPanel;
+    }
+
+    public static MainWindow getInstance() {
+        return instance;
     }
 }

@@ -60,7 +60,7 @@ public class EventConnectionDialog extends WindowAdapter implements ActionListen
                 if (Communication.isConnected()) {
                     source.dispose();
                 } else {
-                    new ErrorDialog(comm.getMessage());
+                    new ErrorDialog(comm.getMessage(), source);
                     source.resetPassword();
                 }
                 break;

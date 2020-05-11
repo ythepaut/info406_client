@@ -146,7 +146,6 @@ public class MessagePanel extends DrawPanel {
                         new CompoundBorder(new MatteBorder(0, 0, 0, 2, Theme.BORDER.getColor(Parameters.getThemeName())),
                                 new EmptyBorder(0, 0, 0, 5))));
 
-                assert User.getUser() != null;
                 JLabel label = new JLabel(User.getUser().isSender(message) ?
                         "Moi" :
                         message.getSrc().getFirstname() + " " + message.getSrc().getLastname());
@@ -166,7 +165,6 @@ public class MessagePanel extends DrawPanel {
                 c.gridy++;
             }
             add(scrollPane, BorderLayout.CENTER);
-            setVerticalScrollBarMax();
         } else {
             messagePanel.setLayout(new GridBagLayout());
             messagePanel.add(new JLabel("<html><div style=\"text-align:center;\">" +
@@ -210,12 +208,6 @@ public class MessagePanel extends DrawPanel {
         return idProject;
     }
 
-    public void setVerticalScrollBarMax() {
-        if (scrollPane != null) {
-            scrollPane.getVerticalScrollBar().setValue(scrollPane.getVerticalScrollBar().getMaximum());
-        }
-    }
-
     /**
      * Rafraichi la liste des messages
      * Redessine le panel
@@ -223,6 +215,5 @@ public class MessagePanel extends DrawPanel {
     public void refresh() {
         messageList = (MessageList) cBuilder.startNow().sleepUntilFinished().build().getResult();
         redraw();
-        setVerticalScrollBarMax();
     }
 }

@@ -45,7 +45,7 @@ public class KeyEventConnectionDialog extends KeyAdapter {
                 if (Communication.isConnected()) {
                     source.dispose();
                 } else {
-                    new ErrorDialog(comm.getMessage());
+                    new ErrorDialog(comm.getMessage(), source);
                     source.resetPassword();
                 }
                 break;

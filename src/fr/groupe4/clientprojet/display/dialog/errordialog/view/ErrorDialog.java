@@ -13,13 +13,7 @@ import javax.swing.JLabel;
 import javax.swing.JButton;
 import javax.swing.WindowConstants;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Toolkit;
-import java.awt.BorderLayout;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Font;
+import java.awt.*;
 
 /**
  * Dialog d'erreur
@@ -61,7 +55,8 @@ public class ErrorDialog extends DrawDialog {
      * @param title Titre
      * @param color Couleur
      */
-    public ErrorDialog(@NotNull String message, @NotNull String title, @NotNull Color color) {
+    public ErrorDialog(@NotNull String message, @NotNull String title, @NotNull Color color, Window owner) {
+        super(owner);
         if (color == COLOR_OK) {
             Logger.success("SUCCESS DIALOG:", title, message);
         }
@@ -94,8 +89,8 @@ public class ErrorDialog extends DrawDialog {
      *
      * @param message Message
      */
-    public ErrorDialog(@NotNull String message) {
-        this(message, "ERREUR", Theme.POLICE_ERROR.getColor(Parameters.getThemeName()));
+    public ErrorDialog(@NotNull String message, Window owner) {
+        this(message, "ERREUR", Theme.POLICE_ERROR.getColor(Parameters.getThemeName()), owner);
     }
 
     /**

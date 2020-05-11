@@ -34,6 +34,7 @@ public class FirstRunDialog extends DrawDialog {
      * Constructeur
      */
     public FirstRunDialog() {
+        super(null);
         setTitle("Premier lancement");
         setSize(300, 400);
         setModal(true);

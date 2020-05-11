@@ -22,12 +22,6 @@ import java.awt.Toolkit;
  */
 public class ExitDialog extends DrawDialog {
     /**
-     * La frame qui appelle ce dialog
-     */
-    @NotNull
-    private final JFrame owner;
-
-    /**
      * Le listener du dialog
      */
     @NotNull
@@ -40,7 +34,7 @@ public class ExitDialog extends DrawDialog {
      * @param avertissement Titre
      */
     public ExitDialog(@NotNull JFrame owner, @NotNull String avertissement) {
-        this.owner = owner;
+        super(owner);
         setTitle(avertissement);
 
         setSize(300, 70);
@@ -82,16 +76,5 @@ public class ExitDialog extends DrawDialog {
         add(panel);
 
 
-    }
-
-    /**
-     * Renvoie la frame qui a appelé ce dialog
-     *
-     * @return Frame qui a appelé ce dialog
-     */
-    @Override
-    public JFrame getOwner() {
-        // TODO
-        return owner;
     }
 }

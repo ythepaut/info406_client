@@ -15,12 +15,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.MatteBorder;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
-import java.awt.Toolkit;
+import java.awt.*;
 import java.time.DayOfWeek;
 
 /**
@@ -53,12 +48,6 @@ public class TaskCreationDialog extends DrawDialog {
     private static final int NAME_NB_COLS = 15;
 
     /**
-     * Parent
-     */
-    @NotNull
-    private final JPanel parent;
-
-    /**
      * Projet associé
      */
     @NotNull
@@ -67,11 +56,11 @@ public class TaskCreationDialog extends DrawDialog {
     /**
      * Constructeur
      *
-     * @param parent Parent
+     * @param owner Parent
      * @param project Projet associé
      */
-    public TaskCreationDialog(@NotNull JPanel parent, @NotNull Project project) {
-        this.parent = parent;
+    public TaskCreationDialog(Window owner, @NotNull Project project) {
+        super(owner);
         this.project = project;
 
         setTitle("Fenêtre de création de tâche");

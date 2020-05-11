@@ -74,17 +74,17 @@ public class EventProjectCreation implements ActionListener {
             switch (c.getHTTPCode()) {
                 case HTTP_FORBIDDEN:
                     // Pas les permissions de créer un projet
-                    new ErrorDialog("Vous n'avez pas les permissions nécessaires");
+                    new ErrorDialog("Vous n'avez pas les permissions nécessaires", source);
                     break;
 
                 case HTTP_OK:
                     // Projet créé
-                    new ErrorDialog("Projet créé", "SUCCESS", ErrorDialog.COLOR_OK);
+                    new ErrorDialog("Projet créé", "SUCCESS", ErrorDialog.COLOR_OK, source);
                     source.dispose();
                     break;
 
                 case HTTP_BAD_REQUEST:
-                    new ErrorDialog("Un projet avec ce nom existe déjà");
+                    new ErrorDialog("Un projet avec ce nom existe déjà", source);
                     break;
 
                 default:
@@ -94,7 +94,7 @@ public class EventProjectCreation implements ActionListener {
         }
         else {
             // Si le nom n'est pas conforme
-            new ErrorDialog("Nom de projet invalide");
+            new ErrorDialog("Nom de projet invalide", source);
         }
     }
 }

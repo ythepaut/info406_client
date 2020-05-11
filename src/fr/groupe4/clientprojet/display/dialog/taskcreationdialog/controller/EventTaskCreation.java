@@ -89,19 +89,19 @@ public class EventTaskCreation implements ActionListener {
                 case HTTP_FORBIDDEN:
                     // Pas les permissions de créer un projet
                     Logger.warning("Pas les permissions");
-                    new ErrorDialog("Vous n'avez pas les permissions nécessaires");
+                    new ErrorDialog("Vous n'avez pas les permissions nécessaires", parent);
                     break;
 
                 case HTTP_OK:
                     // Projet créé
                     Logger.success("Tâche créée");
-                    new ErrorDialog("Tâche créée", "SUCCESS", ErrorDialog.COLOR_OK);
+                    new ErrorDialog("Tâche créée", "SUCCESS", ErrorDialog.COLOR_OK, parent);
                     parent.dispose();
                     break;
 
                 case HTTP_BAD_REQUEST:
                     Logger.warning("Tâche avec ce nom");
-                    new ErrorDialog("Une tâche avec ce nom existe déjà");
+                    new ErrorDialog("Une tâche avec ce nom existe déjà", parent);
                     break;
 
                 default:
@@ -112,7 +112,7 @@ public class EventTaskCreation implements ActionListener {
         else {
             // Si le nom n'est pas conforme
             Logger.warning("Nom de tâche invalide");
-            new ErrorDialog("Nom de tâche invalide");
+            new ErrorDialog("Nom de tâche invalide", parent);
         }
     }
 }

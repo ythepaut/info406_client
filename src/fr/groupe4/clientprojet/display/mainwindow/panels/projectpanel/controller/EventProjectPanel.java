@@ -2,6 +2,7 @@ package fr.groupe4.clientprojet.display.mainwindow.panels.projectpanel.controlle
 
 import fr.groupe4.clientprojet.display.dialog.materielgestiondialog.view.MaterielGestionDialog;
 import fr.groupe4.clientprojet.display.dialog.usersgestiondialog.view.UsersGestionDialog;
+import fr.groupe4.clientprojet.display.mainwindow.view.MainWindow;
 import fr.groupe4.clientprojet.model.project.Project;
 import org.jetbrains.annotations.NotNull;
 
@@ -17,12 +18,6 @@ public class EventProjectPanel implements ActionListener {
     public static final String NEWMAT = "newmat";
 
     /**
-     * Panel qui fait les appels
-     */
-    @NotNull
-    private final JPanel source;
-
-    /**
      * Projet courant
      */
     @NotNull
@@ -33,8 +28,7 @@ public class EventProjectPanel implements ActionListener {
      *
      * @param source Panel qui fait les appels
      */
-    public EventProjectPanel(@NotNull JPanel source, @NotNull Project project) {
-        this.source = source;
+    public EventProjectPanel(@NotNull Project project) {
         this.project = project;
     }
 
@@ -46,9 +40,9 @@ public class EventProjectPanel implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (NEWUSERS.equals(e.getActionCommand())) {
-          new UsersGestionDialog(source, project);
+          new UsersGestionDialog(MainWindow.getInstance(), project);
         } else {
-            new MaterielGestionDialog(source);
+            new MaterielGestionDialog(MainWindow.getInstance());
         }
     }
 }

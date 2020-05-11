@@ -85,7 +85,7 @@ public class EventGestionUsersConfirm implements ActionListener {
             users.remove(i);
         }
 
-        new ErrorDialog("Utilisateurs bien ajoutés", "SUCCESS", ErrorDialog.COLOR_OK);
+        new ErrorDialog("Utilisateurs bien ajoutés", "SUCCESS", ErrorDialog.COLOR_OK, parent);
         parent.dispose();
     }
 }

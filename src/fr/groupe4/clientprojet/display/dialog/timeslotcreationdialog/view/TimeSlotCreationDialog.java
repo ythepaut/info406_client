@@ -7,19 +7,14 @@ import com.github.lgooddatepicker.components.TimePickerSettings;
 import fr.groupe4.clientprojet.display.dialog.controller.GenericExitEvent;
 import fr.groupe4.clientprojet.display.dialog.timeslotcreationdialog.controller.EventTimeSlotCreation;
 import fr.groupe4.clientprojet.display.dialog.timeslotcreationdialog.controller.TimeSlotCreationPolicy;
+import fr.groupe4.clientprojet.display.mainwindow.panels.projectpanel.taskprojectpanel.view.TaskProjectPanel;
 import fr.groupe4.clientprojet.display.view.draw.DrawDialog;
 import fr.groupe4.clientprojet.model.task.Task;
 import org.jetbrains.annotations.NotNull;
 
-import javax.swing.JButton;
-import javax.swing.JLabel;
+import javax.swing.*;
 import javax.swing.border.MatteBorder;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
-import java.awt.Toolkit;
+import java.awt.*;
 import java.time.DayOfWeek;
 
 public class TimeSlotCreationDialog extends DrawDialog {
@@ -34,7 +29,8 @@ public class TimeSlotCreationDialog extends DrawDialog {
     @NotNull
     private final Task task;
 
-    public TimeSlotCreationDialog(@NotNull Task task) {
+    public TimeSlotCreationDialog(@NotNull Task task, Window owner) {
+        super(owner);
         this.task = task;
 
         setTitle("Fenêtre d'ajout' de créneau");

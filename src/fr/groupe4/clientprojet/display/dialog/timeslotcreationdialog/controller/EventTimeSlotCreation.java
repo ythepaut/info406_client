@@ -22,7 +22,7 @@ public class EventTimeSlotCreation implements ActionListener {
      * Parent
      */
     @NotNull
-    private final DrawDialog parent;
+    private final DrawDialog source;
 
     /**
      * Sélecteur de date
@@ -51,18 +51,18 @@ public class EventTimeSlotCreation implements ActionListener {
     /**
      * Constructeur
      *
-     * @param parent Parent
+     * @param source Parent
      * @param datePicker Sélecteur de date
      * @param timePickerFrom Sélecteur d'heure 1
      * @param timePickerTo Sélecteur d'heure 2
      * @param task Tâche actuelle
      */
-    public EventTimeSlotCreation(@NotNull DrawDialog parent,
+    public EventTimeSlotCreation(@NotNull DrawDialog source,
                                  @NotNull DatePicker datePicker,
                                  @NotNull TimePicker timePickerFrom,
                                  @NotNull TimePicker timePickerTo,
                                  @NotNull Task task) {
-        this.parent = parent;
+        this.source = source;
         this.datePicker = datePicker;
         this.timePickerFrom = timePickerFrom;
         this.timePickerTo = timePickerTo;
@@ -93,19 +93,19 @@ public class EventTimeSlotCreation implements ActionListener {
                 case HTTP_FORBIDDEN:
                     // Pas les permissions de créer un projet
                     Logger.warning("Pas les permissions", c);
-                    new ErrorDialog("Vous n'avez pas les permissions nécessaires");
+                    new ErrorDialog("Vous n'avez pas les permissions nécessaires", source);
                     break;
 
                 case HTTP_OK:
                     // Projet créé
                     Logger.success("Créneau ajouté");
-                    new ErrorDialog("Créneau ajouté", "SUCCESS", ErrorDialog.COLOR_OK);
-                    parent.dispose();
+                    new ErrorDialog("Créneau ajouté", "SUCCESS", ErrorDialog.COLOR_OK, source);
+                    source.dispose();
                     break;
 
                 case HTTP_BAD_REQUEST:
                     Logger.warning("Créneau indisponible");
-                    new ErrorDialog("Ce créneau est indisponible");
+                    new ErrorDialog("Ce créneau est indisponible", source);
                     break;
 
                 default:
@@ -114,7 +114,7 @@ public class EventTimeSlotCreation implements ActionListener {
             }
         }
         else {
-            new ErrorDialog("Temps invalides : date de début après date de fin");
+            new ErrorDialog("Temps invalides : date de début après date de fin", source);
         }
     }
 }

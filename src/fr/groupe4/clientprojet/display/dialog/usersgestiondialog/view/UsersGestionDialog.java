@@ -17,24 +17,13 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JPanel;
 import javax.swing.border.MatteBorder;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
-import java.awt.Toolkit;
+import java.awt.*;
 
 public class UsersGestionDialog extends DrawDialog {
     /**
      * Largeur et hauteur
      */
     private static final int WIDTH = 300, HEIGHT = 200;
-
-    /**
-     * Frame qui appelle ce dialog
-     */
-    @NotNull
-    private final JPanel owner;
 
     /**
      * Projet courant
@@ -48,11 +37,11 @@ public class UsersGestionDialog extends DrawDialog {
      * @param owner Parent
      * @param project Projet
      */
-    public UsersGestionDialog(@NotNull JPanel owner, @NotNull Project project) {
+    public UsersGestionDialog(Window owner, @NotNull Project project) {
+        super(owner);
         this.project = project;
 
         setTitle("Fenêtre de gestions d'utilisateurs au projet");
-        this.owner = owner;
         setModal(true);
 
         drawContent();

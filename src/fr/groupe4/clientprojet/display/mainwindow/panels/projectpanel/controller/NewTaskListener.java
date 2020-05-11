@@ -1,6 +1,7 @@
 package fr.groupe4.clientprojet.display.mainwindow.panels.projectpanel.controller;
 
 import fr.groupe4.clientprojet.display.dialog.taskcreationdialog.view.TaskCreationDialog;
+import fr.groupe4.clientprojet.display.mainwindow.view.MainWindow;
 import fr.groupe4.clientprojet.model.project.Project;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -21,20 +22,12 @@ public class NewTaskListener implements ActionListener {
     private final Project project;
 
     /**
-     * Parent
-     */
-    @NotNull
-    private final JPanel parent;
-
-    /**
      * Constructeur
      *
      * @param project Projet
-     * @param parent JFrame parente
      */
-    public NewTaskListener(@NotNull Project project, @NotNull JPanel parent) {
+    public NewTaskListener(@NotNull Project project) {
         this.project = project;
-        this.parent = parent;
     }
 
     /**
@@ -44,6 +37,6 @@ public class NewTaskListener implements ActionListener {
      */
     @Override
     public void actionPerformed(ActionEvent e) {
-        new TaskCreationDialog(parent, project);
+        new TaskCreationDialog(MainWindow.getInstance(), project);
     }
 }

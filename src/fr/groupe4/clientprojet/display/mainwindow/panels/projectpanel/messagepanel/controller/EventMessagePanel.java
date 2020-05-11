@@ -50,7 +50,6 @@ public class EventMessagePanel implements ActionListener {
      */
     private void sendMessage() {
         String message = source.getMessage();
-        System.out.print(message + " -> ");
         while (!message.isEmpty() && message.charAt(0) == ' ') {
             message = message.substring(1);
         }
@@ -65,8 +64,6 @@ public class EventMessagePanel implements ActionListener {
                     res.append(message.charAt(i));
                 }
             }
-
-            System.out.println(res);
 
             Communication.builder().
                     sendMessage(res.toString(), dest, source.getIdProject()).

@@ -4,6 +4,7 @@ import fr.groupe4.clientprojet.communication.enums.CommunicationPropertyName;
 import fr.groupe4.clientprojet.display.dialog.parametersdialog.view.ParametersDialog;
 import fr.groupe4.clientprojet.display.mainwindow.panels.userpanel.enums.UserChoice;
 import fr.groupe4.clientprojet.display.mainwindow.panels.userpanel.view.UserPanel;
+import fr.groupe4.clientprojet.display.mainwindow.view.MainWindow;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -51,7 +52,7 @@ public class EventUserPanel implements ActionListener, PropertyChangeListener {
                 break;
 
             case SETTINGS:
-                new ParametersDialog();
+                new ParametersDialog(MainWindow.getInstance());
                 break;
 
             default:

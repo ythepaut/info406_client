@@ -45,6 +45,7 @@ public class ConnectionDialog extends DrawDialog {
      * Le constructeur
      */
     public ConnectionDialog() {
+        super(null);
         setTitle("Connexion");
         setModal(true);
         setSize(250, 350);

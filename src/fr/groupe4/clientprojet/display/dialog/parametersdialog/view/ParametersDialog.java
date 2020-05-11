@@ -16,11 +16,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import java.awt.BorderLayout;
-import java.awt.FlowLayout;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.GridLayout;
+import java.awt.*;
 
 /**
  * Le dialog des paramètres
@@ -47,7 +43,8 @@ public class ParametersDialog extends DrawDialog {
     /**
      * Le constructeur
      */
-    public ParametersDialog() {
+    public ParametersDialog(Window owner) {
+        super(owner);
         setTitle("Paramètres");
         setSize(WIDTH, HEIGHT);
         setModal(true);

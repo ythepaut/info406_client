@@ -51,18 +51,13 @@ public class ProjectCreationDialog extends DrawDialog {
     private static final int NB_COLS_NAME = 15;
 
     /**
-     * La frame qui appelle ce dialog
-     */
-    private final JFrame owner;
-
-    /**
      * Constructeur
      *
      * @param owner Propriétaire
      */
     public ProjectCreationDialog(@NotNull JFrame owner) {
+        super(owner);
         setTitle("Fenêtre de création de Projet");
-        this.owner = owner;
         setModal(true);
         setSize(WIDTH, HEIGHT);
         setResizable(false);
