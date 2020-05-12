@@ -547,7 +547,7 @@ public final class Communication implements Runnable {
                 );
             }
 
-            if (null != parsedResponse) {
+            if (parsedResponse != null) {
                 JSONObject jsonMain = (JSONObject) parsedResponse;
 
                 status = CommunicationStatus.fromString((String) jsonMain.get("status"));
@@ -569,6 +569,10 @@ public final class Communication implements Runnable {
      * Met en pause le thread actuel le temps que la requête soit effectuée
      */
     public void sleepUntilFinished() {
+        if (!started) {
+            Logger.warning("sleepUntilFinished sur Thread non commencé");
+        }
+
         while (started && !loadingFinished && communicationAllowed) {
             try {
                 Thread.sleep(UPDATE_DELAY.toMillis());

@@ -274,6 +274,41 @@ public final class CommunicationBuilder {
         return addResourceToProject(projectId, ResourceType.HUMAN_RESOURCE, humanId, start, end);
     }
 
+    /**
+     * Retire une ressource d'un projet
+     *
+     * @param projectId  Id du projet
+     * @param type       Type de ressource
+     * @param resourceId Id de la ressource
+     * @param time       Date comprise entre la date d'allocation et la deadline
+     * @return Builder non terminé avec URL
+     */
+    public CommunicationBuilder removeResourceFromProject(long projectId,
+                                                          @NotNull ResourceType type,
+                                                          long resourceId,
+                                                          @NotNull Temporal time) {
+        typeOfCommunication = CommunicationType.REMOVE_RESOURCE_FROM_PROJECT;
+        requestData.put("token", Communication.getRequestToken(this));
+        requestData.put("project", projectId);
+        requestData.put("type", type.getNameForAPI());
+        requestData.put("id", resourceId);
+        long t = temporalToSeconds(time, false);
+        requestData.put("date", t);
+        return this;
+    }
+
+    /**
+     * Retire une ressource humaine d'un projet
+     *
+     * @param projectId Id du projet
+     * @param humanId   Id de la ressource humaine
+     * @return Builder non terminé avec URL
+     */
+    public CommunicationBuilder removeHumanResourceFromProject(long projectId,
+                                                               long humanId) {
+        return removeResourceFromProject(projectId, ResourceType.HUMAN_RESOURCE, humanId, LocalDateTime.now());
+    }
+
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     /**

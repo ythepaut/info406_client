@@ -16,6 +16,7 @@ public enum CommunicationType {
     GET_PROJECT("/project/get"),
     LIST_PROJECTS("/project/list"),
     ADD_RESOURCE_TO_PROJECT("/project/alloc"),
+    REMOVE_RESOURCE_FROM_PROJECT("/project/unalloc"),
 
     CREATE_HUMAN_RESOURCE, // TODO
     GET_USER_INFOS("/auth/verify"),

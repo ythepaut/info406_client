@@ -1,5 +1,6 @@
 package fr.groupe4.clientprojet.communication;
 
+import fr.groupe4.clientprojet.communication.enums.APICode;
 import fr.groupe4.clientprojet.communication.enums.CommunicationStatus;
 import fr.groupe4.clientprojet.communication.enums.HTTPCode;
 import fr.groupe4.clientprojet.logger.Logger;
@@ -53,6 +54,7 @@ final class JsonTreatment {
                 break;
 
             case CREATE_PROJECT:
+                debugError(comm, jsonObject);
                 break;
             case GET_PROJECT:
                 getProject(comm, jsonObject);
@@ -61,7 +63,10 @@ final class JsonTreatment {
                 listProjects(comm, jsonObject);
                 break;
             case ADD_RESOURCE_TO_PROJECT:
-                addResourceToProject(comm, jsonObject);
+                debugError(comm, jsonObject);
+                break;
+            case REMOVE_RESOURCE_FROM_PROJECT:
+                debugError(comm, jsonObject);
                 break;
 
             case GET_USER_INFOS:
@@ -75,18 +80,21 @@ final class JsonTreatment {
                 break;
 
             case CREATE_TASK:
+                debugError(comm, jsonObject);
                 break;
             case GET_TASK_LIST:
                 getTaskList(comm, jsonObject);
                 break;
 
             case ADD_TIME_SLOT:
+                debugError(comm, jsonObject);
                 break;
             case GET_TIME_SLOT_LIST:
                 getTimeSlotList(comm, jsonObject);
                 break;
 
             case SEND_MESSAGE:
+                debugError(comm, jsonObject);
                 break;
             case LIST_MESSAGES:
                 listMessages(comm, jsonObject);
@@ -95,6 +103,15 @@ final class JsonTreatment {
             default:
                 Logger.error("Traitement JSON : type de communication non reconnu : " + comm.typeOfCommunication);
                 break;
+        }
+    }
+
+    private static void debugError(Communication comm, Object jsonObject) {
+        if (comm.getHTTPCode() != HTTPCode.HTTP_OK
+                || comm.getCode() != APICode.SUCCESS
+                || comm.getStatus() != CommunicationStatus.STATUS_SUCCESS) {
+
+            Logger.warning("Erreur lors d'un appel serveur\nComm:", comm, "\nJSON:", jsonObject);
         }
     }
 
@@ -187,18 +204,6 @@ final class JsonTreatment {
         }
 
         comm.communicationResult = projectsArray;
-    }
-
-    /**
-     * Ajoute une ressource à un projet
-     *
-     * @param comm       Communication à traiter
-     * @param jsonObject Contenu à traiter
-     */
-    private static void addResourceToProject(Communication comm, Object jsonObject) {
-        if (comm.getHTTPCode() != HTTPCode.HTTP_OK) {
-            Logger.warning("L'ajout de ressource humaine a échoué");
-        }
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
