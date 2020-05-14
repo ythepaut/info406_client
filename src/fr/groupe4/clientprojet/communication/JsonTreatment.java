@@ -8,9 +8,7 @@ import fr.groupe4.clientprojet.model.message.Message;
 import fr.groupe4.clientprojet.model.message.MessageList;
 import fr.groupe4.clientprojet.model.project.Project;
 import fr.groupe4.clientprojet.model.project.ProjectList;
-import fr.groupe4.clientprojet.model.resource.human.HumanResource;
-import fr.groupe4.clientprojet.model.resource.human.HumanResourceList;
-import fr.groupe4.clientprojet.model.resource.human.User;
+import fr.groupe4.clientprojet.model.resource.human.*;
 import fr.groupe4.clientprojet.model.task.Task;
 import fr.groupe4.clientprojet.model.task.TaskList;
 import fr.groupe4.clientprojet.model.timeslot.TimeSlot;
@@ -52,6 +50,9 @@ final class JsonTreatment {
             case UPDATE_CONNECTION:
                 updateConnection(comm, jsonObject);
                 break;
+            case VERIFY_CONNECTION:
+                verifyConnection(comm, jsonObject);
+                break;
 
             case CREATE_PROJECT:
                 debugError(comm, jsonObject);
@@ -67,6 +68,9 @@ final class JsonTreatment {
                 break;
             case REMOVE_RESOURCE_FROM_PROJECT:
                 debugError(comm, jsonObject);
+                break;
+            case LIST_USERS_FROM_PROJECT:
+                listUsersFromProject(comm, jsonObject);
                 break;
 
             case GET_USER_INFOS:
@@ -98,6 +102,10 @@ final class JsonTreatment {
                 break;
             case LIST_MESSAGES:
                 listMessages(comm, jsonObject);
+                break;
+
+            case DEFAULT:
+                Logger.warning("Case impossible ??");
                 break;
 
             default:
@@ -157,6 +165,25 @@ final class JsonTreatment {
         }
     }
 
+    /**
+     * Vérifie la validité d'une connexion
+     *
+     * @param comm       Communication à traiter
+     * @param jsonObject Contenu à traiter
+     */
+    private static void verifyConnection(Communication comm, Object jsonObject) {
+        if (comm.httpCode == HTTPCode.HTTP_OK) {
+            comm.communicationResult = true;
+        }
+        else {
+            comm.communicationResult = false;
+
+            if (comm.httpCode != HTTPCode.HTTP_UNAUTHORIZED) {
+                Logger.warning("Code réponse inconnu", comm, jsonObject);
+            }
+        }
+    }
+
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     private static void getProject(Communication comm, Object jsonObject) {
@@ -204,6 +231,43 @@ final class JsonTreatment {
         }
 
         comm.communicationResult = projectsArray;
+    }
+
+    private static void listUsersFromProject(Communication comm, Object jsonObject) {
+        JSONObject jsonContent = (JSONObject) jsonObject;
+        JSONArray jsonArrayHuman = (JSONArray) jsonContent.get("HUMAN");
+
+        HumanResourceProjectList humanList = new HumanResourceProjectList();
+
+        for (Object jsonHumanObject : jsonArrayHuman) {
+            JSONObject jsonHuman = (JSONObject) jsonHumanObject;
+
+            Communication c = Communication.builder()
+                    .startNow()
+                    .sleepUntilFinished()
+                    .getHumanResource(Long.parseLong((String) jsonHuman.get("id_resource")))
+                    .build();
+
+            HumanResource humanResource = (HumanResource) c.getResult();
+
+            if (humanResource == null) {
+                Logger.error("Ressource humaine nulle");
+            }
+            else {
+                HumanResourceProject human = new HumanResourceProject(
+                        humanResource,
+                        Long.parseLong((String) jsonHuman.get("id_project")),
+                        Long.parseLong((String) jsonHuman.get("date_start")),
+                        Long.parseLong((String) jsonHuman.get("date_end")),
+                        Long.parseLong((String) jsonHuman.get("id_issuer")),
+                        (String) jsonHuman.get("status")
+                );
+
+                humanList.add(human);
+            }
+        }
+
+        comm.communicationResult = humanList;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

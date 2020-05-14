@@ -10,13 +10,14 @@ public enum CommunicationType {
 
     LOGIN("/auth/connect", false),
     UPDATE_CONNECTION("/auth/renew", false),
-    VERIFY_CONNECTION, // TODO ? -> GET_USER_INFOS
+    VERIFY_CONNECTION("/auth/verify"),
 
     CREATE_PROJECT("/project/create"),
     GET_PROJECT("/project/get"),
     LIST_PROJECTS("/project/list"),
     ADD_RESOURCE_TO_PROJECT("/project/alloc"),
     REMOVE_RESOURCE_FROM_PROJECT("/project/unalloc"),
+    LIST_USERS_FROM_PROJECT("/project/alloclist"),
 
     CREATE_HUMAN_RESOURCE, // TODO
     GET_USER_INFOS("/auth/verify"),

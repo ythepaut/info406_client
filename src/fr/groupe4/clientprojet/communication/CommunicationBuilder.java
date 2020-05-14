@@ -167,6 +167,17 @@ public final class CommunicationBuilder {
         return this;
     }
 
+    /**
+     * Vérifie une connexion existante
+     *
+     * @return Builder non terminé avec URL
+     */
+    CommunicationBuilder verifyConnection() {
+        typeOfCommunication = CommunicationType.VERIFY_CONNECTION;
+        requestData.put("token", Communication.getRenewToken(this));
+        return this;
+    }
+
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     /**
@@ -307,6 +318,21 @@ public final class CommunicationBuilder {
     public CommunicationBuilder removeHumanResourceFromProject(long projectId,
                                                                long humanId) {
         return removeResourceFromProject(projectId, ResourceType.HUMAN_RESOURCE, humanId, LocalDateTime.now());
+    }
+
+    /**
+     * Liste les utilisateurs associés à un projet
+     *
+     * @param projectId Id du projet
+     * @return Builder non terminé avec URL
+     */
+    public CommunicationBuilder listUsersFromProject(long projectId) {
+        typeOfCommunication = CommunicationType.LIST_USERS_FROM_PROJECT;
+        requestData.put("token", Communication.getRequestToken(this));
+        requestData.put("project", projectId);
+        long t = temporalToSeconds(LocalDateTime.now(), false);
+        requestData.put("date", t);
+        return this;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
