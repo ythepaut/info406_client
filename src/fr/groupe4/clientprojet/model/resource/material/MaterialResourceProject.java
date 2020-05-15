@@ -1,4 +1,4 @@
-package fr.groupe4.clientprojet.model.resource.human;
+package fr.groupe4.clientprojet.model.resource.material;
 
 import fr.groupe4.clientprojet.model.resource.ResourceState;
 import org.jetbrains.annotations.NotNull;
@@ -8,9 +8,9 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 
 /**
- * Ressource humaine dans le contexte d'un projet
+ * Ressource matérielle dans le contexte d'un projet
  */
-public class HumanResourceProject extends HumanResource {
+public class MaterialResourceProject extends MaterialResource {
     /**
      * Id du projet
      */
@@ -44,14 +44,14 @@ public class HumanResourceProject extends HumanResource {
      */
     private final long allocationId;
 
-    public HumanResourceProject(@NotNull HumanResource humanResource,
-                                long idProject,
-                                long dateStart,
-                                long dateEnd,
-                                long idIssuer,
-                                @NotNull String status,
-                                long allocationId) {
-        super(humanResource);
+    public MaterialResourceProject(@NotNull MaterialResource materialResource,
+                                   long idProject,
+                                   long dateStart,
+                                   long dateEnd,
+                                   long idIssuer,
+                                   @NotNull String status,
+                                   long allocationId) {
+        super(materialResource);
 
         this.idProject = idProject;
         this.dateStart = LocalDateTime.ofInstant(Instant.ofEpochMilli(dateStart*1000), ZoneId.systemDefault());

@@ -15,6 +15,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.temporal.Temporal;
 import java.util.HashMap;
+import java.util.Objects;
 
 /**
  * Builder de la communication <br>
@@ -269,10 +270,27 @@ public final class CommunicationBuilder {
     }
 
     /**
+     * Ajoute une ressource matérielle à un projet
+     *
+     * @param projectId  Id du projet
+     * @param materialId Id de la ressource matérielle
+     * @param start      Date de début, maintenant si null
+     * @param end        Date de fin, pas de fin si null
+     * @return Builder non terminé avec URL
+     * @see #getUserTimeSlotList Exemple de Temporal
+     */
+    public CommunicationBuilder addMaterialResourceToProject(long projectId,
+                                                             long materialId,
+                                                             @Nullable Temporal start,
+                                                             @Nullable Temporal end) {
+        return addResourceToProject(projectId, ResourceType.MATERIAL_RESOURCE, materialId, start, end);
+    }
+
+    /**
      * Ajoute une ressource humaine à un projet
      *
      * @param projectId Id du projet
-     * @param humanId   Id de la ressource
+     * @param humanId   Id de la ressource humaine
      * @param start     Date de début, maintenant si null
      * @param end       Date de fin, pas de fin si null
      * @return Builder non terminé avec URL
@@ -309,6 +327,18 @@ public final class CommunicationBuilder {
     }
 
     /**
+     * Retire une ressource matérielle d'un projet
+     *
+     * @param projectId  Id du projet
+     * @param materialId Id de la ressource matérielle
+     * @return Builder non terminé avec URL
+     */
+    public CommunicationBuilder removeMaterialResourceFromProject(long projectId,
+                                                                  long materialId) {
+        return removeResourceFromProject(projectId, ResourceType.MATERIAL_RESOURCE, materialId, LocalDateTime.now());
+    }
+
+    /**
      * Retire une ressource humaine d'un projet
      *
      * @param projectId Id du projet
@@ -328,6 +358,21 @@ public final class CommunicationBuilder {
      */
     public CommunicationBuilder listUsersFromProject(long projectId) {
         typeOfCommunication = CommunicationType.LIST_USERS_FROM_PROJECT;
+        requestData.put("token", Communication.getRequestToken(this));
+        requestData.put("project", projectId);
+        long t = temporalToSeconds(LocalDateTime.now(), false);
+        requestData.put("date", t);
+        return this;
+    }
+
+    /**
+     * Liste les ressources matérielles associées à un projet
+     *
+     * @param projectId Id du projet
+     * @return Builder non terminé avec URL
+     */
+    public CommunicationBuilder listMaterialFromProject(long projectId) {
+        typeOfCommunication = CommunicationType.LIST_MATERIAL_FROM_PROJECT;
         requestData.put("token", Communication.getRequestToken(this));
         requestData.put("project", projectId);
         long t = temporalToSeconds(LocalDateTime.now(), false);
@@ -368,6 +413,47 @@ public final class CommunicationBuilder {
      */
     public CommunicationBuilder getHumanResourceList() {
         typeOfCommunication = CommunicationType.LIST_HUMAN_RESOURCE;
+        requestData.put("token", Communication.getRequestToken(this));
+        return this;
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    /**
+     * Crée une ressource matérielle
+     *
+     * @param name        Nom de la ressource matérielle
+     * @param description Description (chaine vide si null)
+     * @return Builder non terminé avec URL
+     */
+    public CommunicationBuilder createMaterialResource(@NotNull String name, @Nullable String description) {
+        typeOfCommunication = CommunicationType.CREATE_MATERIAL_RESOURCE;
+        requestData.put("token", Communication.getRequestToken(this));
+        requestData.put("name", name);
+        requestData.put("description", Objects.requireNonNullElse(description, ""));
+        return this;
+    }
+
+    /**
+     * Récupère une ressource matérielle
+     *
+     * @param id Id de la ressource matérielle
+     * @return Builder non terminé avec URL
+     */
+    public CommunicationBuilder getMaterialResource(long id) {
+        typeOfCommunication = CommunicationType.GET_MATERIAL_RESOURCE;
+        requestData.put("token", Communication.getRequestToken(this));
+        requestData.put("id", id);
+        return this;
+    }
+
+    /**
+     * Liste les ressources matérielle
+     *
+     * @return Builder non terminé avec URL
+     */
+    public CommunicationBuilder listMaterialResource() {
+        typeOfCommunication = CommunicationType.LIST_MATERIAL_RESOURCE;
         requestData.put("token", Communication.getRequestToken(this));
         return this;
     }
@@ -469,7 +555,7 @@ public final class CommunicationBuilder {
      * <br>
      * Exemple d'utilisation : <code>
      * LocalDateTime from = LocalDateTime.of(2020, 1, 1, 15, 30); // Date et heure, 1er janvier 2020 à 15h30 <br>
-     * LocalDate to = LocalDate.of(2020, 12, 31); // Date seulement, 31 décembre 2020 <br>
+     * LocalDate to = LocalDate.of(2020, 12, 31); // Date seulement, 31 décembre 2020 à minuit <br>
      * <p>
      * Communication c = Communication.builder() <br>
      * .getUserTimeSlotList(from, to) <br>

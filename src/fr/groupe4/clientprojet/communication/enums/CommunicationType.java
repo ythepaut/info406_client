@@ -1,5 +1,6 @@
 package fr.groupe4.clientprojet.communication.enums;
 
+import fr.groupe4.clientprojet.logger.Logger;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -18,15 +19,16 @@ public enum CommunicationType {
     ADD_RESOURCE_TO_PROJECT("/project/alloc"),
     REMOVE_RESOURCE_FROM_PROJECT("/project/unalloc"),
     LIST_USERS_FROM_PROJECT("/project/alloclist"),
+    LIST_MATERIAL_FROM_PROJECT("/project/alloclist"),
 
     CREATE_HUMAN_RESOURCE, // TODO
     GET_USER_INFOS("/auth/verify"),
     GET_HUMAN_RESOURCE("/resource/h/get"),
     LIST_HUMAN_RESOURCE("/resource/h/list"),
 
-    CREATE_MATERIAL_RESOURCE, // TODO
-    GET_MATERIAL_RESOURCE, // TODO
-    LIST_MATERIAL_RESOURCE, // TODO
+    CREATE_MATERIAL_RESOURCE("/resource/m/create"),
+    GET_MATERIAL_RESOURCE("/resource/m/get"),
+    LIST_MATERIAL_RESOURCE("/resource/m/list"),
 
     CREATE_TASK("/task/create"), // TODO
     GET_TASK, // TODO
@@ -89,6 +91,10 @@ public enum CommunicationType {
      */
     @NotNull
     public String getUrl() {
+        if (url.isEmpty()) {
+            Logger.debug("getUrl sur URL vide");
+        }
+
         return url;
     }
 
