@@ -1,6 +1,8 @@
 package fr.groupe4.clientprojet.display.mainwindow.panels.projectpanel.view;
 
 import fr.groupe4.clientprojet.display.mainwindow.panels.projectpanel.controller.EventProjectPanel;
+import fr.groupe4.clientprojet.model.parameters.Parameters;
+import fr.groupe4.clientprojet.model.parameters.themes.Theme;
 import fr.groupe4.clientprojet.model.project.Project;
 
 import javax.swing.*;
@@ -20,7 +22,11 @@ public class HomeProjectPanel extends JPanel {
         ajoutRessource.setBorder(BorderFactory.createEmptyBorder(10, 10, 20, 10));
         ajoutRessource.setLayout(new FlowLayout());
         JButton bouttonAddRessourcesMateriel = new JButton("Gérer les ressources matériels du projet");
+        bouttonAddRessourcesMateriel.setBackground(Theme.FOND_BUTTON.getColor(Parameters.getThemeName()));
+        bouttonAddRessourcesMateriel.setForeground(Theme.POLICE_NORMAL.getColor(Parameters.getThemeName()));
         JButton bouttonAddRessourcesHumaine = new JButton("Gérer les utilisateurs du projet");
+        bouttonAddRessourcesHumaine.setBackground(Theme.FOND_BUTTON.getColor(Parameters.getThemeName()));
+        bouttonAddRessourcesHumaine.setForeground(Theme.POLICE_NORMAL.getColor(Parameters.getThemeName()));
         ajoutRessource.add(bouttonAddRessourcesHumaine);
         ajoutRessource.add(bouttonAddRessourcesMateriel);
 
