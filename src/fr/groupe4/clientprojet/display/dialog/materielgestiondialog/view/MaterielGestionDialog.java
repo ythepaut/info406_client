@@ -1,6 +1,8 @@
 package fr.groupe4.clientprojet.display.dialog.materielgestiondialog.view;
 
 import fr.groupe4.clientprojet.display.view.draw.DrawDialog;
+import fr.groupe4.clientprojet.model.parameters.Parameters;
+import fr.groupe4.clientprojet.model.parameters.themes.Theme;
 
 import javax.swing.*;
 import javax.swing.border.MatteBorder;
@@ -29,6 +31,7 @@ public class MaterielGestionDialog extends DrawDialog {
         super(owner);
         setTitle("Fenêtre de création de Projet");
         setModal(true);
+        this.setBackground(Theme.FOND.getColor());
 
         drawContent();
         setVisible(true);
@@ -39,6 +42,7 @@ public class MaterielGestionDialog extends DrawDialog {
      */
     @Override
     protected void drawContent() {
+        getContentPane().setBackground(Theme.FOND.getColor(Parameters.getThemeName()));
         GridBagConstraints c = new GridBagConstraints();
 
         setSize(WIDTH, HEIGHT);
@@ -63,8 +67,12 @@ public class MaterielGestionDialog extends DrawDialog {
         // TODO
         //   ajouterusers.addActionListener(new ());
         add(addUsersButton, c);
+        addUsersButton.setBackground(Theme.FOND_BUTTON.getColor(Parameters.getThemeName()));
+        addUsersButton.setForeground(Theme.POLICE_NORMAL.getColor(Parameters.getThemeName()));
         c.gridx++;
         JButton cancelButton = new JButton("Annuler l'ajout");
+        cancelButton.setBackground(Theme.FOND_BUTTON.getColor(Parameters.getThemeName()));
+        cancelButton.setForeground(Theme.POLICE_NORMAL.getColor(Parameters.getThemeName()));
         //   cancelButton.addActionListener(new ());
         add(cancelButton, c);
     }
