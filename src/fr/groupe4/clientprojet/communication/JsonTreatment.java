@@ -8,9 +8,11 @@ import fr.groupe4.clientprojet.model.message.Message;
 import fr.groupe4.clientprojet.model.message.MessageList;
 import fr.groupe4.clientprojet.model.project.Project;
 import fr.groupe4.clientprojet.model.project.ProjectList;
-import fr.groupe4.clientprojet.model.resource.human.HumanResource;
-import fr.groupe4.clientprojet.model.resource.human.HumanResourceList;
-import fr.groupe4.clientprojet.model.resource.human.User;
+import fr.groupe4.clientprojet.model.resource.human.*;
+import fr.groupe4.clientprojet.model.resource.material.MaterialResource;
+import fr.groupe4.clientprojet.model.resource.material.MaterialResourceList;
+import fr.groupe4.clientprojet.model.resource.material.MaterialResourceProject;
+import fr.groupe4.clientprojet.model.resource.material.MaterialResourceProjectList;
 import fr.groupe4.clientprojet.model.task.Task;
 import fr.groupe4.clientprojet.model.task.TaskList;
 import fr.groupe4.clientprojet.model.timeslot.TimeSlot;
@@ -52,6 +54,9 @@ final class JsonTreatment {
             case UPDATE_CONNECTION:
                 updateConnection(comm, jsonObject);
                 break;
+            case VERIFY_CONNECTION:
+                verifyConnection(comm, jsonObject);
+                break;
 
             case CREATE_PROJECT:
                 debugError(comm, jsonObject);
@@ -68,6 +73,12 @@ final class JsonTreatment {
             case REMOVE_RESOURCE_FROM_PROJECT:
                 debugError(comm, jsonObject);
                 break;
+            case LIST_USERS_FROM_PROJECT:
+                listUsersFromProject(comm, jsonObject);
+                break;
+            case LIST_MATERIAL_FROM_PROJECT:
+                listMaterialFromProject(comm, jsonObject);
+                break;
 
             case GET_USER_INFOS:
                 getUserInfos(comm, jsonObject);
@@ -77,6 +88,16 @@ final class JsonTreatment {
                 break;
             case LIST_HUMAN_RESOURCE:
                 listHumanResource(comm, jsonObject);
+                break;
+
+            case CREATE_MATERIAL_RESOURCE:
+                debugError(comm, jsonObject);
+                break;
+            case GET_MATERIAL_RESOURCE:
+                getMaterialResource(comm, jsonObject);
+                break;
+            case LIST_MATERIAL_RESOURCE:
+                listMaterialResource(comm, jsonObject);
                 break;
 
             case CREATE_TASK:
@@ -98,6 +119,10 @@ final class JsonTreatment {
                 break;
             case LIST_MESSAGES:
                 listMessages(comm, jsonObject);
+                break;
+
+            case DEFAULT:
+                Logger.warning("Case impossible ??");
                 break;
 
             default:
@@ -157,6 +182,24 @@ final class JsonTreatment {
         }
     }
 
+    /**
+     * Vérifie la validité d'une connexion
+     *
+     * @param comm       Communication à traiter
+     * @param jsonObject Contenu à traiter
+     */
+    private static void verifyConnection(Communication comm, Object jsonObject) {
+        if (comm.httpCode == HTTPCode.HTTP_OK) {
+            comm.communicationResult = true;
+        } else {
+            comm.communicationResult = false;
+
+            if (comm.httpCode != HTTPCode.HTTP_UNAUTHORIZED) {
+                Logger.warning("Code réponse inconnu", comm, jsonObject);
+            }
+        }
+    }
+
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     private static void getProject(Communication comm, Object jsonObject) {
@@ -181,29 +224,141 @@ final class JsonTreatment {
      * @param jsonObject Contenu à traiter
      */
     private static void listProjects(Communication comm, Object jsonObject) {
-        JSONObject jsonContent = (JSONObject) jsonObject;
-        JSONArray projects = (JSONArray) jsonContent.get("projects");
+        if (comm.status == CommunicationStatus.STATUS_SUCCESS) {
+            JSONObject jsonContent = (JSONObject) jsonObject;
+            JSONArray projects = (JSONArray) jsonContent.get("projects");
 
-        ProjectList projectsArray = new ProjectList();
+            ProjectList projectsArray = new ProjectList();
 
-        for (Object projectObject : projects) {
-            JSONObject jsonProjectSet = (JSONObject) projectObject;
-            Object[] keySet = jsonProjectSet.keySet().toArray();
-            String key = String.valueOf(keySet[0]);
+            for (Object projectObject : projects) {
+                JSONObject jsonProjectSet = (JSONObject) projectObject;
+                Object[] keySet = jsonProjectSet.keySet().toArray();
+                String key = String.valueOf(keySet[0]);
 
-            JSONObject jsonProject = (JSONObject) jsonProjectSet.get(key);
+                JSONObject jsonProject = (JSONObject) jsonProjectSet.get(key);
 
-            Project project = new Project(
-                    (long) jsonProject.get("id"),
-                    (String) jsonProject.get("name"),
-                    (String) jsonProject.get("description"),
-                    (long) jsonProject.get("deadline"),
-                    (String) jsonProject.get("status"));
+                Project project = new Project(
+                        (long) jsonProject.get("id"),
+                        (String) jsonProject.get("name"),
+                        (String) jsonProject.get("description"),
+                        (long) jsonProject.get("deadline"),
+                        (String) jsonProject.get("status"));
 
-            projectsArray.add(project);
+                projectsArray.add(project);
+            }
+
+            comm.communicationResult = projectsArray;
         }
+    }
 
-        comm.communicationResult = projectsArray;
+    /**
+     * Liste les utilisateurs sur un projet
+     *
+     * @param comm       Communication à traiter
+     * @param jsonObject Contenu à traiter
+     */
+    private static void listUsersFromProject(Communication comm, Object jsonObject) {
+        if (comm.status == CommunicationStatus.STATUS_SUCCESS) {
+            JSONObject jsonContent = (JSONObject) jsonObject;
+            JSONArray jsonArrayHuman = (JSONArray) jsonContent.get("HUMAN");
+
+            HumanResourceProjectList humanList = new HumanResourceProjectList();
+
+            Communication[] comms = new Communication[jsonArrayHuman.size()];
+
+            for (int i = 0; i < jsonArrayHuman.size(); i++) {
+                JSONObject jsonHuman = (JSONObject) jsonArrayHuman.get(i);
+
+                comms[i] = Communication.builder()
+                        .startNow()
+                        .getHumanResource(Long.parseLong((String) jsonHuman.get("id_resource")))
+                        .build();
+            }
+
+            for (int i = 0; i < jsonArrayHuman.size(); i++) {
+                JSONObject jsonHuman = (JSONObject) jsonArrayHuman.get(i);
+                Communication c = comms[i];
+
+                if (!c.isFinished()) {
+                    c.sleepUntilFinished();
+                }
+
+                HumanResource humanResource = (HumanResource) c.getResult();
+
+                if (humanResource == null) {
+                    Logger.error("Ressource humaine nulle");
+                } else {
+                    HumanResourceProject human = new HumanResourceProject(
+                            humanResource,
+                            Long.parseLong((String) jsonHuman.get("id_project")),
+                            Long.parseLong((String) jsonHuman.get("date_start")),
+                            Long.parseLong((String) jsonHuman.get("date_end")),
+                            Long.parseLong((String) jsonHuman.get("id_issuer")),
+                            (String) jsonHuman.get("status"),
+                            Long.parseLong((String) jsonHuman.get("id"))
+                    );
+
+                    humanList.add(human);
+                }
+            }
+
+            comm.communicationResult = humanList;
+        }
+    }
+
+    /**
+     * Liste le matériel alloué à un projet
+     *
+     * @param comm       Communication à traiter
+     * @param jsonObject Contenu à traiter
+     */
+    private static void listMaterialFromProject(Communication comm, Object jsonObject) {
+        if (comm.status == CommunicationStatus.STATUS_SUCCESS) {
+            JSONObject jsonContent = (JSONObject) jsonObject;
+            JSONArray jsonArrayMaterial = (JSONArray) jsonContent.get("MATERIAL");
+
+            MaterialResourceProjectList materialList = new MaterialResourceProjectList();
+
+            Communication[] comms = new Communication[jsonArrayMaterial.size()];
+
+            for (int i = 0; i < jsonArrayMaterial.size(); i++) {
+                JSONObject jsonMaterial = (JSONObject) jsonArrayMaterial.get(i);
+
+                comms[i] = Communication.builder()
+                        .startNow()
+                        .getMaterialResource(Long.parseLong((String) jsonMaterial.get("id_resource")))
+                        .build();
+            }
+
+            for (int i = 0; i < jsonArrayMaterial.size(); i++) {
+                JSONObject jsonMaterial = (JSONObject) jsonArrayMaterial.get(i);
+                Communication c = comms[i];
+
+                if (!c.isFinished()) {
+                    c.sleepUntilFinished();
+                }
+
+                MaterialResource materialResource = (MaterialResource) c.getResult();
+
+                if (materialResource == null) {
+                    Logger.error("Ressource matérielle nulle");
+                } else {
+                    MaterialResourceProject material = new MaterialResourceProject(
+                            materialResource,
+                            Long.parseLong((String) jsonMaterial.get("id_project")),
+                            Long.parseLong((String) jsonMaterial.get("date_start")),
+                            Long.parseLong((String) jsonMaterial.get("date_end")),
+                            Long.parseLong((String) jsonMaterial.get("id_issuer")),
+                            (String) jsonMaterial.get("status"),
+                            Long.parseLong((String) jsonMaterial.get("id"))
+                    );
+
+                    materialList.add(material);
+                }
+            }
+
+            comm.communicationResult = materialList;
+        }
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -306,6 +461,58 @@ final class JsonTreatment {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     /**
+     * Récupère une ressource matérielle
+     *
+     * @param comm       Communication à traiter
+     * @param jsonObject Contenu à traiter
+     */
+    private static void getMaterialResource(Communication comm, Object jsonObject) {
+        if (comm.status == CommunicationStatus.STATUS_SUCCESS) {
+            JSONObject jsonContent = (JSONObject) jsonObject;
+
+            comm.communicationResult = new MaterialResource(
+                    (long) jsonContent.get("id"),
+                    (String) jsonContent.get("name"),
+                    (String) jsonContent.get("description")
+            );
+        }
+    }
+
+    /**
+     * Liste les ressources matérielles
+     *
+     * @param comm       Communication à traiter
+     * @param jsonObject Contenu à traiter
+     */
+    private static void listMaterialResource(Communication comm, Object jsonObject) {
+        if (comm.status == CommunicationStatus.STATUS_SUCCESS) {
+            JSONObject jsonContent = (JSONObject) jsonObject;
+            JSONArray jsonArray = (JSONArray) jsonContent.get("m_ressources");
+
+            MaterialResourceList resourceList = new MaterialResourceList();
+
+            for (Object materialObject : jsonArray) {
+                JSONObject jsonMaterialSet = (JSONObject) materialObject;
+                Object[] keySet = jsonMaterialSet.keySet().toArray();
+                String key = String.valueOf(keySet[0]);
+
+                JSONObject jsonMaterial = (JSONObject) jsonMaterialSet.get(key);
+
+                MaterialResource material = new MaterialResource(
+                        (long) jsonMaterial.get("id"),
+                        (String) jsonMaterial.get("name"),
+                        (String) jsonMaterial.get("description"));
+
+                resourceList.add(material);
+            }
+
+            comm.communicationResult = resourceList;
+        }
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    /**
      * Récupère la liste des tâches
      *
      * @param comm       Communication à traiter
@@ -395,8 +602,10 @@ final class JsonTreatment {
 
             MessageList messages = new MessageList();
 
-            for (Object jsonMessageObject : jsonMessages) {
-                JSONObject jsonMessageSet = (JSONObject) jsonMessageObject;
+            Communication[] comms = new Communication[jsonMessages.size()];
+
+            for (int i = 0; i < jsonMessages.size(); i++) {
+                JSONObject jsonMessageSet = (JSONObject) jsonMessages.get(i);
 
                 Object[] keySet = jsonMessageSet.keySet().toArray();
                 String key = String.valueOf(keySet[0]);
@@ -405,12 +614,27 @@ final class JsonTreatment {
 
                 long sourceId = (long) jsonMessage.get("sourceId");
 
-                Communication c = Communication
+                comms[i] = Communication
                         .builder()
                         .getHumanResource(sourceId)
                         .startNow()
                         .sleepUntilFinished()
                         .build();
+            }
+
+            for (int i = 0; i < jsonMessages.size(); i++) {
+                JSONObject jsonMessageSet = (JSONObject) jsonMessages.get(i);
+
+                Object[] keySet = jsonMessageSet.keySet().toArray();
+                String key = String.valueOf(keySet[0]);
+
+                JSONObject jsonMessage = (JSONObject) jsonMessageSet.get(key);
+
+                Communication c = comms[i];
+
+                if (!c.isFinished()) {
+                    c.sleepUntilFinished();
+                }
 
                 HumanResource humanResource = (HumanResource) c.getResult();
 

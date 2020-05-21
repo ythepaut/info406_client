@@ -17,15 +17,17 @@ public enum CommunicationType {
     LIST_PROJECTS("/project/list"),
     ADD_RESOURCE_TO_PROJECT("/project/alloc"),
     REMOVE_RESOURCE_FROM_PROJECT("/project/unalloc"),
+    LIST_USERS_FROM_PROJECT("/project/alloclist"),
+    LIST_MATERIAL_FROM_PROJECT("/project/alloclist"),
 
     CREATE_HUMAN_RESOURCE, // TODO
     GET_USER_INFOS("/auth/verify"),
     GET_HUMAN_RESOURCE("/resource/h/get"),
     LIST_HUMAN_RESOURCE("/resource/h/list"),
 
-    CREATE_MATERIAL_RESOURCE, // TODO
-    GET_MATERIAL_RESOURCE, // TODO
-    LIST_MATERIAL_RESOURCE, // TODO
+    CREATE_MATERIAL_RESOURCE("/resource/m/create"), // TODO
+    GET_MATERIAL_RESOURCE("/resource/m/get"), // TODO
+    LIST_MATERIAL_RESOURCE("/resource/m/list"), // TODO
 
     CREATE_TASK("/task/create"), // TODO
     GET_TASK, // TODO
