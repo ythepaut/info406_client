@@ -66,7 +66,7 @@ public class EventConnectionDialog extends WindowAdapter implements ActionListen
                 break;
 
             case CANCEL:
-                source.getOwner().dispose();
+                source.dispose();
                 Main.exit();
                 break;
 

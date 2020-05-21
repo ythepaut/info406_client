@@ -26,10 +26,6 @@ public class Main {
             new FirstRunDialog();
         }
 
-        // Juste pour ne pas avoir à se connecter à chaque fois
-        // TODO : enlever pour le rendu
-        new LoadDialog(Communication.builder().connect("user3", "HippopotameParallèle").build(), null);
-
         if (!Communication.isConnected()) {
             new ConnectionDialog();
         }
