@@ -25,7 +25,7 @@ public class EventProjectPanel implements ActionListener {
     /**
      * Constructeur
      *
-     * @param source Panel qui fait les appels
+     * @param project Panel qui fait les appels
      */
     public EventProjectPanel(@NotNull Project project) {
         this.project = project;
@@ -41,7 +41,7 @@ public class EventProjectPanel implements ActionListener {
         if (NEWUSERS.equals(e.getActionCommand())) {
             new UsersGestionDialog(MainWindow.getInstance(), project);
         } else {
-            new MaterielGestionDialog(MainWindow.getInstance());
+            new MaterielGestionDialog(MainWindow.getInstance(), project);
         }
     }
 }

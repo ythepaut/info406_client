@@ -20,6 +20,9 @@ import javax.swing.*;
 import javax.swing.border.MatteBorder;
 import java.awt.*;
 
+/**
+ * Gestion des utilisateurs
+ */
 public class UsersGestionDialog extends DrawDialog {
     /**
      * Largeur et hauteur
