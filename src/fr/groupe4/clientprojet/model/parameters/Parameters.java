@@ -52,7 +52,7 @@ public abstract class Parameters {
             // Définition des paramètres par défaut
             parameters.put(ParametersNames.FIRSTRUN, true);
             parameters.put(ParametersNames.SERVERURL, DEFAULT_SERVER_URL);
-            parameters.put(ParametersNames.THEME, ThemeName.SOMBRE);
+            parameters.put(ParametersNames.THEME, ThemeName.CLAIR);
         }
     }
 

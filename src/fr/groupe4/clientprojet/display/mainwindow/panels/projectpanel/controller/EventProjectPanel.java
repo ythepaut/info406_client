@@ -41,7 +41,7 @@ public class EventProjectPanel implements ActionListener {
         if (NEWUSERS.equals(e.getActionCommand())) {
             new UsersGestionDialog(MainWindow.getInstance(), project);
         } else {
-            new MaterielGestionDialog(MainWindow.getInstance());
+            new MaterielGestionDialog(MainWindow.getInstance(), project);
         }
     }
 }
