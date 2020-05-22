@@ -50,6 +50,7 @@ public class ErrorDialog extends DrawDialog {
      * @param message Message
      * @param title   Titre
      * @param color   Couleur
+     * @param owner   Propriétaire
      */
     public ErrorDialog(@NotNull String message, @NotNull String title, @NotNull Color color, Window owner) {
         super(owner);
@@ -83,6 +84,7 @@ public class ErrorDialog extends DrawDialog {
      * Constructeur basique
      *
      * @param message Message
+     * @param owner Propriétaire
      */
     public ErrorDialog(@NotNull String message, Window owner) {
         this(message, "ERREUR", Theme.POLICE_ERROR.getColor(Parameters.getThemeName()), owner);

@@ -24,7 +24,8 @@ public class EventMessagePanel implements ActionListener {
     /**
      * Le constructeur
      *
-     * @param source : Le MessagePanel
+     * @param source Le MessagePanel
+     * @param dest Ressource de destination
      */
     public EventMessagePanel(MessagePanel source, MessageResource dest) {
         this.source = source;

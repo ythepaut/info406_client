@@ -237,6 +237,8 @@ public final class Communication implements Runnable {
 
     /**
      * Builder de la communication
+     *
+     * @return Builder
      */
     @NotNull
     public static CommunicationBuilder builder() {

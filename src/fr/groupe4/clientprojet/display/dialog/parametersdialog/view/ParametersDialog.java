@@ -37,6 +37,8 @@ public class ParametersDialog extends DrawDialog {
 
     /**
      * Le constructeur
+     *
+     * @param owner Propriétaire
      */
     public ParametersDialog(Window owner) {
         super(owner);

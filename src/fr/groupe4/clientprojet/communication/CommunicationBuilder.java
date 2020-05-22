@@ -556,7 +556,7 @@ public final class CommunicationBuilder {
      * Exemple d'utilisation : <code>
      * LocalDateTime from = LocalDateTime.of(2020, 1, 1, 15, 30); // Date et heure, 1er janvier 2020 à 15h30 <br>
      * LocalDate to = LocalDate.of(2020, 12, 31); // Date seulement, 31 décembre 2020 à minuit <br>
-     * <p>
+     * <br>
      * Communication c = Communication.builder() <br>
      * .getUserTimeSlotList(from, to) <br>
      * .startNow() <br>

@@ -79,8 +79,9 @@ public class Message {
     /**
      * Retourne le contenu du message
      *
-     * @return : String
+     * @return Contenu
      */
+    @NotNull
     public String getContent() {
         return content;
     }
@@ -88,8 +89,9 @@ public class Message {
     /**
      * Renvoie l'utilisateur source
      *
-     * @return
+     * @return Ressource humaine associée
      */
+    @NotNull
     public HumanResource getSrc() {
         return src;
     }
@@ -97,8 +99,9 @@ public class Message {
     /**
      * Renvoie l'utilisateur destinataire
      *
-     * @return
+     * @return Type de ressource du message
      */
+    @NotNull
     public MessageResource getDst() {
         return dst;
     }

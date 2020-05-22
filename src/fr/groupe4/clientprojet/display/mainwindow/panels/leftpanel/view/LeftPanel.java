@@ -45,7 +45,8 @@ public class LeftPanel extends DrawPanel {
     /**
      * Le constructeur
      *
-     * @param centerPanel : le panel du centre
+     * @param centerPanel Le panel du centre
+     * @param owner Propriétaire
      */
     public LeftPanel(CenterPanel centerPanel, MainWindow owner) {
         buttons = new ArrayList<>();

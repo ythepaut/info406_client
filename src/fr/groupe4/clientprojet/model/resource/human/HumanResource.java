@@ -67,6 +67,8 @@ public class HumanResource extends Resource {
     /**
      * Permet de copier une ressource humaine<br>
      * Utile pour l'utilisateur par exemple, où une RH lui est fournie
+     *
+     * @param toCopy Ressource à copier
      */
     public HumanResource(HumanResource toCopy) {
         this(

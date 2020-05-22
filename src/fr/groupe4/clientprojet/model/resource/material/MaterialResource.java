@@ -25,6 +25,7 @@ public class MaterialResource extends Resource {
      *
      * @param id   Id de la ressource
      * @param name Nom de la ressource
+     * @param description Description
      */
     public MaterialResource(long id, @NotNull String name, @NotNull String description) {
         super(ResourceType.MATERIAL_RESOURCE, id);

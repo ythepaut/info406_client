@@ -25,7 +25,7 @@ public class EventProjectPanel implements ActionListener {
     /**
      * Constructeur
      *
-     * @param source Panel qui fait les appels
+     * @param project Projet
      */
     public EventProjectPanel(@NotNull Project project) {
         this.project = project;
