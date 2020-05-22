@@ -3,19 +3,14 @@ package fr.groupe4.clientprojet.display.dialog.materielgestiondialog.view;
 import fr.groupe4.clientprojet.communication.Communication;
 import fr.groupe4.clientprojet.display.dialog.controller.GenericExitEvent;
 import fr.groupe4.clientprojet.display.dialog.materielgestiondialog.controller.EventChoixMats;
+import fr.groupe4.clientprojet.display.dialog.materielgestiondialog.controller.EventCreerOwnMatButton;
 import fr.groupe4.clientprojet.display.dialog.materielgestiondialog.controller.EventGestionMaterialConfirm;
 import fr.groupe4.clientprojet.display.dialog.materielgestiondialog.controller.EventRemoveMaterial;
-import fr.groupe4.clientprojet.display.dialog.usersgestiondialog.controller.EventChoixUser;
-import fr.groupe4.clientprojet.display.dialog.usersgestiondialog.controller.EventGestionUsersConfirm;
-import fr.groupe4.clientprojet.display.dialog.usersgestiondialog.controller.EventRemoveUser;
 import fr.groupe4.clientprojet.display.view.draw.DrawDialog;
 import fr.groupe4.clientprojet.logger.Logger;
 import fr.groupe4.clientprojet.model.parameters.Parameters;
 import fr.groupe4.clientprojet.model.parameters.themes.Theme;
 import fr.groupe4.clientprojet.model.project.Project;
-import fr.groupe4.clientprojet.model.resource.human.HumanResource;
-import fr.groupe4.clientprojet.model.resource.human.HumanResourceList;
-import fr.groupe4.clientprojet.model.resource.human.HumanResourceProjectList;
 import fr.groupe4.clientprojet.model.resource.material.MaterialResource;
 import fr.groupe4.clientprojet.model.resource.material.MaterialResourceList;
 import fr.groupe4.clientprojet.model.resource.material.MaterialResourceProjectList;
@@ -82,16 +77,17 @@ public class MaterielGestionDialog extends DrawDialog {
         c.gridheight = 1;
         c.insets = new Insets(10, 5, 10, 5);
 
-
-        //TODO : Creer sa propre ressource matériel
-        JButton creerMat = new JButton("Creer votre ressources");
-        creerMat.setBackground(Theme.FOND_BUTTON.getColor(Parameters.getThemeName()));
-        creerMat.setForeground(Theme.POLICE_NORMAL.getColor(Parameters.getThemeName()));
-        add(creerMat,c);
-
         // Récupération de la liste des matériels
         Communication comm = Communication.builder().listMaterialResource().startNow().sleepUntilFinished().build();
         MaterialResourceList mats = (MaterialResourceList) comm.getResult();
+
+
+        JButton creerMat = new JButton("Creer votre ressources");
+        creerMat.setBackground(Theme.FOND_BUTTON.getColor(Parameters.getThemeName()));
+        creerMat.setForeground(Theme.POLICE_NORMAL.getColor(Parameters.getThemeName()));
+        creerMat.addActionListener(new EventCreerOwnMatButton(this,project));
+        add(creerMat,c);
+
 
         if (mats == null) {
             Logger.error("Matériels null", c);
@@ -134,7 +130,6 @@ public class MaterielGestionDialog extends DrawDialog {
         JMenu menusupp = new JMenu("Supprimer une ou plusieurs ressources");
         menusupp.setForeground(Theme.POLICE_NORMAL.getColor(Parameters.getThemeName()));
         barmenusupp.add(menusupp);
-        System.out.println(materialProject.size());
 
         for (int i = 0; i < materialProject.size(); i++) {
             MaterialResource currentMat = materialProject.get(i);
