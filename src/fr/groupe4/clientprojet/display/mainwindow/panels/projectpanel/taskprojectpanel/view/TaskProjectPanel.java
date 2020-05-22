@@ -4,12 +4,16 @@ import fr.groupe4.clientprojet.communication.Communication;
 import fr.groupe4.clientprojet.display.mainwindow.panels.projectpanel.controller.NewTaskListener;
 import fr.groupe4.clientprojet.display.mainwindow.panels.projectpanel.taskprojectpanel.controller.TaskProjectAddTimeSlot;
 import fr.groupe4.clientprojet.logger.Logger;
+import fr.groupe4.clientprojet.model.parameters.Parameters;
+import fr.groupe4.clientprojet.model.parameters.themes.Theme;
+import fr.groupe4.clientprojet.model.parameters.themes.ThemeName;
 import fr.groupe4.clientprojet.model.project.Project;
 import fr.groupe4.clientprojet.model.task.Task;
 import fr.groupe4.clientprojet.model.task.TaskList;
 
 import javax.swing.*;
 import java.awt.*;
+import java.lang.reflect.Parameter;
 import java.time.LocalDateTime;
 
 /**
@@ -31,7 +35,7 @@ public class TaskProjectPanel extends JPanel {
 
         JPanel panel = new JPanel(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
-
+        panel.setBackground(Theme.FOND.getColor(Parameters.getThemeName()));
         String[] titles = {"TÂCHES", "DESCRIPTION", "DATE LIMITE", "AJOUT CRÉNEAUX"};
 
         c.gridy = 0;
@@ -42,8 +46,9 @@ public class TaskProjectPanel extends JPanel {
 
             c.weightx = 1.0;
             c.fill = GridBagConstraints.BOTH;
-
-            panel.add(new JLabel(titles[i]), c);
+            JLabel t = new JLabel(titles[i]);
+            t.setForeground(Theme.POLICE_NORMAL.getColor(Parameters.getThemeName()));
+            panel.add(t, c);
         }
 
         comm.sleepUntilFinished();
@@ -63,7 +68,9 @@ public class TaskProjectPanel extends JPanel {
                 c.fill = GridBagConstraints.BOTH;
 
                 c.gridx = 0;
-                panel.add(new JLabel(task.getName()), c);
+                JLabel n = new JLabel(task.getName());
+                n.setForeground(Theme.POLICE_NORMAL.getColor(Parameters.getThemeName()));
+                panel.add(n, c);
 
                 String description = task.getDescription();
 
@@ -72,7 +79,9 @@ public class TaskProjectPanel extends JPanel {
                 }
 
                 c.gridx = 1;
-                panel.add(new JLabel(description), c);
+                JLabel d = new JLabel(description);
+                d.setForeground(Theme.POLICE_NORMAL.getColor(Parameters.getThemeName()));
+                panel.add(d, c);
 
                 LocalDateTime deadline = task.getDeadline();
                 String deadlineString = " ";
@@ -82,11 +91,14 @@ public class TaskProjectPanel extends JPanel {
                 }
 
                 c.gridx = 2;
-                panel.add(new JLabel(deadlineString), c);
+                JLabel dl = new JLabel(deadlineString);
+                dl.setForeground(Theme.POLICE_NORMAL.getColor(Parameters.getThemeName()));
+                panel.add(dl, c);
 
                 JButton b = new JButton("Ajouter un créneau");
                 b.addActionListener(new TaskProjectAddTimeSlot(task));
-
+                b.setBackground(Theme.FOND_BUTTON.getColor(Parameters.getThemeName()));
+                b.setForeground(Theme.POLICE_NORMAL.getColor(Parameters.getThemeName()));
                 c.gridx = 3;
 
                 if (i == tasks.size() - 1 && tasks.size() >= MIN_NB_TASKS) {
@@ -113,6 +125,8 @@ public class TaskProjectPanel extends JPanel {
             }
 
             JButton b = new JButton("Nouvelle tâche");
+            b.setBackground(Theme.FOND_BUTTON.getColor(Parameters.getThemeName()));
+            b.setForeground(Theme.POLICE_NORMAL.getColor(Parameters.getThemeName()));
             b.addActionListener(new NewTaskListener(project));
             panel.add(b);
 
