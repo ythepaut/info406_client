@@ -91,7 +91,7 @@ final class JsonTreatment {
                 break;
 
             case CREATE_MATERIAL_RESOURCE:
-                debugError(comm, jsonObject);
+                createMaterialResource(comm, jsonObject);
                 break;
             case GET_MATERIAL_RESOURCE:
                 getMaterialResource(comm, jsonObject);
@@ -459,6 +459,26 @@ final class JsonTreatment {
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    /**
+     * Crée une ressource matérielle
+     *
+     * @param comm       Communication à traiter
+     * @param jsonObject Contenu à traiter
+     */
+    private static void createMaterialResource(Communication comm, Object jsonObject) {
+        if (comm.status == CommunicationStatus.STATUS_SUCCESS) {
+            JSONArray jsonContent = (JSONArray) jsonObject;
+            JSONObject jsonMaterialElement = (JSONObject) jsonContent.get(0);
+            JSONObject jsonMaterial = (JSONObject) jsonMaterialElement.get("m_resource");
+
+            comm.communicationResult = new MaterialResource(
+                    (long) jsonMaterial.get("id"),
+                    (String) jsonMaterial.get("name"),
+                    (String) jsonMaterial.get("description")
+            );
+        }
+    }
 
     /**
      * Récupère une ressource matérielle
