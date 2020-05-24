@@ -39,7 +39,8 @@ public class EventConnectionDialog extends WindowAdapter implements ActionListen
      */
     @Override
     public void windowClosing(WindowEvent e) {
-        source.getOwner().dispose();
+        source.dispose();
+        Main.exit();
     }
 
     /**
