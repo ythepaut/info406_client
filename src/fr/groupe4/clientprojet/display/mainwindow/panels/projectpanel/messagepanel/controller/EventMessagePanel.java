@@ -56,12 +56,11 @@ public class EventMessagePanel implements ActionListener {
             message = message.substring(1);
         }
         if (!message.isEmpty()) {
-            message = "<html>" + message + "</html>";
-
             StringBuilder res = new StringBuilder();
             for (int i = 0; i < message.length(); i++) {
                 if (message.charAt(i) == '\n') {
-                    res.append("<br/>");
+                    // res.append("<br/>");
+                    res.append('\n');
                 } else {
                     res.append(message.charAt(i));
                 }

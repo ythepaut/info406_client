@@ -127,6 +127,7 @@ public class MessagePanel extends DrawPanel {
                 JPanel panel = new JPanel(new BorderLayout());
 
                 JLabel content = new JLabel(message.getContent());
+                content.putClientProperty("html.disable", Boolean.TRUE);
                 content.setForeground(Theme.POLICE_NORMAL.getColor(Parameters.getThemeName()));
                 panel.add(content, BorderLayout.CENTER);
 
@@ -149,6 +150,7 @@ public class MessagePanel extends DrawPanel {
                 JLabel label = new JLabel(User.getUser().isSender(message) ?
                         "Moi" :
                         message.getSrc().getFirstname() + " " + message.getSrc().getLastname());
+                label.putClientProperty("html.disable", Boolean.TRUE);
                 label.setForeground(Theme.POLICE_NORMAL.getColor(Parameters.getThemeName()));
                 infoPanel.add(label);
                 panel.add(infoPanel, BorderLayout.WEST);
