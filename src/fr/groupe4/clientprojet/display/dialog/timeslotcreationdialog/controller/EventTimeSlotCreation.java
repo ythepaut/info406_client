@@ -98,7 +98,6 @@ public class EventTimeSlotCreation implements ActionListener {
 
                 case HTTP_OK:
                     // Projet créé
-                    Logger.success("Créneau ajouté");
                     new ErrorDialog("Créneau ajouté", "SUCCESS", ErrorDialog.COLOR_OK, source);
                     source.dispose();
                     break;

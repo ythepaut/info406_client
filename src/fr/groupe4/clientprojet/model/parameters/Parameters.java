@@ -42,7 +42,7 @@ public abstract class Parameters {
 
         try {
             ObjectInputStream inputStream = new ObjectInputStream(
-                    new FileInputStream(Location.getDataPath() + fileName));
+                    new FileInputStream(fileName));
 
             parameters = (HashMap<ParametersNames, Object>) inputStream.readObject();
             inputStream.close();
@@ -65,7 +65,7 @@ public abstract class Parameters {
             if (parameters == null) throw new InitParametersException(); // Si init() n'a pas été appelé
 
             ObjectOutputStream outputStream = new ObjectOutputStream(
-                    new FileOutputStream(Location.getDataPath() + fileName));
+                    new FileOutputStream(fileName));
             outputStream.writeObject(parameters);
             outputStream.close();
         } catch (IOException | InitParametersException e) {

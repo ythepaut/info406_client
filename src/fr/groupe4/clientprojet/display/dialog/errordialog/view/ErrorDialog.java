@@ -4,6 +4,7 @@ import fr.groupe4.clientprojet.display.dialog.controller.GenericExitEvent;
 import fr.groupe4.clientprojet.display.dialog.errordialog.controller.KeyEventErrorDialog;
 import fr.groupe4.clientprojet.display.view.draw.DrawDialog;
 import fr.groupe4.clientprojet.logger.Logger;
+import fr.groupe4.clientprojet.logger.enums.LoggerOption;
 import fr.groupe4.clientprojet.model.parameters.Parameters;
 import fr.groupe4.clientprojet.model.parameters.themes.Theme;
 import org.jetbrains.annotations.NotNull;
@@ -55,9 +56,9 @@ public class ErrorDialog extends DrawDialog {
     public ErrorDialog(@NotNull String message, @NotNull String title, @NotNull Color color, Window owner) {
         super(owner);
         if (color == COLOR_OK) {
-            Logger.success("SUCCESS DIALOG:", title, message);
+            Logger.success("SUCCESS DIALOG:", title, message, LoggerOption.LOG_FILE_ONLY);
         } else {
-            Logger.warning("ERROR DIALOG:", title, message);
+            Logger.warning("ERROR DIALOG:", title, message, LoggerOption.LOG_FILE_ONLY);
         }
 
         this.message = message;

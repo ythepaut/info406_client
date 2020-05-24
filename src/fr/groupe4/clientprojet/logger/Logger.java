@@ -53,11 +53,10 @@ public abstract class Logger {
         BufferedWriter bufferedWriter = null;
 
         try {
-            dirCreated = new File(Location.getPath() + "/logs").mkdir();
+            dirCreated = new File("logs").mkdir();
 
             FileWriter fileWriter = new FileWriter(
-                    Location.getPath()
-                            + "/logs/fr-groupe4-clientprojet_log_"
+                             "logs/fr-groupe4-clientprojet_log_"
                             + getDate() + ".log"
             );
 
