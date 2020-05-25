@@ -1,54 +1,59 @@
 package fr.groupe4.clientprojet.display.view.slide.controller;
 
+import fr.groupe4.clientprojet.display.view.slide.SlideItem;
 import fr.groupe4.clientprojet.display.view.slide.enums.SlideMove;
 import fr.groupe4.clientprojet.display.view.slide.view.Slide;
+import org.jetbrains.annotations.NotNull;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 /**
- * Le listener du slide
+ * Listener du slide
  */
 public class EventSlide implements ActionListener {
     /**
-     * Le panel Slide
+     * Panel Slide
      */
-    private Slide source;
+    @NotNull
+    private final Slide source;
 
     /**
-     * Le constructeur
+     * Constructeur
      *
-     * @param source : le panel Slide
+     * @param source Panel Slide
      */
-    public EventSlide(Slide source) {
+    public EventSlide(@NotNull Slide source) {
         this.source = source;
     }
 
     /**
-     * Quand un bouton est clické
+     * Quand un bouton est cliqué
      *
-     * @param e : l'event
+     * @param e Event
      */
     @Override
     public void actionPerformed(ActionEvent e) {
         String command = e.getActionCommand();
 
         if (command.equals(SlideMove.LEFT.getName())) {
-            source.setSlide(source.getSlide() -1);
+            source.setSlide(source.getSlide() - 1);
         } else if (command.equals(SlideMove.RIGHT.getName())) {
-            source.setSlide(source.getSlide() +1);
+            source.setSlide(source.getSlide() + 1);
         } else {
-            ArrayList<String> names = source.getSlideName();
-            if (names.contains(command)) {
-                int i = 0;
-                while (!names.get(i).equals(command)) {
+            ArrayList<SlideItem> slides = source.getSlideItems();
+
+            int i = 0;
+
+            for (SlideItem slide : slides) {
+                if (slide.getName().equals(command)) {
+                    source.setSlide(i);
+                } else {
                     i++;
                 }
-                source.setSlide(i);
             }
-        }
 
-        source.redraw();
+        }
     }
 }

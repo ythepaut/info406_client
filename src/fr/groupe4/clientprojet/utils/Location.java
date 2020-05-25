@@ -3,15 +3,14 @@ package fr.groupe4.clientprojet.utils;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Classe abstraite qui permet de connaître le répertoire de l'éxécutable via sa méthode statique getPath();
+ * Classe abstraite qui permet de connaître le répertoire de l'éxécutable
  */
 public abstract class Location {
-
     /**
-     * Renvoie le répertoire de l'exécutable java
+     * Renvoie le répertoire de l'exécutable java <br>
      * Renvoie "/" si non trouvé
      *
-     * @return String : sous la forme "blabla"
+     * @return String sous la forme "blabla"
      */
     @NotNull
     public static String getPath() {
@@ -23,12 +22,22 @@ public abstract class Location {
     }
 
     /**
+     * Renvoie le répertoire data
+     *
+     * @return Path vers data
+     */
+    @NotNull
+    public static String getDataPath() {
+        return getPath() + "/data";
+    }
+
+    /**
      * Renvoie le répertoire img
      *
-     * @return String
+     * @return Path vers img
      */
     @NotNull
     public static String getImgDataPath() {
-        return getPath() + "/data/img";
+        return getDataPath() + "/img";
     }
 }

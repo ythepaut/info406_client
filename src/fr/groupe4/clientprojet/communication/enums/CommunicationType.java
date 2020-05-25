@@ -1,34 +1,40 @@
 package fr.groupe4.clientprojet.communication.enums;
 
+import org.jetbrains.annotations.NotNull;
+
 /**
  * Types de communication
  */
 public enum CommunicationType {
     DEFAULT,
 
-    LOGIN(false),
-    UPDATE_CONNECTION(false),
-    VERIFY_CONNECTION, // TODO
+    LOGIN("/auth/connect", false),
+    UPDATE_CONNECTION("/auth/renew", false),
+    VERIFY_CONNECTION, // TODO ? -> GET_USER_INFOS
 
-    CREATE_PROJECT,
-    GET_PROJECT,
-    LIST_PROJECTS,
+    CREATE_PROJECT("/project/create"),
+    GET_PROJECT("/project/get"),
+    LIST_PROJECTS("/project/list"),
+    ADD_RESOURCE_TO_PROJECT("/project/alloc"),
+    REMOVE_RESOURCE_FROM_PROJECT("/project/unalloc"),
+    LIST_USERS_FROM_PROJECT("/project/alloclist"),
+    LIST_MATERIAL_FROM_PROJECT("/project/alloclist"),
 
     CREATE_HUMAN_RESOURCE, // TODO
-    GET_USER_INFOS,
-    GET_HUMAN_RESOURCE,
-    LIST_HUMAN_RESOURCE,
+    GET_USER_INFOS("/auth/verify"),
+    GET_HUMAN_RESOURCE("/resource/h/get"),
+    LIST_HUMAN_RESOURCE("/resource/h/list"),
 
-    CREATE_MATERIAL_RESOURCE, // TODO
-    GET_MATERIAL_RESOURCE, // TODO
-    LIST_MATERIAL_RESOURCE, // TODO
+    CREATE_MATERIAL_RESOURCE("/resource/m/create"), // TODO
+    GET_MATERIAL_RESOURCE("/resource/m/get"), // TODO
+    LIST_MATERIAL_RESOURCE("/resource/m/list"), // TODO
 
-    CREATE_TASK, // TODO
+    CREATE_TASK("/task/create"), // TODO
     GET_TASK, // TODO
-    GET_TASK_LIST,
+    GET_TASK_LIST("/task/list"),
 
-    ADD_TIME_SLOT,
-    GET_TIME_SLOT_LIST,
+    ADD_TIME_SLOT("/timeslot/create"),
+    GET_TIME_SLOT_LIST("/timeslot/list"),
     GET_TIME_SLOT, // TODO
     REMOVE_TIME_SLOT, // TODO
 
@@ -36,19 +42,62 @@ public enum CommunicationType {
     GET_ROOM, // TODO
     LIST_ROOMS, // TODO
 
-    SEND_MESSAGE,
-    LIST_MESSAGES;
+    SEND_MESSAGE("/message/create"),
+    LIST_MESSAGES("/message/list");
 
-    private boolean checkConnection;
+    /**
+     * Doit vérifier la connexion ou non
+     */
+    private final boolean checkConnection;
 
+    /**
+     * URL associé
+     */
+    @NotNull
+    private final String url;
+
+    /**
+     * Constructeur
+     */
     CommunicationType() {
-        this(true);
+        this("");
     }
 
-    CommunicationType(boolean checkConnection) {
+    /**
+     * Constructeur
+     *
+     * @param url URL
+     */
+    CommunicationType(@NotNull String url) {
+        this(url, true);
+    }
+
+    /**
+     * Constructeur
+     *
+     * @param url             URL
+     * @param checkConnection Vérifie la connexion
+     */
+    CommunicationType(@NotNull String url, boolean checkConnection) {
+        this.url = url;
         this.checkConnection = checkConnection;
     }
 
+    /**
+     * Récupère l'URL
+     *
+     * @return URL
+     */
+    @NotNull
+    public String getUrl() {
+        return url;
+    }
+
+    /**
+     * Doit vérifier la connexion ?
+     *
+     * @return Vérif ?
+     */
     public boolean checkConnection() {
         return checkConnection;
     }

@@ -4,19 +4,38 @@ import fr.groupe4.clientprojet.logger.Logger;
 import fr.groupe4.clientprojet.logger.enums.LoggerOption;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Rôles humains
+ */
 public enum HumanRole {
     RESOURCE_MANAGER("RESOURCE_MANAGER"),
     PROJECT_LEADER("PROJECT_LEADER"),
     COLLABORATOR("COLLABORATOR");
 
-    private String role;
+    /**
+     * Rôle
+     */
+    @NotNull
+    private final String role;
 
-    HumanRole(String role) {
+    /**
+     * Constructeur
+     *
+     * @param role Rôle
+     */
+    HumanRole(@NotNull String role) {
         this.role = role;
     }
 
+    /**
+     * Chaine vers enum
+     *
+     * @param role Role
+     * @return Enum
+     * @throws IllegalArgumentException Si l'enum n'est pas trouvée
+     */
     @NotNull
-    public static HumanRole fromString(String role) throws IllegalArgumentException {
+    public static HumanRole fromString(@NotNull String role) throws IllegalArgumentException {
         HumanRole[] vars = HumanRole.values();
 
         HumanRole result = null;
@@ -36,6 +55,12 @@ public enum HumanRole {
         return result;
     }
 
+    /**
+     * Vers String
+     *
+     * @return String
+     */
+    @NotNull
     @Override
     public String toString() {
         return role;

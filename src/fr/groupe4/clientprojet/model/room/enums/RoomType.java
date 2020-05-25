@@ -4,6 +4,9 @@ import fr.groupe4.clientprojet.logger.Logger;
 import fr.groupe4.clientprojet.logger.enums.LoggerOption;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Type de salle
+ */
 public enum RoomType {
     MEETING_ROOM("MEETING_ROOM"),
     CONFERENCE_ROOM("CONFERENCE_ROOM"),
@@ -11,19 +14,41 @@ public enum RoomType {
     OTHER("OTHER"),
     ROOM("ROOM");
 
-    private String type;
+    /**
+     * Type de salle
+     */
+    @NotNull
+    private final String type;
 
-    RoomType(String type) {
+    /**
+     * Constructeur
+     *
+     * @param type Type
+     */
+    RoomType(@NotNull String type) {
         this.type = type;
     }
 
+    /**
+     * Vers String
+     *
+     * @return String
+     */
+    @NotNull
     @Override
     public String toString() {
-        return type.toUpperCase();
+        return type;
     }
 
+    /**
+     * String vers enum
+     *
+     * @param name Nom
+     * @return Enum
+     * @throws IllegalArgumentException Si l'enum n'est pas trouvée
+     */
     @NotNull
-    public static RoomType fromString(String name) throws IllegalArgumentException {
+    public static RoomType fromString(@NotNull String name) throws IllegalArgumentException {
         RoomType[] vars = RoomType.values();
 
         RoomType result = null;

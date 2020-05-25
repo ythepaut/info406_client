@@ -5,6 +5,7 @@ import fr.groupe4.clientprojet.display.mainwindow.panels.centerpanel.view.Center
 import fr.groupe4.clientprojet.display.mainwindow.panels.leftpanel.view.LeftPanel;
 import fr.groupe4.clientprojet.logger.Logger;
 import fr.groupe4.clientprojet.utils.Location;
+import org.jetbrains.annotations.NotNull;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -16,17 +17,27 @@ import java.io.IOException;
  * Fenêtre principale
  */
 public class MainWindow extends JFrame {
+    /**
+     * Panel central
+     */
+    @NotNull
     private CenterPanel centerPanel;
+
+    /**
+     * Panel de gauche
+     */
+    @NotNull
     private LeftPanel leftPanel;
+
+    private static MainWindow instance = null;
 
     /**
      * Constructeur de la fenêtre
      *
-     * @param title : titre de la fenêtre
+     * @param title Titre de la fenêtre
      */
-    public MainWindow(String title) {
-        EventMainWindow eventMainWindow = new EventMainWindow(this);
-
+    public MainWindow(@NotNull String title) {
+        if (instance == null) instance = this;
         // Définition de la fenêtre
         setTitle(title);
         try {
@@ -36,10 +47,9 @@ public class MainWindow extends JFrame {
         }
         setMinimumSize(new Dimension(1400, 800));
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-        setLocation(dim.width/2 - getWidth()/2, dim.height/2 - getHeight()/2);
+        setLocation(dim.width / 2 - getWidth() / 2, dim.height / 2 - getHeight() / 2);
         setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-
-        addWindowListener(eventMainWindow);
+        addWindowListener(new EventMainWindow(this));
 
         drawContent();
 
@@ -47,21 +57,38 @@ public class MainWindow extends JFrame {
     }
 
     /**
-     * Dessine le contenue de la fenêtre
+     * Dessine le contenu de la fenêtre
      */
     private void drawContent() {
         setLayout(new BorderLayout());
-        centerPanel = new CenterPanel(CenterPanel.USER); // <!> Dans LeftPanel, le bouton user est initialisé comme selected <!>
+        centerPanel = new CenterPanel(CenterPanel.USER);
+        //! Dans LeftPanel, le bouton user est initialisé comme selected
         leftPanel = new LeftPanel(centerPanel, this);
         add(leftPanel, BorderLayout.WEST);
         add(centerPanel, BorderLayout.CENTER);
     }
 
+    /**
+     * Récupère le panel central
+     *
+     * @return Panel central
+     */
+    @NotNull
     public CenterPanel getCenterPanel() {
         return centerPanel;
     }
 
+    /**
+     * Récupère le panel de gauche
+     *
+     * @return Panel de gauche
+     */
+    @NotNull
     public LeftPanel getLeftPanel() {
         return leftPanel;
+    }
+
+    public static MainWindow getInstance() {
+        return instance;
     }
 }

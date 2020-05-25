@@ -2,69 +2,77 @@ package fr.groupe4.clientprojet.display.dialog.connectiondialog.controller;
 
 import fr.groupe4.clientprojet.Main;
 import fr.groupe4.clientprojet.communication.Communication;
-import fr.groupe4.clientprojet.display.dialog.connectiondialog.view.ConnectionDialog;
 import fr.groupe4.clientprojet.display.dialog.connectiondialog.enums.ConnectionChoice;
+import fr.groupe4.clientprojet.display.dialog.connectiondialog.view.ConnectionDialog;
 import fr.groupe4.clientprojet.display.dialog.errordialog.view.ErrorDialog;
 import fr.groupe4.clientprojet.display.dialog.loaddialog.view.LoadDialog;
+import org.jetbrains.annotations.NotNull;
 
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 /**
- * Le listener de la connexion
+ * Listener de la connexion
  */
 public class EventConnectionDialog extends WindowAdapter implements ActionListener {
     /**
-     * Le dialog de connexion
+     * Dialog de connexion
      */
-    private ConnectionDialog source;
+    @NotNull
+    private final ConnectionDialog source;
 
     /**
-     * Le constructeur
+     * Constructeur
      *
-     * @param source : le dialog de connexion
+     * @param source Dialog de connexion
      */
-    public EventConnectionDialog(ConnectionDialog source) {
+    public EventConnectionDialog(@NotNull ConnectionDialog source) {
         this.source = source;
     }
 
     /**
      * Quand la fenêtre est fermée
      *
-     * @param e : l'event
+     * @param e Event
      */
     @Override
     public void windowClosing(WindowEvent e) {
-        source.getOwner().dispose();
+        source.dispose();
+        Main.exit();
     }
 
     /**
-     * Quand un bouton est clické
+     * Quand un bouton est cliqué
      *
-     * @param e : l'event
+     * @param e Event
      */
     @Override
     public void actionPerformed(ActionEvent e) {
         switch (ConnectionChoice.getEnum(e.getActionCommand())) {
             case OK:
                 Communication comm = Communication.builder()
-                                                  .connect(source.getUsername(), source.getPassword())
-                                                  .build();
+                        .connect(source.getUsername(), source.getPassword())
+                        .build();
 
-                new LoadDialog(comm);
+                new LoadDialog(comm, source);
 
                 if (Communication.isConnected()) {
                     source.dispose();
                 } else {
-                    new ErrorDialog(comm.getMessage()); // TODO : adapter le message en fonction de l'erreur
+                    new ErrorDialog(comm.getMessage(), source);
+                    source.resetPassword();
                 }
                 break;
 
             case CANCEL:
-                source.getOwner().dispose();
+                source.dispose();
                 Main.exit();
                 break;
 
             default:
+                break;
         }
 
     }

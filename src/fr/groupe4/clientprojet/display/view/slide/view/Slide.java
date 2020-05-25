@@ -1,79 +1,75 @@
 package fr.groupe4.clientprojet.display.view.slide.view;
 
 import fr.groupe4.clientprojet.display.view.RoundButton;
+import fr.groupe4.clientprojet.display.view.slide.SlideItem;
 import fr.groupe4.clientprojet.display.view.slide.controller.EventSlide;
 import fr.groupe4.clientprojet.display.view.slide.enums.SlideMove;
+import fr.groupe4.clientprojet.model.parameters.Parameters;
+import fr.groupe4.clientprojet.model.parameters.themes.Theme;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 
 /**
- * Permet de créer des slides
+ * Permet de créer des slides <br>
  * Un peu comme les onglets, mais en mieux
  */
 public class Slide extends JPanel {
     /**
      * Le slide sur lequel on est
      */
-    private int slide;
+    private int slideId;
+
     /**
-     * Le nombre de slide total
+     * Slides sous forme de tuple
      */
-    private int nbSlide;
-    /**
-     * La liste des noms de slides
-     */
-    private ArrayList<String> slideName;
-    /**
-     * La liste des panels des slides
-     */
-    private ArrayList<JPanel> slidePanel;
+    private ArrayList<SlideItem> slides;
+
     /**
      * Le listener du panel
      */
-    private EventSlide eventSlide;
+    private final EventSlide eventSlide;
 
     /**
      * Le constructeur
      *
-     * @param slidePanel : la liste des panel
-     * @param slideName : la liste des noms
+     * @param slides Liste des noms et des panels associés
      */
-    public Slide(ArrayList<JPanel> slidePanel, ArrayList<String> slideName) {
-        this.slidePanel = slidePanel;
-        this.slideName = slideName;
-        nbSlide = slideName.size();
-        slide = nbSlide > 0 ? 0 : -1;
+    public Slide(ArrayList<SlideItem> slides) {
+        this.slides = slides;
+
+        slideId = slides.isEmpty() ? -1 : 0;
+
         eventSlide = new EventSlide(this);
 
-        if (nbSlide > 0) {
+        if (!slides.isEmpty()) {
             drawContent();
         }
     }
 
     /**
-     * Le constructeur par défaut
-     * Il n'y a aucun slide de base, il faut les rajouter via la méthode addSlide(JPanel, String)
+     * Le constructeur par défaut <br>
+     * Il n'y a aucun slide de base, il faut les rajouter via la méthode <code>addSlide</code>
+     *
+     * @see #addSlide
      */
     public Slide() {
-        this(new ArrayList<>(), new ArrayList<>());
+        this(new ArrayList<>());
     }
 
     /**
      * Permet d'ajouter un slide
      * Redéssine le panel
      *
-     * @param panel : le panel
-     * @param name : le nom du slide
+     * @param item Item à ajouter (tuple)
      */
-    public void addSlide(JPanel panel, String name) {
-        nbSlide++;
-        slideName.add(name);
-        slidePanel.add(panel);
+    public void addSlide(@NotNull SlideItem item) {
+        slides.add(item);
 
-        if (slide == -1) {
-            slide = 0;
+        if (slideId == -1) {
+            slideId = 0;
         }
 
         redraw();
@@ -84,62 +80,67 @@ public class Slide extends JPanel {
      */
     private void drawContent() {
         setLayout(new BorderLayout());
-        setBackground(Color.WHITE);
+        setBackground(Theme.FOND.getColor(Parameters.getThemeName()));
 
         // Bouton gauche
         RoundButton leftButton = new RoundButton("<");
+        leftButton.setForeground(Theme.POLICE_NORMAL.getColor(Parameters.getThemeName()));
         leftButton.setActionCommand(SlideMove.LEFT.getName());
         leftButton.addActionListener(eventSlide);
         add(leftButton, BorderLayout.WEST);
         // Bouton droite
         RoundButton rightButton = new RoundButton(">");
+        rightButton.setForeground(Theme.POLICE_NORMAL.getColor(Parameters.getThemeName()));
         rightButton.setActionCommand(SlideMove.RIGHT.getName());
         rightButton.addActionListener(eventSlide);
         add(rightButton, BorderLayout.EAST);
         // Bouton haut
-        JPanel topButtons = new JPanel(new GridBagLayout());
-        topButtons.setBackground(Color.WHITE);
-        GridBagConstraints c = new GridBagConstraints();
-        c.gridy = c.gridx = 0;
-        for (String name: slideName) {
+        JPanel topButtons = new JPanel(new FlowLayout());
+        topButtons.setBackground(Theme.FOND.getColor(Parameters.getThemeName()));
+
+        for (SlideItem slide : slides) {
+            String name = slide.getName();
             JButton button = new JButton(name);
+            button.setBackground(Theme.FOND_BUTTON.getColor(Parameters.getThemeName()));
+            button.setForeground(Theme.POLICE_NORMAL.getColor(Parameters.getThemeName()));
             button.setActionCommand(name);
             button.addActionListener(eventSlide);
-            topButtons.add(button, c);
-
-            c.gridx++;
+            topButtons.add(button);
         }
+
         add(topButtons, BorderLayout.NORTH);
-        if (nbSlide > 0 && slide != -1) {
-            add(slidePanel.get(slide), BorderLayout.CENTER);
+
+        if (!slides.isEmpty() && slideId != -1) {
+            add(slides.get(slideId).getPanel(), BorderLayout.CENTER);
         }
     }
 
     /**
      * Défini le slide sur lequel on veut être
      *
-     * @param slide : le numéro du slide sur lequel on veut être
+     * @param slideId Numéro du slide sur lequel on veut être
      */
-    public void setSlide(int slide) {
-        this.slide = Math.max(0, Math.min(slide, nbSlide-1));
+    public void setSlide(int slideId) {
+        this.slideId = Math.max(0, Math.min(slideId, slides.size() - 1));
+        redraw();
     }
 
     /**
      * Renvoie le slide sur lequel on est
      *
-     * @return : Le numéro du slide
+     * @return Numéro du slide
      */
     public int getSlide() {
-        return slide;
+        return slideId;
     }
 
     /**
      * Renvoie la liste des noms des slides
      *
-     * @return : les noms
+     * @return les items
      */
-    public ArrayList<String> getSlideName() {
-        return slideName;
+    public ArrayList<SlideItem> getSlideItems() {
+        return slides;
     }
 
     /**

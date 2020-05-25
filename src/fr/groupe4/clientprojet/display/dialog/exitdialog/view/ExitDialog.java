@@ -4,6 +4,9 @@ import fr.groupe4.clientprojet.display.dialog.exitdialog.controller.EventExitDia
 import fr.groupe4.clientprojet.display.dialog.exitdialog.controller.KeyEventExitDialog;
 import fr.groupe4.clientprojet.display.dialog.exitdialog.enums.ExitChoice;
 import fr.groupe4.clientprojet.display.view.draw.DrawDialog;
+import fr.groupe4.clientprojet.model.parameters.Parameters;
+import fr.groupe4.clientprojet.model.parameters.themes.Theme;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,21 +18,25 @@ public class ExitDialog extends DrawDialog {
     /**
      * Le listener du dialog
      */
-    private EventExitDialog eventExitDialog;
-    /**
-     * La frame qui appelle ce dialog
-     */
-    private JFrame owner;
+    @NotNull
+    private final EventExitDialog eventExitDialog;
 
     /**
      * Le constructeur
      *
-     * @param owner : la frame à laquelle appartient le dialog
+     * @param owner         Frame à laquelle appartient le dialog
+     * @param avertissement Titre
      */
-    public ExitDialog(JFrame owner) {
-        setTitle("Êtes-vous sûr de vouloir quitter ?");
-        this.owner = owner;
+    public ExitDialog(@NotNull JFrame owner, @NotNull String avertissement) {
+        super(owner);
+        setTitle(avertissement);
+
+        setSize(300, 70);
+        setResizable(false);
+        Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+        setLocation(dim.width / 2 - getWidth() / 2, dim.height / 2 - getHeight() / 2);
         setModal(true);
+        eventExitDialog = new EventExitDialog(this); // Le listener du dialog
 
         drawContent();
 
@@ -41,35 +48,27 @@ public class ExitDialog extends DrawDialog {
      */
     @Override
     protected void drawContent() {
-        eventExitDialog = new EventExitDialog(this);
 
-        setSize(300, 70);
-        setResizable(false);
-        Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-        setLocation(dim.width/2 - getWidth()/2, dim.height/2 - getHeight()/2);
-
-        setContentPane(new JPanel());
-
+        JPanel panel = new JPanel(new FlowLayout());
+        panel.setBackground(Theme.FOND.getColor(Parameters.getThemeName()));
 
         JButton exitButton = new JButton("Quitter");
+        exitButton.setForeground(Theme.POLICE_NORMAL.getColor(Parameters.getThemeName()));
+        exitButton.setBackground(Theme.FOND_BUTTON.getColor(Parameters.getThemeName()));
         exitButton.requestFocus();
         exitButton.setActionCommand(ExitChoice.EXIT.getName());
         exitButton.addActionListener(eventExitDialog);
         exitButton.addKeyListener(new KeyEventExitDialog(this));
-        getContentPane().add(exitButton);
+        panel.add(exitButton);
         JButton cancelButton = new JButton("Annuler");
+        cancelButton.setBackground(Theme.FOND_BUTTON.getColor(Parameters.getThemeName()));
+        cancelButton.setForeground(Theme.POLICE_NORMAL.getColor(Parameters.getThemeName()));
         cancelButton.setActionCommand(ExitChoice.CANCEL.getName());
         cancelButton.addActionListener(eventExitDialog);
-        getContentPane().add(cancelButton);
-    }
+        panel.add(cancelButton);
 
-    /**
-     * Renvoie la frame qui a appelé ce dialog
-     *
-     * @return : la frame qui a appelé ce dialog
-     */
-    @Override
-    public JFrame getOwner() {
-        return owner;
+        add(panel);
+
+
     }
 }

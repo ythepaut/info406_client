@@ -9,13 +9,29 @@ import fr.groupe4.clientprojet.display.dialog.loaddialog.view.LoadDialog;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
+/**
+ * Event clavier pour le dialog de connexion
+ */
 public class KeyEventConnectionDialog extends KeyAdapter {
-    private ConnectionDialog source;
+    /**
+     * Dialog source
+     */
+    private final ConnectionDialog source;
 
+    /**
+     * Constructeur
+     *
+     * @param source Dialog parent
+     */
     public KeyEventConnectionDialog(ConnectionDialog source) {
         this.source = source;
     }
 
+    /**
+     * Touche enfoncée
+     *
+     * @param e Event
+     */
     @Override
     public void keyPressed(KeyEvent e) {
         switch (e.getKeyCode()) {
@@ -24,12 +40,13 @@ public class KeyEventConnectionDialog extends KeyAdapter {
                         .connect(source.getUsername(), source.getPassword())
                         .build();
 
-                new LoadDialog(comm);
+                new LoadDialog(comm, source);
 
                 if (Communication.isConnected()) {
                     source.dispose();
                 } else {
-                    new ErrorDialog(comm.getMessage()); // TODO : adapter le message en fonction de l'erreur
+                    new ErrorDialog(comm.getMessage(), source);
+                    source.resetPassword();
                 }
                 break;
 
@@ -39,6 +56,7 @@ public class KeyEventConnectionDialog extends KeyAdapter {
                 break;
 
             default:
+                break;
         }
     }
 }

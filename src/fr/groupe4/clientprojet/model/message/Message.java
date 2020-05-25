@@ -8,44 +8,47 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 
+/**
+ * Message
+ */
 public class Message {
     /**
-     * Id du message
+     * Id du message dans la BDD
      */
-    private long id;
+    private final long id;
 
     /**
      * Date d'envoi
      */
     @NotNull
-    private LocalDateTime date;
+    private final LocalDateTime date;
 
     /**
      * Id de l'émetteur
      */
     @NotNull
-    private HumanResource src;
+    private final HumanResource src;
 
     /**
      * Id du destinataire
      */
-    private long idDst;
+    private final long idDst;
 
     /**
      * Type de ressource de la destination
      */
     @NotNull
-    private MessageResource dst;
+    private final MessageResource dst;
 
     /**
      * Contenu du message
      */
     @NotNull
-    private String content;
+    private final String content;
 
     public Message(@NotNull HumanResource src, long id, long date, long idDst, @NotNull String dst, @NotNull String content) {
         this.id = id;
-        this.date = Instant.ofEpochMilli(date*1000).atZone(ZoneId.systemDefault()).toLocalDateTime();
+        this.date = Instant.ofEpochMilli(date * 1000).atZone(ZoneId.systemDefault()).toLocalDateTime();
         this.src = src;
         this.idDst = idDst;
         this.dst = MessageResource.fromString(dst);
@@ -62,6 +65,11 @@ public class Message {
         return date;
     }
 
+    /**
+     * Vers chaine
+     *
+     * @return Chaine
+     */
     @NotNull
     @Override
     public String toString() {
@@ -71,8 +79,9 @@ public class Message {
     /**
      * Retourne le contenu du message
      *
-     * @return : String
+     * @return Contenu
      */
+    @NotNull
     public String getContent() {
         return content;
     }
@@ -80,8 +89,9 @@ public class Message {
     /**
      * Renvoie l'utilisateur source
      *
-     * @return
+     * @return Ressource humaine associée
      */
+    @NotNull
     public HumanResource getSrc() {
         return src;
     }
@@ -89,8 +99,9 @@ public class Message {
     /**
      * Renvoie l'utilisateur destinataire
      *
-     * @return
+     * @return Type de ressource du message
      */
+    @NotNull
     public MessageResource getDst() {
         return dst;
     }

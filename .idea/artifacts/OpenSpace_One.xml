@@ -1,0 +1,15 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="OpenSpace_One">
+    <output-path>$PROJECT_DIR$/out/artifacts/OpenSpace_One</output-path>
+    <root id="archive" name="OpenSpace_One.jar">
+      <element id="directory" name="META-INF">
+        <element id="file-copy" path="$PROJECT_DIR$/src/META-INF/MANIFEST.MF" />
+      </element>
+      <element id="module-output" name="info406_client" />
+      <element id="library" level="project" name="json-simple-1.1.1" />
+      <element id="library" level="project" name="LGoodDatePicker-10.4.1-javadoc" />
+      <element id="library" level="project" name="org.jetbrains:annotations:16.0.2" />
+      <element id="dir-copy" path="$PROJECT_DIR$/data" />
+    </root>
+  </artifact>
+</component>

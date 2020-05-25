@@ -4,15 +4,27 @@ import fr.groupe4.clientprojet.logger.Logger;
 import fr.groupe4.clientprojet.logger.enums.LoggerOption;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Status d'un projet
+ */
 public enum ProjectStatus {
     PENDING("PENDING"),
     FINISHED("FINISHED"),
     ONGOING("ONGOING"),
     CANCELED("CANCELED");
 
-    private String msg;
+    /**
+     * Message
+     */
+    @NotNull
+    private final String msg;
 
-    ProjectStatus(String msg) {
+    /**
+     * Constructeur
+     *
+     * @param msg Message
+     */
+    ProjectStatus(@NotNull String msg) {
         this.msg = msg.toUpperCase();
     }
 
@@ -20,11 +32,11 @@ public enum ProjectStatus {
      * Transforme une String en son status associé
      *
      * @param msg Message
-     *
      * @return Status associé
+     * @throws IllegalArgumentException S'il n'y a pas d'enum associée
      */
     @NotNull
-    public static ProjectStatus fromString(String msg) throws IllegalArgumentException {
+    public static ProjectStatus fromString(@NotNull String msg) throws IllegalArgumentException {
         ProjectStatus[] vars = ProjectStatus.values();
 
         ProjectStatus result = null;
@@ -49,6 +61,7 @@ public enum ProjectStatus {
      *
      * @return Message
      */
+    @NotNull
     @Override
     public String toString() {
         return msg;

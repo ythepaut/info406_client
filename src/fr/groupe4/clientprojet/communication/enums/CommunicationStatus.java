@@ -15,19 +15,27 @@ public enum CommunicationStatus {
     /**
      * Message associé
      */
-    private String msg;
+    @NotNull
+    private final String msg;
 
     /**
      * Constructeur
      *
      * @param msg Message
      */
-    CommunicationStatus(String msg) {
-        this.msg = msg.toLowerCase();
+    CommunicationStatus(@NotNull String msg) {
+        this.msg = msg;
     }
 
+    /**
+     * Chaine vers enum
+     *
+     * @param msg Chaine
+     * @return Enum
+     * @throws IllegalArgumentException Enum non trouvée
+     */
     @NotNull
-    public static CommunicationStatus fromString(String msg) throws IllegalArgumentException {
+    public static CommunicationStatus fromString(@NotNull String msg) throws IllegalArgumentException {
         CommunicationStatus[] vars = CommunicationStatus.values();
 
         CommunicationStatus result = null;
@@ -52,6 +60,7 @@ public enum CommunicationStatus {
      *
      * @return Message
      */
+    @NotNull
     @Override
     public String toString() {
         return msg;

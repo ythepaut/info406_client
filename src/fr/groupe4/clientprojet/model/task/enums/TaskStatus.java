@@ -4,6 +4,9 @@ import fr.groupe4.clientprojet.logger.Logger;
 import fr.groupe4.clientprojet.logger.enums.LoggerOption;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Status des tâches
+ */
 public enum TaskStatus {
     PENDING("PENDING"),
     FINISHED("FINISHED"),
@@ -11,21 +14,30 @@ public enum TaskStatus {
     REVIEWING("REVIEWING"),
     CANCELED("CANCELED");
 
-    private String msg;
+    /**
+     * Message
+     */
+    @NotNull
+    private final String msg;
 
-    TaskStatus(String msg) {
-        this.msg = msg.toUpperCase();
+    /**
+     * Constructeur
+     *
+     * @param msg Message
+     */
+    TaskStatus(@NotNull String msg) {
+        this.msg = msg;
     }
 
     /**
      * Transforme une String en son status associé
      *
      * @param msg Message
-     *
      * @return Status associé
+     * @throws IllegalArgumentException S'il n'y a pas d'enum associée
      */
     @NotNull
-    public static TaskStatus fromString(String msg) throws IllegalArgumentException {
+    public static TaskStatus fromString(@NotNull String msg) throws IllegalArgumentException {
         TaskStatus[] vars = TaskStatus.values();
 
         TaskStatus result = null;
@@ -48,8 +60,9 @@ public enum TaskStatus {
     /**
      * Transforme un status en String
      *
-     * @return Message
+     * @return String
      */
+    @NotNull
     @Override
     public String toString() {
         return msg;

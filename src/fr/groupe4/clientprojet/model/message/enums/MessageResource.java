@@ -4,27 +4,39 @@ import fr.groupe4.clientprojet.logger.Logger;
 import fr.groupe4.clientprojet.logger.enums.LoggerOption;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Ressource associée à un message
+ */
 public enum MessageResource {
     MESSAGE_RESOURCE_HUMAN("HUMANRESOURCE"),
     MESSAGE_RESOURCE_PROJECT("PROJECT"),
     MESSAGE_RESOURCE_HUMAN_ALLOCATION("HUMANRESOURCE_ALLOCATION"),
     MESSAGE_RESOURCE_MATERIAL_ALLOCATION("MATERIALRESOURCE_ALLOCATION");
 
-    private String msg;
+    /**
+     * Message associé à l'énum
+     */
+    @NotNull
+    private final String msg;
 
-    MessageResource(String msg) {
-        this.msg = msg.toUpperCase();
+    /**
+     * Constructeur
+     *
+     * @param msg Message
+     */
+    MessageResource(@NotNull String msg) {
+        this.msg = msg;
     }
 
     /**
      * Transforme une String en son enum associée
      *
      * @param msg Message
-     *
      * @return Enum associé
+     * @throws IllegalArgumentException Si l'enum n'est pas trouvée
      */
     @NotNull
-    public static MessageResource fromString(String msg) throws IllegalArgumentException {
+    public static MessageResource fromString(@NotNull String msg) throws IllegalArgumentException {
         MessageResource[] vars = MessageResource.values();
 
         MessageResource result = null;
@@ -49,6 +61,7 @@ public enum MessageResource {
      *
      * @return Message
      */
+    @NotNull
     @Override
     public String toString() {
         return msg;

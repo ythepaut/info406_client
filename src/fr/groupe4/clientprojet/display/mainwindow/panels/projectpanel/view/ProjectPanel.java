@@ -1,9 +1,17 @@
 package fr.groupe4.clientprojet.display.mainwindow.panels.projectpanel.view;
 
 import fr.groupe4.clientprojet.communication.Communication;
+import fr.groupe4.clientprojet.display.dialog.loaddialog.view.LoadDialog;
+import fr.groupe4.clientprojet.display.mainwindow.panels.projectpanel.controller.RightClicMenuProjectListener;
+import fr.groupe4.clientprojet.display.mainwindow.panels.projectpanel.messagepanel.view.MessagePanel;
+import fr.groupe4.clientprojet.display.mainwindow.panels.projectpanel.taskprojectpanel.view.TaskProjectPanel;
+import fr.groupe4.clientprojet.display.mainwindow.view.MainWindow;
 import fr.groupe4.clientprojet.display.view.draw.DrawPanel;
-import fr.groupe4.clientprojet.display.view.messagepanel.view.MessagePanel;
+import fr.groupe4.clientprojet.display.view.slide.SlideItem;
 import fr.groupe4.clientprojet.display.view.slide.view.Slide;
+import fr.groupe4.clientprojet.logger.Logger;
+import fr.groupe4.clientprojet.model.parameters.Parameters;
+import fr.groupe4.clientprojet.model.parameters.themes.Theme;
 import fr.groupe4.clientprojet.model.project.Project;
 import fr.groupe4.clientprojet.model.project.ProjectList;
 
@@ -11,7 +19,7 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
- * Le panel des projets
+ * Panel des projets
  */
 public class ProjectPanel extends DrawPanel {
     /**
@@ -25,16 +33,18 @@ public class ProjectPanel extends DrawPanel {
      * @param projectName : Le nom du projet
      */
     public ProjectPanel(String projectName) {
-        Communication comm = Communication.builder().sleepUntilFinished().startNow().getProjectList().build();
+        Communication comm = Communication.builder().getProjectList().sleepUntilFinished().startNow().build();
 
         ProjectList list = (ProjectList) comm.getResult();
 
         assert list != null;
-        for (Project p: list) {
+        for (Project p : list) {
             if (p.getName().equals(projectName)) {
                 project = p;
             }
         }
+
+        addMouseListener(new RightClicMenuProjectListener(this));
 
         drawContent();
     }
@@ -45,14 +55,17 @@ public class ProjectPanel extends DrawPanel {
     @Override
     protected void drawContent() {
         setLayout(new BorderLayout());
+        setBackground(Theme.FOND.getColor(Parameters.getThemeName()));
 
         // Titre
         JPanel titlePanel = new JPanel(new GridBagLayout());
-        titlePanel.setBackground(Color.WHITE);
+        titlePanel.setBackground(Theme.FOND.getColor(Parameters.getThemeName()));
         GridBagConstraints c = new GridBagConstraints();
-        c.gridx = c.gridy = 0;
+        c.gridx = 0;
+        c.gridy = 0;
         c.insets = new Insets(20, 0, 0, 0);
         JLabel title = new JLabel(project.getName());
+        title.setForeground(Theme.POLICE_NORMAL.getColor(Parameters.getThemeName()));
         title.setFont(new Font("Arial", Font.PLAIN, 30));
         titlePanel.add(title, c);
 
@@ -60,9 +73,9 @@ public class ProjectPanel extends DrawPanel {
 
         // Les slides
         Slide slides = new Slide();
-        slides.addSlide(homePanel(), "HOME");
-        slides.addSlide(taskPanel(), "TASK");
-        slides.addSlide(messagePanel(), "MESSAGE");
+        slides.addSlide(new SlideItem("HOME", homePanel()));
+        slides.addSlide(new SlideItem("TASK", taskPanel()));
+        slides.addSlide(new SlideItem("MESSAGE", messagePanel()));
 
         add(slides, BorderLayout.CENTER);
     }
@@ -70,35 +83,29 @@ public class ProjectPanel extends DrawPanel {
     /**
      * Dessine le premier slide du projet
      *
-     * @return : le jpanel
+     * @return Le JPanel
      */
     private JPanel homePanel() {
-        JPanel panel = new JPanel(new BorderLayout());
-        panel.add(new JLabel("HOME"), BorderLayout.NORTH);
-        panel.add(new JLabel(project.getDescription()), BorderLayout.CENTER);
         // TODO : Construire panel accueil
-        return panel;
+        return new HomeProjectPanel(project);
     }
 
     /**
      * Dessine le slide des tâches du projet
      *
-     * @return : le jpanel
+     * @return JPanel des tâches
      */
     private JPanel taskPanel() {
-        JPanel panel = new JPanel();
-        panel.add(new JLabel("TÂCHES"));
-        // TODO : Construire panel tâches
-        return panel;
+        return new TaskProjectPanel(project);
     }
 
     /**
      * Dessine le slide de la messagerie du projet
      *
-     * @return : le jpanel
+     * @return JPanel de la messagerie
      */
     private JPanel messagePanel() {
-        MessagePanel m = new MessagePanel(Communication.builder().getUserMessageList(0));
+        MessagePanel m = new MessagePanel(Communication.builder().getProjectMessageList(0, project.getId()));
         m.setIdProject(project.getId());
         return m;
     }
